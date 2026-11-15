@@ -1,13 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import axiosClient from '../utils/axiosClient';
 
+const INITIAL_MESSAGE = {
+  role: 'ai',
+  content: "Hi! I'm your AI coding tutor. Stuck on this problem? Ask me a question and I'll analyze your code to give you a hint!"
+};
 
-const ChatAI = ({ problem, code, language }) => {
-  const [messages, setMessages] = useState([
-    { role: 'ai', content: "Hi! I'm your AI coding tutor. Stuck on this problem? Ask me a question and I'll analyze your code to give you a hint!" }
-  ]);
+const ChatAI = ({ problem, getCode, code, language, isVisible }) => {
+  const [messages, setMessages] = useState([INITIAL_MESSAGE]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -20,12 +22,20 @@ const ChatAI = ({ problem, code, language }) => {
     scrollToBottom();
   }, [messages]);
 
+  // Scroll to bottom when tab becomes visible
+  useEffect(() => {
+    if (isVisible) {
+      scrollToBottom();
+    }
+  }, [isVisible]);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
 
     const userQuestion = inputValue.trim();
-    
+    const currentCode = getCode ? getCode() : (code || "");
+
     setMessages(prev => [...prev, { role: 'user', content: userQuestion }]);
     setInputValue('');
     setIsLoading(true);
@@ -34,14 +44,14 @@ const ChatAI = ({ problem, code, language }) => {
         problemTitle: problem.title,
         problemDescription: problem.description, 
         userLanguage: language,
-        userCode: code,
+        userCode: currentCode,
         userQuestion: userQuestion
       };
 
       const { data } = await axiosClient.post('/chatAI/doubt', payload);
 
       setMessages(prev => [...prev, { role: 'ai', content: data.reply }]);
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, { 
         role: 'ai', 
         content: "Sorry, I encountered an error connecting to the server. Please check your connection and try again." 
@@ -104,13 +114,15 @@ const ChatAI = ({ problem, code, language }) => {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={"Ask any doubt?"}
+            placeholder="Ask any doubt?"
+            aria-label="Ask AI tutor a question"
             disabled={isLoading}
             className="w-full bg-base-100 border border-base-content/20 text-base-content text-sm rounded-full pl-4 pr-12 py-3 focus:outline-none focus:border-secondary transition-colors disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={!inputValue.trim() || isLoading}
+            aria-label="Send question to AI tutor"
             className="absolute right-2 p-2 bg-secondary hover:bg-secondary/80 text-secondary-content rounded-full transition-colors disabled:bg-base-300 disabled:text-base-content/50"
           >
             <Send className="w-4 h-4" />
@@ -125,4 +137,4 @@ const ChatAI = ({ problem, code, language }) => {
   );
 };
 
-export default ChatAI;
+export default memo(ChatAI);

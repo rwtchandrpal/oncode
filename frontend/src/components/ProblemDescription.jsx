@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const ProblemDescription = ({ problem }) => {
+const ProblemDescription = memo(({ problem }) => {
   if (!problem) return null;
 
   // Helper to color-code difficulty badges
@@ -109,6 +110,8 @@ const ProblemDescription = ({ problem }) => {
 
     </div>
   );
-};
+});
+
+ProblemDescription.displayName = 'ProblemDescription';
 
 export default ProblemDescription;

@@ -5,6 +5,58 @@ const validate = require("../utils/validate");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const client = require("../config/redis");
+const crypto = require("crypto");
+
+// handler for temporary isolated demo session
+const demoLogin = async (req, res) => {
+  try {
+    const timestamp = Date.now();
+    const entropy = crypto.randomBytes(4).toString("hex");
+    const uniqueEmail = `demo_${timestamp}_${entropy}@guest.oncode.local`;
+    const randomPassword = crypto.randomBytes(16).toString("hex");
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    const expiresAt = new Date(timestamp + 24 * 60 * 60 * 1000); // 24-hour expiration
+
+    const demoUser = await User.create({
+      firstName: "Demo",
+      lastName: "Guest",
+      email: uniqueEmail,
+      password: hashedPassword,
+      role: "user",
+      isDemo: true,
+      expiresAt: expiresAt
+    });
+
+    const token = jwt.sign(
+      { _id: demoUser._id, email: demoUser.email, role: "user", isDemo: true },
+      process.env.JWT_KEY,
+      { expiresIn: "24h" }
+    );
+
+    const userData = {
+      _id: demoUser._id,
+      firstName: demoUser.firstName,
+      lastName: demoUser.lastName,
+      email: demoUser.email,
+      role: demoUser.role,
+      isDemo: true,
+      expiresAt: demoUser.expiresAt
+    };
+
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+      'Pragma': 'no-cache'
+    });
+
+    res.status(201).json({
+      message: "Demo session initialized successfully.",
+      user: userData,
+      token
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to initialize demo session: " + err.message });
+  }
+};
 
 // cookieOptions are no longer needed as we use localStorage + Bearer tokens
 
@@ -140,6 +192,12 @@ const adminRegister = async (req, res) => {
 
 const deleteProfile = async (req, res) => {
   try {
+    if (req.user.isDemo) {
+      return res.status(403).json({
+        message: "Demo sessions are temporary and cannot be manually deleted. They expire automatically after 24 hours."
+      });
+    }
+
     const userId = req.user._id;
 
     await User.findByIdAndDelete(userId);
@@ -159,7 +217,13 @@ const checkAuth = async (req, res) => {
     email: req.user.email,
     _id: req.user._id,
     role: req.user.role,
+    isDemo: req.user.isDemo || false,
+    expiresAt: req.user.expiresAt || null
   };
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+    'Pragma': 'no-cache'
+  });
   res.status(200).json({
     user: reply,
     message: "valid user session.",
@@ -180,18 +244,38 @@ const getUserStats = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
+    // Defensive check: filter out nulls caused by legacy deleted problems
+    const rawSolved = user.problemsSolved || [];
+    const validProblems = rawSolved.filter(Boolean);
+
+    // Self-healing: if dangling nulls were found, clean the user's array in the background
+    if (validProblems.length !== rawSolved.length) {
+      const validIds = validProblems.map(p => p._id);
+      User.updateOne({ _id: userId }, { $set: { problemsSolved: validIds } })
+        .catch(err => console.error("Self-healing cleanup error:", err.message));
+    }
+
     let easySolved = 0;
     let mediumSolved = 0;
     let hardSolved = 0;
 
-    user.problemsSolved.forEach((problem) => {
-      const diff = problem.difficulty?.toLowerCase();
+    validProblems.forEach((problem) => {
+      const diff = problem?.difficulty?.toLowerCase();
       if (diff === "easy") easySolved++;
       else if (diff === "medium") mediumSolved++;
       else if (diff === "hard") hardSolved++;
     });
 
     const totalSolved = easySolved + mediumSolved + hardSolved;
+
+    // Platform difficulty totals for accurate progress calculation
+    const platformCounts = await Problem.aggregate([
+      { $group: { _id: { $toLower: "$difficulty" }, count: { $sum: 1 } } }
+    ]);
+    const totalEasy = platformCounts.find(p => p._id === 'easy')?.count || 0;
+    const totalMedium = platformCounts.find(p => p._id === 'medium')?.count || 0;
+    const totalHard = platformCounts.find(p => p._id === 'hard')?.count || 0;
+    const totalPlatformProblems = totalEasy + totalMedium + totalHard;
 
     const totalSubmissions = await Submission.countDocuments({ userId });
     const acceptedSubmissions = await Submission.countDocuments({
@@ -211,6 +295,11 @@ const getUserStats = async (req, res) => {
       year: "numeric",
     });
 
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+      'Pragma': 'no-cache'
+    });
+
     res.status(200).json({
       message: "User statistics fetched successfully",
       stats: {
@@ -218,6 +307,10 @@ const getUserStats = async (req, res) => {
         mediumSolved,
         hardSolved,
         totalSolved,
+        totalEasy,
+        totalMedium,
+        totalHard,
+        totalPlatformProblems,
         totalSubmissions,
         acceptedSubmissions,
         acceptanceRate,
@@ -236,6 +329,7 @@ module.exports = {
   register,
   login,
   logout,
+  demoLogin,
   adminRegister,
   deleteProfile,
   checkAuth,

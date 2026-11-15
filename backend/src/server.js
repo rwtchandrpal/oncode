@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
+const compression = require("compression");
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const problemRouter = require("./routes/problemRoutes");
 const submitRouter = require("./routes/submitRoute");
 const adminRouter = require('./routes/adminRoutes');
 const chatAIRouter = require('./routes/chatAIRoute');
+const { initDemoCleanupWorker } = require("./utils/cleanupDemoWorker");
 
 
 const app = express();
@@ -19,6 +21,13 @@ const app = express();
 app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true
+}));
+app.use(compression({
+    threshold: 1024,
+    filter: (req, res) => {
+        if (req.headers["x-no-compression"]) return false;
+        return compression.filter(req, res);
+    }
 }));
 app.use(express.json({limit: "5mb"}));
 app.use(cookieParser());
@@ -40,6 +49,7 @@ const initializeConnection = async () => {
   try {
     await Promise.all([client.connect(), connectDB()]);
     console.log("Databases are connected successfully");
+    initDemoCleanupWorker();
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {

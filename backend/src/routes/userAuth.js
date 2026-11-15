@@ -1,5 +1,5 @@
 const express = require('express');
-const {register, login, logout, adminRegister, deleteProfile, checkAuth, getUserStats} =
+const {register, login, logout, demoLogin, adminRegister, deleteProfile, checkAuth, getUserStats} =
 require('../controllers/userAuthenticate');
 const authRouter = express.Router();
 const userMiddleware = require('../middlewares/userMiddleware');
@@ -14,9 +14,18 @@ const authLimiter = rateLimit({
   message: { message: 'Too many authentication attempts, please try again later.' }
 });
 
+const demoLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 5, // Limit each IP to 5 demo sessions per 15 minutes
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { message: 'Too many demo accounts created from this IP. Please try again in 15 minutes.' }
+});
+
 // different user routes 
 authRouter.post("/register", authLimiter, register);
 authRouter.post("/login", authLimiter, login);
+authRouter.post("/demo", demoLimiter, demoLogin);
 authRouter.post("/logout", userMiddleware, logout);
 authRouter.post("/admin/register", adminMiddleware, adminRegister);
 

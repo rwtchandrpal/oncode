@@ -6,8 +6,9 @@ const getDashboardStats = async (req, res) => {
     try {
         const [userStats, problemStats, totalSubmissions, acceptedSubmissions] = await Promise.all([
             
-            // Pipeline A: Group users by role
+            // Pipeline A: Group persistent users by role (exclude temporary demo users)
             User.aggregate([
+                { $match: { isDemo: { $ne: true } } },
                 { $group: { _id: "$role", count: { $sum: 1 } } }
             ]),
         
@@ -16,10 +17,10 @@ const getDashboardStats = async (req, res) => {
                 { $group: { _id: "$difficulty", count: { $sum: 1 } } }
             ]),
 
-            // Pipeline C: Submission metrics
-            Submission.countDocuments(),
+            // Pipeline C: Submission metrics (persistent submissions)
+            Submission.countDocuments({ isDemo: { $ne: true } }),
             
-            Submission.countDocuments({ status: "Accepted" }) 
+            Submission.countDocuments({ isDemo: { $ne: true }, status: "Accepted" }) 
         ]);
 
         // --- Data Formatting & Transformation ---
@@ -75,6 +76,10 @@ const getDashboardStats = async (req, res) => {
             }
         };
 
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+            'Pragma': 'no-cache'
+        });
         return res.status(200).json(dashboardData);
 
     } catch (error) {

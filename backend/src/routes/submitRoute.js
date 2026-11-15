@@ -3,6 +3,7 @@ const submitRouter = express.Router();
 
 const userMiddleware = require('../middlewares/userMiddleware');
 const {submitCode, runCode} = require('../controllers/submissionController');
+const {checkJudge0Health} = require('../utils/judge0Utility');
 const rateLimit = require('express-rate-limit');
 
 const submitLimiter = rateLimit({
@@ -13,6 +14,12 @@ const submitLimiter = rateLimit({
   message: { message: 'Too many submissions. Please wait a few minutes before trying again.' }
 });
 
+// Diagnostic health route
+submitRouter.get("/health", async (req, res) => {
+  const health = await checkJudge0Health();
+  const statusCode = health.isOnline ? 200 : 503;
+  res.status(statusCode).json(health);
+});
 
 submitRouter.post("/submit/:id", userMiddleware, submitLimiter, submitCode);
 submitRouter.post("/run/:id", userMiddleware, submitLimiter, runCode);

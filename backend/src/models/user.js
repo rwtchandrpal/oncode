@@ -26,6 +26,15 @@ const userSchema = new Schema ({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    isDemo: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
+    expiresAt: {
+        type: Date,
+        default: null
+    },
 problemsSolved: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
@@ -42,6 +51,9 @@ problemsSolved: {
     timestamps: true
 })
 
+
+// Sparse TTL index for automatic expiration of temporary demo sessions
+userSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, sparse: true });
 
 // when user delete profile
 userSchema.post('findOneAndDelete', async function(doc){

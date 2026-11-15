@@ -47,7 +47,7 @@ const validateAndTestProblem = async (problemData) => {
         return { isValid: false, error: `Missing driver code snippet for language: ${solution.language}` };
     }
 
-    const fullCodeToTest = matchingSnippet.driverCode.replace("{{USER_CODE}}", solution.code);
+    const fullCodeToTest = matchingSnippet.driverCode.replaceAll("{{USER_CODE}}", () => solution.code);
 
     // Send to Judge0
     const submissionPayload = testCases.map(testCase => ({
@@ -143,12 +143,39 @@ const deleteProblem = async (req, res) => {
             return res.status(400).json({ message: "Invalid ID format." });
         }
 
-        const deleted = await Problem.findByIdAndDelete(id);
-        if (!deleted) {
+        const problem = await Problem.findById(id);
+        if (!problem) {
             return res.status(404).json({ message: "Problem not found." });
         }
 
-        res.status(200).json({ message: "Problem deleted successfully." });
+        let session = null;
+        try {
+            session = await mongoose.startSession();
+            session.startTransaction();
+        } catch {
+            session = null; // Standalone MongoDB fallback
+        }
+
+        try {
+            const opts = session ? { session } : {};
+
+            // Problem.findByIdAndDelete triggers the findOneAndDelete pre-hook with session options,
+            // which cascades the deletion to User.problemsSolved and Submissions atomically.
+            await Problem.findByIdAndDelete(id, opts);
+
+            if (session) {
+                await session.commitTransaction();
+                session.endSession();
+            }
+        } catch (opErr) {
+            if (session) {
+                await session.abortTransaction();
+                session.endSession();
+            }
+            throw opErr;
+        }
+
+        res.status(200).json({ message: "Problem and associated data deleted successfully." });
     } catch (err) {
         res.status(500).json({ message: "Failed to delete problem: " + err.message });
     }
@@ -165,23 +192,146 @@ const getProblem = async (req, res) => {
             return res.status(400).json({ message: "Invalid ID format" });
         }
 
-        
-        const fetchedProblem = await Problem.findById(id).select('-problemCreator -createdAt -updatedAt');
+        const fetchedProblem = await Problem.findById(id)
+            .select('_id number title difficulty topics description constraints examples visibleTestCase codeSnippets.language codeSnippets.userSnippet')
+            .lean();
 
         if (!fetchedProblem) {
             return res.status(404).json({ message: "Problem not found" });
         }
 
+        res.set({
+            'Cache-Control': 'public, max-age=120, stale-while-revalidate=300',
+            'Vary': 'Accept-Encoding'
+        });
         res.status(200).json({ problem: fetchedProblem });
     } catch (err) {
         res.status(500).json({ message: "Failed to fetch problem: " + err.message });
     }
 };
 
+const getProblemSolution = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const userRole = req.user.role;
+
+    try {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid problem ID format." });
+        }
+
+        const problem = await Problem.findById(id).select('referenceSolutions title').lean();
+        if (!problem) {
+            return res.status(404).json({ message: "Problem not found." });
+        }
+
+        // Admins always have access; standard users must have solved the problem
+        let isAuthorized = userRole === 'admin';
+        if (!isAuthorized) {
+            const hasSolved = await User.exists({ _id: userId, problemsSolved: id });
+            isAuthorized = !!hasSolved;
+        }
+
+        if (!isAuthorized) {
+            return res.status(403).json({
+                isLocked: true,
+                message: "You must solve this problem before viewing the official solution."
+            });
+        }
+
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+            'Pragma': 'no-cache'
+        });
+        return res.status(200).json({
+            isLocked: false,
+            referenceSolutions: problem.referenceSolutions || []
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch solution: " + err.message });
+    }
+};
+
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const getAllProblems = async (req, res) => {
     try {
-        const allProblems = await Problem.find({}).select('_id number title difficulty topics');
-        res.status(200).json({ allProblems });
+        const query = {};
+
+        // Keyword / Title Search (Regex escaped against ReDoS)
+        if (req.query.search && req.query.search.trim()) {
+            const sanitized = escapeRegex(req.query.search.trim());
+            query.title = { $regex: sanitized, $options: 'i' };
+        }
+
+        // Difficulty Filter
+        if (req.query.difficulty && req.query.difficulty.toLowerCase() !== 'all') {
+            query.difficulty = new RegExp(`^${escapeRegex(req.query.difficulty)}$`, 'i');
+        }
+
+        // Topic Filter
+        if (req.query.topic && req.query.topic.toLowerCase() !== 'all') {
+            query.topics = { $in: [new RegExp(`^${escapeRegex(req.query.topic)}$`, 'i')] };
+        }
+
+        // Solved Status Filter (requires user)
+        if (req.query.status && req.query.status.toLowerCase() !== 'all' && req.user) {
+            const userDoc = await User.findById(req.user._id).select('problemsSolved').lean();
+            const solvedIds = (userDoc?.problemsSolved || []).filter(Boolean);
+            if (req.query.status.toLowerCase() === 'solved') {
+                query._id = { $in: solvedIds };
+            } else if (req.query.status.toLowerCase() === 'unsolved') {
+                query._id = { $nin: solvedIds };
+            }
+        }
+
+        // Pagination setup with backwards compatibility for unbounded requests
+        const isUnbounded = req.query.limit === 'all' || (!req.query.page && !req.query.limit);
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = isUnbounded ? 1000 : Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+        const skip = isUnbounded ? 0 : (page - 1) * limit;
+
+        const findQuery = Problem.find(query)
+            .select('_id number title difficulty topics')
+            .sort({ number: 1 });
+
+        if (!isUnbounded) {
+            findQuery.skip(skip).limit(limit);
+        }
+
+        const [allProblems, totalProblems, rawTopics] = await Promise.all([
+            findQuery.lean(),
+            Problem.countDocuments(query),
+            Problem.distinct('topics')
+        ]);
+
+        const totalPages = isUnbounded ? 1 : Math.ceil(totalProblems / limit) || 1;
+
+        // Distinct, normalized topics for filter dropdowns
+        const uniqueTopicsMap = new Map();
+        (rawTopics || []).forEach(t => {
+            if (typeof t === 'string' && t.trim()) {
+                const trimmed = t.trim();
+                const lower = trimmed.toLowerCase();
+                if (!uniqueTopicsMap.has(lower)) {
+                    uniqueTopicsMap.set(lower, trimmed.charAt(0).toUpperCase() + trimmed.slice(1));
+                }
+            }
+        });
+        const allTopics = Array.from(uniqueTopicsMap.values()).sort((a, b) => a.localeCompare(b));
+
+        res.set({
+            'Cache-Control': req.user ? 'private, no-cache' : 'public, max-age=30, stale-while-revalidate=60',
+            'Vary': 'Accept-Encoding, Authorization'
+        });
+        res.status(200).json({
+            allProblems,
+            totalProblems,
+            totalPages,
+            currentPage: isUnbounded ? 1 : page,
+            limit: isUnbounded ? totalProblems : limit,
+            allTopics
+        });
     } catch (err) {
         res.status(500).json({ message: "Failed to fetch problems: " + err.message });
     }
@@ -194,10 +344,17 @@ const getSolvedProblems = async (req, res) => {
         const user = await User.findById(userId).populate({
             path: "problemsSolved",
             select: "_id number title difficulty topics"
-        });
+        }).lean();
 
+        // Filter out null/dangling references from deleted problems
+        const validSolved = (user?.problemsSolved || []).filter(Boolean);
+
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+            'Pragma': 'no-cache'
+        });
         res.status(200).json({
-            solvedProblems: user.problemsSolved
+            solvedProblems: validSolved
         });
 
     } catch (err) {
@@ -210,8 +367,15 @@ const getAllSubmissions = async (req, res) => {
         const userId = req.user._id;
         const problemId = req.params.id;
 
-        const allSubmissions = await Submission.find({ userId, problemId });
+        const allSubmissions = await Submission.find({ userId, problemId })
+            .sort({ createdAt: -1 })
+            .select('_id status testCasesPassed testCasesTotal runtime memory language createdAt errorMessage code')
+            .lean();
 
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+            'Pragma': 'no-cache'
+        });
         res.status(200).json({
             submissions: allSubmissions
         });
@@ -220,4 +384,4 @@ const getAllSubmissions = async (req, res) => {
     }
 };
 
-module.exports = { createProblem, updateProblem, deleteProblem, getAllProblems, getSolvedProblems, getProblem, getAllSubmissions };
+module.exports = { createProblem, updateProblem, deleteProblem, getAllProblems, getSolvedProblems, getProblem, getProblemSolution, getAllSubmissions };

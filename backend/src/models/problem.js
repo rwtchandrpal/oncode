@@ -80,5 +80,20 @@ problemSchema.pre('save', async function() {
     }
 });
 
+// Cascade cleanup when a problem is deleted
+problemSchema.pre('findOneAndDelete', async function() {
+    const session = this.getOptions()?.session;
+    const sessionOpts = session ? { session } : {};
+    const docToDelete = await this.model.findOne(this.getQuery(), null, sessionOpts);
+    if (docToDelete) {
+        await mongoose.model('User').updateMany(
+            { problemsSolved: docToDelete._id },
+            { $pull: { problemsSolved: docToDelete._id } },
+            sessionOpts
+        );
+        await mongoose.model('Submission').deleteMany({ problemId: docToDelete._id }, sessionOpts);
+    }
+});
+
 const Problem = mongoose.model('Problem', problemSchema);
 module.exports = Problem;

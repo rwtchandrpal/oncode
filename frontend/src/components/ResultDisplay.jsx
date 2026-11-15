@@ -95,7 +95,7 @@ const SubmitResult = ({ result }) => {
 
       {/* Performance Metrics (Only show if code compiled/ran successfully) */}
       {!result.errorMessage && (
-        <div className="flex gap-6 mb-8 ml-2">
+        <div className="flex flex-wrap gap-4 mb-8 ml-2">
           <div className="flex items-center gap-3 bg-base-100 border border-base-content/10 px-5 py-3 rounded-xl">
             <Clock className="w-5 h-5 text-info" />
             <div>

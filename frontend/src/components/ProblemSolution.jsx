@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Check, Copy, Lightbulb } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, Copy, Lightbulb, Lock } from 'lucide-react';
+import axiosClient from '../utils/axiosClient';
 
 const SolutionBlock = ({ solution }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -11,7 +12,7 @@ const SolutionBlock = ({ solution }) => {
       await navigator.clipboard.writeText(code);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 5000);
-    } catch (err) {
+    } catch {
       // copy failed
     }
   };
@@ -26,6 +27,7 @@ const SolutionBlock = ({ solution }) => {
         <button 
           onClick={handleCopy}
           className="flex items-center gap-1.5 text-xs font-medium text-base-content/60 hover:text-base-content transition-colors p-1"
+          aria-label="Copy solution code"
         >
           {isCopied ? (
             <><Check className="w-3.5 h-3.5 text-success" /> Copied!</>
@@ -44,12 +46,77 @@ const SolutionBlock = ({ solution }) => {
   );
 };
 
-const ProblemSolution = ({ problem }) => {
-  if (!problem || !problem.referenceSolutions || problem.referenceSolutions.length === 0) {
+const ProblemSolution = ({ problemId }) => {
+  const [solutions, setSolutions] = useState([]);
+  const [isLocked, setIsLocked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchSolution = async () => {
+      try {
+        const { data } = await axiosClient.get(`/problem/${problemId}/solution`);
+        if (isMounted) {
+          setSolutions(data.referenceSolutions || []);
+          setIsLocked(false);
+        }
+      } catch (err) {
+        if (isMounted) {
+          if (err.response?.status === 403) {
+            setIsLocked(true);
+            setMessage(err.response?.data?.message || "Solve this problem to unlock the official solution.");
+          } else {
+            setMessage("Failed to load reference solutions.");
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    if (problemId) {
+      fetchSolution();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [problemId]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-48 items-center justify-center">
+        <span className="loading loading-spinner text-primary loading-md"></span>
+      </div>
+    );
+  }
+
+  if (isLocked) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center px-4">
+        <div className="bg-warning/10 p-4 rounded-full text-warning mb-4">
+          <Lock className="w-8 h-8" />
+        </div>
+        <h3 className="text-lg font-bold text-base-content mb-1">Official Solution Locked</h3>
+        <p className="text-sm text-base-content/60 max-w-sm mb-4">
+          {message || "Submit an Accepted solution to unlock the official approach!"}
+        </p>
+        <span className="badge badge-warning badge-outline text-xs">
+          Solve Problem to Unlock
+        </span>
+      </div>
+    );
+  }
+
+  if (!solutions || solutions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-base-content/50">
         <Lightbulb className="w-12 h-12 mb-4 opacity-20" />
-        <p>No Solution available for this problem yet.</p>
+        <p>No solution available for this problem yet.</p>
       </div>
     );
   }
@@ -66,10 +133,9 @@ const ProblemSolution = ({ problem }) => {
         </p>
       </div>
 
-      {problem.referenceSolutions.map((sol, index) => (
+      {solutions.map((sol, index) => (
         <SolutionBlock key={index} solution={sol} />
       ))}
-      
     </div>
   );
 };

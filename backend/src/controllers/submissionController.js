@@ -1,7 +1,29 @@
 const Problem = require('../models/problem');
 const User = require('../models/user');
 const Submission = require('../models/submission');
+const client = require('../config/redis');
 const { getLanguageId, getstatusById, createSubmission, getSubmission } = require('../utils/judge0Utility'); 
+
+const checkDemoExecutionLimit = async (user) => {
+    if (!user || !user.isDemo) return { allowed: true };
+    try {
+        const key = `demo_runs:${user._id}`;
+        const count = await client.incr(key);
+        if (count === 1) {
+            await client.expire(key, 24 * 60 * 60);
+        }
+        if (count > 20) {
+            return {
+                allowed: false,
+                message: "Demo session code execution limit reached (20/20). Please create a free account to continue practicing."
+            };
+        }
+        return { allowed: true, remaining: 20 - count };
+    } catch (err) {
+        console.warn("Redis error checking demo execution limit:", err.message);
+        return { allowed: true };
+    }
+}; 
 
 const encodeBase64 = (str) => {
     if (!str) return "";
@@ -33,6 +55,14 @@ const submitCode = async (req, res) => {
             return res.status(400).json({ message: "Missing required field." });
         }
 
+        // Enforce demo user execution limits
+        if (req.user.isDemo) {
+            const limitCheck = await checkDemoExecutionLimit(req.user);
+            if (!limitCheck.allowed) {
+                return res.status(429).json({ message: limitCheck.message });
+            }
+        }
+
         const problem = await Problem.findById(problemId);
         if(!problem) {
             return res.status(404).json({ message: "Problem not found." });
@@ -50,13 +80,15 @@ const submitCode = async (req, res) => {
             userId, problemId, code, language,
             testCasesPassed: 0,
             status: 'Pending',
-            testCasesTotal: testCases.length
+            testCasesTotal: testCases.length,
+            isDemo: req.user.isDemo || false,
+            expiresAt: req.user.isDemo ? req.user.expiresAt : null
         });
 
         const langId = getLanguageId(language.toLowerCase());
         
 
-        const fullCodeToRun = snippet.driverCode.replace("{{USER_CODE}}", code);
+        const fullCodeToRun = snippet.driverCode.replaceAll("{{USER_CODE}}", () => code);
         
         const compilerOptions = langId === 54 ? "-Wall -Werror=return-type" : "";
         
@@ -140,6 +172,14 @@ const runCode = async (req, res) => {
             return res.status(400).json({ message: "Some fields are missing" });
         }
 
+        // Enforce demo user execution limits
+        if (req.user.isDemo) {
+            const limitCheck = await checkDemoExecutionLimit(req.user);
+            if (!limitCheck.allowed) {
+                return res.status(429).json({ message: limitCheck.message });
+            }
+        }
+
         const problem = await Problem.findById(problemId);
         if(!problem) {
             return res.status(404).json({ message: "Problem not found." });
@@ -154,7 +194,7 @@ const runCode = async (req, res) => {
         const testCase = problem.visibleTestCase;
         const langId = getLanguageId(language.toLowerCase());
         
-        const fullCodeToRun = snippet.driverCode.replace("{{USER_CODE}}", code);
+        const fullCodeToRun = snippet.driverCode.replaceAll("{{USER_CODE}}", () => code);
         
         const compilerOptions = langId === 54 ? "-Wall -Werror=return-type" : "";
 

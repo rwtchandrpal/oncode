@@ -63,6 +63,7 @@ const validate = (data) => {
 
   if (!isStrong) {
     const err = new Error("Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character.");
+    err.statusCode = 400;
     throw err;
   }
 

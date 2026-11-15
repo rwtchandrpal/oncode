@@ -18,4 +18,18 @@ axiosClient.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 
+// Response interceptor to handle session expiration / 401s
+axiosClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            const token = localStorage.getItem('token');
+            if (token) {
+                localStorage.removeItem('token');
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default axiosClient ;

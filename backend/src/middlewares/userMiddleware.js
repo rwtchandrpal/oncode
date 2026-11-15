@@ -29,11 +29,18 @@ const userMiddleware = async (req, res, next) => {
         .json({ message: "Session expired. Please log in again." });
     }
 
-    const user = await User.findById(_id);
+    const user = await User.findById(_id).select('_id email role firstName lastName isDemo expiresAt');
     if (!user) {
       return res
         .status(401)
         .json({ message: "User account no longer exists." });
+    }
+
+    // Check if demo session has expired
+    if (user.isDemo && user.expiresAt && new Date() > user.expiresAt) {
+      return res
+        .status(401)
+        .json({ message: "Demo session expired. Please start a new demo session or sign up." });
     }
 
     req.user = user;

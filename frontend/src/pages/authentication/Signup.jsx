@@ -1,41 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router'; 
 import { registerUser, clearError } from '../../features/auth/authSlice';
 import { Eye, EyeOff } from 'lucide-react';
-
-//Define the Zod Validation Schema
-const signupSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name is too long"),
-  lastName: z
-    .string()
-    .min(1, "Last name is required")
-    .max(50, "Last name is too long"),  
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Invalid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character"),
-  confirmPassword: z
-    .string()
-    .min(1, "Please confirm your password")
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"], 
-});
-
+import { signupSchema } from '../../validations/authSchemas';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -70,11 +40,12 @@ const SignUp = () => {
   
   // 3. Handle Form Submission
   const onSubmit = async (data) => {
-    const { confirmPassword, ...userData } = data;
+    const userData = { ...data };
+    delete userData.confirmPassword;
     try {
       await dispatch(registerUser(userData)).unwrap();
       navigate('/', { replace: true });
-    } catch (err) {
+    } catch {
       // Registration failed
     }
   };
@@ -167,6 +138,9 @@ const SignUp = () => {
             {errors.password && (
               <p className="text-red-500 text-xs mt-1 ml-1">{errors.password.message}</p>
             )}
+            <p className="text-[11px] text-base-content/50 mt-1 ml-1">
+              Must be 8+ characters with uppercase, lowercase, number, and special character.
+            </p>
           </div>
 
           {/* Confirm Password */}

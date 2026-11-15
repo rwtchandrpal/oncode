@@ -26,7 +26,7 @@ const adminMiddleware = async (req, res, next) => {
         .json({ message: "Session expired. Please log in again." });
     }
 
-    const user = await User.findById(_id);
+    const user = await User.findById(_id).select('_id email role firstName lastName');
     if (!user) {
       return res
         .status(401)

@@ -4,6 +4,7 @@ import {
   Menu, 
   LayoutDashboard, 
   List, 
+  PlusCircle,
   Users, 
   LogOut 
 } from 'lucide-react'; // icon imports
@@ -90,6 +91,11 @@ const AdminLayout = () => {
               <NavLink to="/admin/problems" className={navLinkStyle} onClick={closeMobileMenu}>
                 <List className="w-5 h-5" />
                 Manage Problems
+              </NavLink>
+
+              <NavLink to="/admin/create-problem" className={navLinkStyle} onClick={closeMobileMenu}>
+                <PlusCircle className="w-5 h-5" />
+                Create Problem
               </NavLink>
 
               <NavLink to="/admin/users" className={navLinkStyle} onClick={closeMobileMenu}>

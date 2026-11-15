@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { UserPlus, Shield, AlertCircle, CheckCircle } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
-
-const userRegistrationSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-  role: z.enum(['user', 'admin'], {
-    required_error: 'Please select a role',
-  })
-});
+import { adminUserRegistrationSchema } from '../../validations/authSchemas';
 
 const UserManagement = () => {
   const [submitError, setSubmitError] = useState('');
@@ -25,7 +15,7 @@ const UserManagement = () => {
     reset,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: zodResolver(userRegistrationSchema),
+    resolver: zodResolver(adminUserRegistrationSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -40,7 +30,7 @@ const UserManagement = () => {
     setSuccessMessage('');
 
     try {
-      const response = await axiosClient.post('/user/admin/register', data); 
+      await axiosClient.post('/user/admin/register', data); 
       
       setSuccessMessage(`${data.firstName} ${data.lastName} has been successfully registered as an ${data.role}.`);
       reset();
@@ -134,6 +124,9 @@ const UserManagement = () => {
               {...register("password")} 
             />
             {errors.password && <span className="text-error text-xs mt-1">{errors.password.message}</span>}
+            <p className="text-[11px] text-base-content/50 mt-1">
+              Must be 8+ characters with uppercase, lowercase, number, and special character.
+            </p>
           </div>
 
           {/* Role Selection */}

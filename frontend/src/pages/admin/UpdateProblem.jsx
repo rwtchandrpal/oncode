@@ -15,7 +15,6 @@ const UpdateProblem = () => {
   // 1. Initialize React Hook Form
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router'; 
-import { LogOut, Trash2, Shield, Calendar, Mail } from 'lucide-react';
+import { LogOut, Trash2, Shield, Calendar, Mail, Zap } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
 import { logoutUser } from '../features/auth/authSlice'; 
 import GlobalNavbar from '../components/GlobalNavbar'; 
@@ -17,12 +17,19 @@ const UserProfile = () => {
     mediumSolved: 0,
     hardSolved: 0,
     totalSolved: 0,
+    totalEasy: 0,
+    totalMedium: 0,
+    totalHard: 0,
+    totalPlatformProblems: 0,
     totalSubmissions: 0,
     acceptedSubmissions: 0,
     acceptanceRate: 0, 
     joinDate: 'Loading...' 
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   // Fetch calculated statistics
   useEffect(() => {
@@ -45,26 +52,26 @@ const UserProfile = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate('/login', { replace: true });
     } catch (err) {
       console.error("Logout failed:", err);
+    } finally {
+      navigate('/', { replace: true });
     }
   };
 
-  const handleDeleteProfile = async () => {
-    const confirmDelete = window.confirm(
-      "Are you absolutely sure you want to delete your account? This action cannot be undone and you will lose all your submissions."
-    );
-    
-    if (confirmDelete) {
-      try {
-        await axiosClient.delete('/user/profile');
-        await dispatch(logoutUser()).unwrap(); 
-        navigate('/signup', { replace: true });
-      } catch (err) {
-        console.error("Failed to delete account:", err);
-        alert("Failed to delete account. Please try again.");
-      }
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    setDeleteError('');
+    try {
+      await axiosClient.delete('/user/profile');
+      setIsDeleteModalOpen(false);
+      await dispatch(logoutUser()).unwrap(); 
+      navigate('/', { replace: true });
+    } catch (err) {
+      console.error("Failed to delete account:", err);
+      setDeleteError(err.response?.data?.message || "Failed to delete account. Please try again.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -95,7 +102,11 @@ const UserProfile = () => {
                 <div>
                   <h2 className="text-xl font-bold text-base-content">{user.firstName} {user.lastName}</h2>
                   <div className="flex items-center gap-2 mt-1">
-                    {user.role === 'admin' ? (
+                    {user.isDemo ? (
+                      <span className="badge badge-warning badge-sm gap-1 bg-warning/10 text-warning border-warning/20 font-medium">
+                        <Zap className="w-3 h-3" /> Demo Session (24h)
+                      </span>
+                    ) : user.role === 'admin' ? (
                       <span className="badge badge-error badge-sm gap-1 bg-error/10 text-error border-error/20 font-medium">
                         <Shield className="w-3 h-3" /> Admin
                       </span>
@@ -131,15 +142,28 @@ const UserProfile = () => {
                 Log Out
               </button>
 
-              <div className="divider border-base-content/10 my-2"></div>
+              {user.isDemo ? (
+                <div className="bg-warning/10 border border-warning/20 text-warning text-xs p-3 rounded-xl space-y-1">
+                  <div className="font-semibold flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5" /> Temporary Guest Session
+                  </div>
+                  <p className="text-warning/80">
+                    This account and its submissions expire automatically after 24 hours. Sign up for a permanent account to keep your stats forever.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="divider border-base-content/10 my-2"></div>
 
-              <button 
-                onClick={handleDeleteProfile}
-                className="btn w-full bg-error/10 hover:bg-error/20 text-error border-error/20 hover:border-error/50 flex justify-start gap-3"
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete Account
-              </button>
+                  <button 
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    className="btn w-full bg-error/10 hover:bg-error/20 text-error border-error/20 hover:border-error/50 flex justify-start gap-3"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete Account
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
@@ -150,10 +174,15 @@ const UserProfile = () => {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h3 className="text-xl font-bold text-base-content">Problems Solved</h3>
-                  <p className="text-base-content/70 text-sm mt-1">Your progress across different difficulties</p>
+                  <p className="text-base-content/70 text-sm mt-1">Your progress across platform challenges</p>
                 </div>
-                <div className="text-4xl font-black text-base-content">
-                  {stats.totalSolved}
+                <div className="text-right">
+                  <div className="text-3xl font-black text-base-content">
+                    {stats.totalSolved}{" "}
+                    <span className="text-lg text-base-content/50 font-normal">
+                      / {stats.totalPlatformProblems}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -168,25 +197,55 @@ const UserProfile = () => {
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="font-medium text-success">Easy</span>
-                      <span className="text-base-content/70 font-medium">{stats.easySolved}</span>
+                      <span className="text-base-content/70 font-medium">
+                        {stats.easySolved} / {stats.totalEasy}{" "}
+                        <span className="text-xs text-base-content/50">
+                          ({stats.totalEasy > 0 ? Math.round((stats.easySolved / stats.totalEasy) * 100) : 0}%)
+                        </span>
+                      </span>
                     </div>
-                    <progress className="progress progress-success w-full bg-base-content/20" value={stats.easySolved} max={stats.totalSolved || 1}></progress>
+                    <progress
+                      className="progress progress-success w-full bg-base-content/20"
+                      value={stats.easySolved}
+                      max={stats.totalEasy > 0 ? stats.totalEasy : 1}
+                      aria-label="Easy problems solved progress"
+                    ></progress>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="font-medium text-warning">Medium</span>
-                      <span className="text-base-content/70 font-medium">{stats.mediumSolved}</span>
+                      <span className="text-base-content/70 font-medium">
+                        {stats.mediumSolved} / {stats.totalMedium}{" "}
+                        <span className="text-xs text-base-content/50">
+                          ({stats.totalMedium > 0 ? Math.round((stats.mediumSolved / stats.totalMedium) * 100) : 0}%)
+                        </span>
+                      </span>
                     </div>
-                    <progress className="progress progress-warning w-full bg-base-content/20" value={stats.mediumSolved} max={stats.totalSolved || 1}></progress>
+                    <progress
+                      className="progress progress-warning w-full bg-base-content/20"
+                      value={stats.mediumSolved}
+                      max={stats.totalMedium > 0 ? stats.totalMedium : 1}
+                      aria-label="Medium problems solved progress"
+                    ></progress>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="font-medium text-error">Hard</span>
-                      <span className="text-base-content/70 font-medium">{stats.hardSolved}</span>
+                      <span className="text-base-content/70 font-medium">
+                        {stats.hardSolved} / {stats.totalHard}{" "}
+                        <span className="text-xs text-base-content/50">
+                          ({stats.totalHard > 0 ? Math.round((stats.hardSolved / stats.totalHard) * 100) : 0}%)
+                        </span>
+                      </span>
                     </div>
-                    <progress className="progress progress-error w-full bg-base-content/20" value={stats.hardSolved} max={stats.totalSolved || 1}></progress>
+                    <progress
+                      className="progress progress-error w-full bg-base-content/20"
+                      value={stats.hardSolved}
+                      max={stats.totalHard > 0 ? stats.totalHard : 1}
+                      aria-label="Hard problems solved progress"
+                    ></progress>
                   </div>
                 </div>
               )}
@@ -217,6 +276,51 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
+
+      {/* Accessible Delete Account Modal */}
+      {isDeleteModalOpen && (
+        <dialog id="delete_modal" className="modal modal-open bg-black/60 backdrop-blur-xs">
+          <div className="modal-box bg-base-200 border border-base-content/10 shadow-2xl max-w-md">
+            <h3 className="font-bold text-lg text-base-content flex items-center gap-2">
+              <Trash2 className="w-5 h-5 text-error" /> Delete Account
+            </h3>
+            <p className="py-4 text-sm text-base-content/80 leading-relaxed">
+              Are you absolutely sure you want to delete your account? This action is <strong className="text-error">permanent and irreversible</strong>. All your solved problems, submissions, and account statistics will be permanently removed.
+            </p>
+            {deleteError && (
+              <div className="alert alert-error text-xs mb-4">
+                <span>{deleteError}</span>
+              </div>
+            )}
+            <div className="modal-action flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                  setDeleteError('');
+                }}
+                disabled={isDeleting}
+                className="btn btn-sm btn-ghost"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className="btn btn-sm btn-error text-error-content gap-2"
+              >
+                {isDeleting ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+                Permanently Delete
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 };

@@ -15,7 +15,7 @@ const ProblemSubmissions = ({ problemId }) => {
 
         setSubmissions(data.submissions || []);
         setIsLoading(false);  
-      } catch (err) {
+      } catch {
         setError("Failed to load submissions.");
         setIsLoading(false);
       }

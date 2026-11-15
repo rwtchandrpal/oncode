@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router'; 
-import { Edit, Trash2, AlertCircle } from 'lucide-react';
+import { Edit, Trash2, AlertCircle, Plus } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
 
 const ManageProblemsTable = () => {
   const [problems, setProblems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [problemToDelete, setProblemToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch all problems when the component mounts
   useEffect(() => {
     const fetchProblems = async () => {
       try {
         const { data } = await axiosClient.get('/problem/'); 
-        setProblems(data.allProblems); 
+        setProblems(data.allProblems || []); 
         setIsLoading(false);
       } catch (err) {
         console.error("Error fetching problems:", err);
@@ -25,19 +27,19 @@ const ManageProblemsTable = () => {
     fetchProblems();
   }, []);
 
-  // Handle Problem Deletion
-  const handleDelete = async (problemId, problemTitle) => {
-    const isConfirmed = window.confirm(`Are you sure you want to delete "${problemTitle}"? This action cannot be undone.`);
-    
-    if (isConfirmed) {
-      try {
-        await axiosClient.delete(`/problem/${problemId}`);
-        //remove the problem from the UI
-        setProblems(problems.filter(p => p._id !== problemId));
-      } catch (err) {
-        console.error("Error deleting problem:", err);
-        alert("Failed to delete the problem. Please check your connection or server logs.");
-      }
+  // Handle Problem Deletion via Modal
+  const handleConfirmDelete = async () => {
+    if (!problemToDelete) return;
+    setIsDeleting(true);
+    try {
+      await axiosClient.delete(`/problem/${problemToDelete.id}`);
+      setProblems(prev => prev.filter(p => p._id !== problemToDelete.id));
+      setProblemToDelete(null);
+    } catch (err) {
+      console.error("Error deleting problem:", err);
+      setError("Failed to delete the problem. Please check your connection or server logs.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -63,9 +65,17 @@ const ManageProblemsTable = () => {
     <div className="space-y-6 text-base-content">
       
       {/* Header Section */}
-      <div>
-        <h1 className="text-2xl font-bold text-base-content">Manage Problems</h1>
-        <p className="text-base-content/60 text-sm mt-1">View, update, or remove coding challenges.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-base-content">Manage Problems</h1>
+          <p className="text-base-content/60 text-sm mt-1">View, update, or remove coding challenges.</p>
+        </div>
+        <Link
+          to="/admin/create-problem"
+          className="btn btn-primary btn-sm gap-2 self-start sm:self-auto shadow-sm"
+        >
+          <Plus className="w-4 h-4" /> Create Problem
+        </Link>
       </div>
 
       {error && (
@@ -129,15 +139,17 @@ const ManageProblemsTable = () => {
                           to={`/admin/update-problem/${problem._id}`}
                           className="btn btn-sm btn-ghost btn-square text-primary hover:bg-primary/10 hover:text-primary"
                           title="Update Problem"
+                          aria-label="Update Problem"
                         >
                           <Edit className="w-4 h-4" />
                         </Link>
                         
                         {/* Delete Button */}
                         <button 
-                          onClick={() => handleDelete(problem._id, problem.title)}
+                          onClick={() => setProblemToDelete({ id: problem._id, title: problem.title })}
                           className="btn btn-sm btn-ghost btn-square text-error hover:bg-error/10 hover:text-error"
                           title="Delete Problem"
+                          aria-label="Delete Problem"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -156,6 +168,43 @@ const ManageProblemsTable = () => {
           </table>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {problemToDelete && (
+        <dialog id="delete_problem_modal" className="modal modal-open bg-black/60 backdrop-blur-xs">
+          <div className="modal-box bg-base-200 border border-base-content/10 shadow-2xl max-w-md">
+            <h3 className="font-bold text-lg text-base-content flex items-center gap-2">
+              <Trash2 className="w-5 h-5 text-error" /> Delete Problem
+            </h3>
+            <p className="py-4 text-sm text-base-content/80 leading-relaxed">
+              Are you sure you want to delete <strong className="text-base-content font-semibold">"{problemToDelete.title}"</strong>? This action cannot be undone and will permanently remove all associated user submissions.
+            </p>
+            <div className="modal-action flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setProblemToDelete(null)}
+                disabled={isDeleting}
+                className="btn btn-sm btn-ghost"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className="btn btn-sm btn-error text-error-content gap-2"
+              >
+                {isDeleting ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+                Delete Problem
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 };

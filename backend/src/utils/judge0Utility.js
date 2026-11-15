@@ -3,6 +3,30 @@ const axios = require('axios');
 // Replace this with your actual AWS Elastic IP
 
 const JUDGE0_BASE_URL = process.env.JUDGE0_BASE_URL;
+const JUDGE0_TIMEOUT_MS = parseInt(process.env.JUDGE0_TIMEOUT_MS) || 10000;
+
+// Health Check Utility
+const checkJudge0Health = async () => {
+  try {
+    const response = await axios.get(`${JUDGE0_BASE_URL}/about`, {
+      headers: {
+        'X-Auth-Token': process.env.JUDGE0_AUTH_TOKEN
+      },
+      timeout: 4000
+    });
+    return {
+      isOnline: true,
+      version: response.data?.version || 'connected',
+      status: response.status
+    };
+  } catch (error) {
+    return {
+      isOnline: false,
+      error: error.message,
+      code: error.code || 'UNREACHABLE'
+    };
+  }
+};
 
 // utility function for problem route
 // Batched submission to judge0
@@ -19,14 +43,17 @@ const createSubmission = async (submissionPayload) => {
     },
     data: {
       submissions: submissionPayload
-    }
+    },
+    timeout: JUDGE0_TIMEOUT_MS
   };
 
   try {
     const response = await axios.request(options);
     return response.data;
   } catch (error) {
-    throw new Error("Failed to submit Batch to judge0: " + error.message);
+    const serverMessage = error.response?.data?.message || error.response?.data?.error;
+    const detail = serverMessage ? `: ${JSON.stringify(serverMessage)}` : ` (${error.message})`;
+    throw new Error("Failed to submit Batch to judge0" + detail);
   }
 }
 
@@ -49,7 +76,8 @@ const getSubmission = async (resultTokens) => {
     headers: {
       'Content-Type': 'application/json',
       'X-Auth-Token': process.env.JUDGE0_AUTH_TOKEN 
-    }
+    },
+    timeout: JUDGE0_TIMEOUT_MS
   };
 
   async function fetchData() {
@@ -57,7 +85,7 @@ const getSubmission = async (resultTokens) => {
       const response = await axios.request(options);
       return response.data;
     } catch (error) {
-      throw new Error("Failed to submit Tokens to judge0: " + error.response?.data);
+      throw new Error("Failed to submit Tokens to judge0: " + (error.response?.data?.error || error.message));
     }
   }
 
@@ -117,4 +145,4 @@ const getstatusById = (id) => {
   return statusIdMap[id] || "Unknown Execution Status";
 }
 
-module.exports = { createSubmission, getSubmission, getLanguageId, getstatusById };
+module.exports = { createSubmission, getSubmission, getLanguageId, getstatusById, checkJudge0Health };

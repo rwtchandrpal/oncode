@@ -37,8 +37,8 @@ const Login = () => {
     try {
       await dispatch(loginUser(data)).unwrap();
       navigate('/', { replace: true });
-    } catch (err) {
-      
+    } catch {
+      // Login failed, handled by Redux error state
     }
   };
 

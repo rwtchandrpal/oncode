@@ -50,11 +50,23 @@ const submissionSchema = new Schema(
             expectedOutput: { type: String },
             actualOutput: { type: String }
         },
+        isDemo: {
+            type: Boolean,
+            default: false,
+            index: true
+        },
+        expiresAt: {
+            type: Date,
+            default: null
+        },
     },
      {timestamps: true}
 )
 
-submissionSchema.index({userId:1, problemId:1});
+submissionSchema.index({ status: 1 });
+submissionSchema.index({ userId: 1, status: 1 });
+submissionSchema.index({ userId: 1, problemId: 1, createdAt: -1 });
+submissionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, sparse: true });
 const Submission = mongoose.model('Submission', submissionSchema);
 
 module.exports = Submission ;

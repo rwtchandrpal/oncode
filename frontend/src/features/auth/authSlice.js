@@ -43,9 +43,28 @@ export const loginUser = createAsyncThunk(
     }
 );
 
+export const loginDemoUser = createAsyncThunk(
+    'auth/demo',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axiosClient.post('/user/demo');
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+            }
+            return response.data.user;
+        } catch (error) {
+            return handleAxiosError(error, rejectWithValue);
+        }
+    }
+);
+
 export const checkAuth = createAsyncThunk(
     'auth/check',
     async (_, { rejectWithValue }) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return rejectWithValue('No authentication token found');
+        }
         try {
             const { data } = await axiosClient.get('/user/check');
             return data.user;
@@ -75,12 +94,33 @@ const authSlice = createSlice({
     initialState: {
         user: null,
         isAuthenticated: false,
-        isCheckingAuth: true, 
+        isCheckingAuth: !!localStorage.getItem('token'), 
         isLoading: false,     
-        error: null
+        error: null,
+        authModal: {
+            isOpen: false,
+            mode: 'login', // 'login' | 'signup' | 'demo'
+            redirectPath: null
+        }
     },
     reducers: {
         clearError: (state) => {
+            state.error = null;
+        },
+        openAuthModal: (state, action) => {
+            state.authModal.isOpen = true;
+            state.authModal.mode = action.payload?.mode || 'login';
+            state.authModal.redirectPath = action.payload?.redirectPath || null;
+            state.error = null;
+        },
+        closeAuthModal: (state) => {
+            state.authModal.isOpen = false;
+            state.authModal.mode = 'login';
+            state.authModal.redirectPath = null;
+            state.error = null;
+        },
+        setAuthModalMode: (state, action) => {
+            state.authModal.mode = action.payload;
             state.error = null;
         }
     },
@@ -95,6 +135,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.user = action.payload;
                 state.isAuthenticated = true; 
+                state.authModal.isOpen = false;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -110,10 +151,29 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.isAuthenticated = !!action.payload;
                 state.user = action.payload;
+                state.authModal.isOpen = false;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload || 'Login failed';
+                state.isAuthenticated = false;
+                state.user = null;
+            })
+
+            // --- Demo Login ---
+            .addCase(loginDemoUser.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(loginDemoUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = !!action.payload;
+                state.user = action.payload;
+                state.authModal.isOpen = false;
+            })
+            .addCase(loginDemoUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload || 'Demo session creation failed';
                 state.isAuthenticated = false;
                 state.user = null;
             })
@@ -150,5 +210,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, openAuthModal, closeAuthModal, setAuthModalMode } = authSlice.actions;
 export default authSlice.reducer;

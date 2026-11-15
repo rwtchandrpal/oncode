@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router'; 
-import { logoutUser } from '../features/auth/authSlice';
+import { logoutUser, openAuthModal } from '../features/auth/authSlice';
 
 const GlobalNavbar = () => {
   const { user } = useSelector((state) => state.auth);
@@ -10,9 +10,10 @@ const GlobalNavbar = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate('/login', { replace: true });
     } catch (err) {
       console.error("Logout failed: ", err);
+    } finally {
+      navigate('/', { replace: true });
     }
   };
 
@@ -43,7 +44,10 @@ const GlobalNavbar = () => {
             
             <ul tabIndex={0} className="mt-3 z-1 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 border border-base-content/10 rounded-box w-52">
               <li className="px-4 py-2 border-b border-base-content/10 text-base-content/70 text-xs cursor-default">
-                Signed in as <br/> <strong className="text-base-content text-sm">{user.firstName}</strong>
+                Signed in as <br/> <strong className="text-base-content text-sm">{user.firstName} {user.lastName || ''}</strong>
+                {user.isDemo && (
+                  <span className="block text-[10px] text-warning font-medium mt-0.5">24h Temporary Demo Session</span>
+                )}
               </li>
               
               <li className="mt-2">
@@ -69,9 +73,13 @@ const GlobalNavbar = () => {
             </ul>
           </div>
         ) : (
-          <Link to="/login" className="btn btn-sm btn-primary text-primary-content border-none shadow-lg">
-            Sign In
-          </Link>
+          <button 
+            type="button"
+            onClick={() => dispatch(openAuthModal({ mode: 'login', redirectPath: '/' }))}
+            className="btn btn-sm btn-primary text-primary-content border-none shadow-md"
+          >
+            Get Started
+          </button>
         )}
       </div>
     </div>
