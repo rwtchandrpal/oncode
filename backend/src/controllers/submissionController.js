@@ -7,8 +7,8 @@ const { sendError } = require('../utils/AppError');
 
 const checkDemoExecutionLimit = async (user) => {
     if (!user || !user.isDemo) return { allowed: true };
+    const key = `demo_runs:${user._id}`;
     try {
-        const key = `demo_runs:${user._id}`;
         const count = await client.incr(key);
         if (count === 1) {
             await client.expire(key, 24 * 60 * 60);
@@ -19,12 +19,22 @@ const checkDemoExecutionLimit = async (user) => {
                 message: "Demo session code execution limit reached (20/20). Please create a free account to continue practicing."
             };
         }
-        return { allowed: true, remaining: 20 - count };
+        return { allowed: true, remaining: 20 - count, key };
     } catch (err) {
         console.warn("Redis error checking demo execution limit:", err.message);
         return { allowed: true };
     }
-}; 
+};
+
+// Gives a demo execution back when the run never reached a verdict (Judge0 down, BUG-14).
+const refundDemoExecution = async (key) => {
+    if (!key) return;
+    try {
+        await client.decr(key);
+    } catch (err) {
+        console.warn("Redis error refunding demo execution:", err.message);
+    }
+};
 
 const encodeBase64 = (str) => {
     if (!str) return "";
@@ -77,14 +87,6 @@ const submitCode = async (req, res) => {
             return res.status(400).json({ message: "Missing required field." });
         }
 
-        // Enforce demo user execution limits
-        if (req.user.isDemo) {
-            const limitCheck = await checkDemoExecutionLimit(req.user);
-            if (!limitCheck.allowed) {
-                return res.status(429).json({ message: limitCheck.message });
-            }
-        }
-
         const problem = await Problem.findById(problemId);
         if(!problem) {
             return res.status(404).json({ message: "Problem not found." });
@@ -95,20 +97,18 @@ const submitCode = async (req, res) => {
         if (!snippet) {
             return res.status(400).json({ message: `Language '${language}' is not supported for this problem.` });
         }
-
-        const testCases = problem.hiddenTestCases || [];
-        // Create the initial pending submission (We store the pure user code in DB)
-        const submittedResult = await Submission.create({
-            userId, problemId, code, language,
-            testCasesPassed: 0,
-            status: 'Pending',
-            testCasesTotal: testCases.length,
-            isDemo: req.user.isDemo || false,
-            expiresAt: req.user.isDemo ? req.user.expiresAt : null
-        });
-
         const langId = getLanguageId(language.toLowerCase());
-        
+        const testCases = problem.hiddenTestCases || [];
+
+        // Demo quota is charged only for valid requests (BUG-14)
+        let demoQuotaKey = null;
+        if (req.user.isDemo) {
+            const limitCheck = await checkDemoExecutionLimit(req.user);
+            if (!limitCheck.allowed) {
+                return res.status(429).json({ message: limitCheck.message });
+            }
+            demoQuotaKey = limitCheck.key;
+        }
 
         const fullCodeToRun = snippet.driverCode.replaceAll("{{USER_CODE}}", () => code);
         
@@ -122,9 +122,30 @@ const submitCode = async (req, res) => {
             compiler_options: compilerOptions
         }));
 
-        const submitResult = await createSubmission(submissionPayload);
-        const resultTokens = submitResult.map(elem => elem.token);
-        const testResult = await getSubmission(resultTokens);
+        // The submission record is created only once Judge0 has accepted the batch, and is marked
+        // 'System Error' if polling then fails, so an outage never leaves a 'Pending' record (BUG-01).
+        let submittedResult = null;
+        let testResult;
+        try {
+            const submitResult = await createSubmission(submissionPayload);
+            submittedResult = await Submission.create({
+                userId, problemId, code, language,
+                testCasesPassed: 0,
+                status: 'Pending',
+                testCasesTotal: testCases.length,
+                isDemo: req.user.isDemo || false,
+                expiresAt: req.user.isDemo ? req.user.expiresAt : null
+            });
+            testResult = await getSubmission(submitResult.map(elem => elem.token));
+        } catch (execErr) {
+            await refundDemoExecution(demoQuotaKey);
+            if (submittedResult) {
+                submittedResult.status = 'System Error';
+                submittedResult.errorMessage = 'Execution service unavailable';
+                await submittedResult.save().catch((saveErr) => console.error("Failed to mark submission as System Error:", saveErr));
+            }
+            throw execErr;
+        }
 
         let totalRuntimeSeconds = 0;
         let maxMemoryKb = 0;
@@ -208,14 +229,6 @@ const runCode = async (req, res) => {
             return res.status(400).json({ message: "Some fields are missing" });
         }
 
-        // Enforce demo user execution limits
-        if (req.user.isDemo) {
-            const limitCheck = await checkDemoExecutionLimit(req.user);
-            if (!limitCheck.allowed) {
-                return res.status(429).json({ message: limitCheck.message });
-            }
-        }
-
         const problem = await Problem.findById(problemId);
         if(!problem) {
             return res.status(404).json({ message: "Problem not found." });
@@ -229,6 +242,16 @@ const runCode = async (req, res) => {
         
         const testCase = problem.visibleTestCase;
         const langId = getLanguageId(language.toLowerCase());
+
+        // Demo quota is charged only for valid requests (BUG-14)
+        let demoQuotaKey = null;
+        if (req.user.isDemo) {
+            const limitCheck = await checkDemoExecutionLimit(req.user);
+            if (!limitCheck.allowed) {
+                return res.status(429).json({ message: limitCheck.message });
+            }
+            demoQuotaKey = limitCheck.key;
+        }
         
         const fullCodeToRun = snippet.driverCode.replaceAll("{{USER_CODE}}", () => code);
         
@@ -242,9 +265,15 @@ const runCode = async (req, res) => {
             compiler_options: compilerOptions
         }];
         
-        const submitResult = await createSubmission(submissionPayload);
-        const testResult = await getSubmission([submitResult[0].token]);
-        const result = testResult[0];
+        let result;
+        try {
+            const submitResult = await createSubmission(submissionPayload);
+            const testResult = await getSubmission([submitResult[0].token]);
+            result = testResult[0];
+        } catch (execErr) {
+            await refundDemoExecution(demoQuotaKey);
+            throw execErr;
+        }
         
         res.status(200).json({
             message: "Run completed.",
