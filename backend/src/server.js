@@ -114,10 +114,45 @@ const initializeConnection = async () => {
   initDemoCleanupWorker();
 
   const PORT = env.PORT;
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     logger.info("Server in listening at port : " + PORT);
   });
+  registerShutdown(server);
 };
+
+// Graceful shutdown (OPS-02): stop accepting connections, let in-flight requests finish, close Redis
+// and MongoDB, exit 0. A 10 s watchdog forces exit 1 if something hangs.
+const SHUTDOWN_TIMEOUT_MS = 10000;
+const registerShutdown = (server) => {
+  let shuttingDown = false;
+  const shutdown = async (signal) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    logger.info({ signal }, "Shutting down");
+    const watchdog = setTimeout(() => {
+      logger.error("Shutdown timed out; forcing exit");
+      process.exit(1);
+    }, SHUTDOWN_TIMEOUT_MS);
+    watchdog.unref();
+    try {
+      await new Promise((resolve) => server.close(resolve));
+      if (client.isOpen) await client.close().catch((err) => logger.warn({ err }, "Redis close failed"));
+      await mongoose.disconnect();
+      logger.info("Shutdown complete");
+      clearTimeout(watchdog);
+      process.exit(0);
+    } catch (err) {
+      logger.error({ err }, "Error during shutdown");
+      process.exit(1);
+    }
+  };
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
+};
+
+process.on("unhandledRejection", (reason) => {
+  logger.error({ err: reason }, "Unhandled promise rejection");
+});
 
 initializeConnection();
 

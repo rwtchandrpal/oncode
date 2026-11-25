@@ -32,7 +32,7 @@ healthRouter.get("/readyz", async (req, res) => {
   ]);
   const ready = mongo === "ok" && redis === "ok";
   res.set("Cache-Control", "no-store");
-  res.status(ready ? 200 : 503).json({ status: ready ? "ok" : "unavailable", checks: { mongo, redis } });
+  res.status(ready ? 200 : 503).json({ status: ready ? "ok" : "unavailable", checks: { mongo, redis }, ...(ready ? {} : { message: "Service not ready." }) });
 });
 
 module.exports = healthRouter;
