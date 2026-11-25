@@ -1,5 +1,6 @@
 # Fix progress (`fix/all-phases`)
-n**Status: stopped during Phase E2 (usage limit). A–E1 complete; E2 partial; E3, F, final reports pending.**
+
+**Status: A–E2 complete; E3, F and the final reports in progress.**
 
 Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] skipped
 
