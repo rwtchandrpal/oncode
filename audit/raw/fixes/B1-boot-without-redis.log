@@ -1,0 +1,5 @@
+MongoDB connected
+Server in listening at port : 3100
+[redis] connection error: ECONNREFUSED (will keep retrying)
+[redis] ready
+Redis connected

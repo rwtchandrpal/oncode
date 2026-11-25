@@ -22,7 +22,7 @@ client.on('error', (err) => {
     const now = Date.now();
     if (now - lastErrorLoggedAt > 30000) {
         lastErrorLoggedAt = now;
-        console.warn(`[redis] connection error: ${err.code || err.name || 'error'} (will keep retrying)`);
+        console.warn(`[redis] connection error: ${err.code || err.message || err.name} (will keep retrying)`);
     }
 });
 client.on('ready', () => {

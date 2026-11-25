@@ -56,19 +56,28 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Boot policy (BUG-03): MongoDB is required, so a failed connect exits non-zero and a supervisor can
+// restart us. Redis is degradable (token blocklist, demo quotas): we start listening right away and
+// connect Redis in the background; node-redis keeps retrying with backoff until it is reachable.
 const initializeConnection = async () => {
   try {
-    await Promise.all([client.connect(), connectDB()]);
-    console.log("Databases are connected successfully");
-    initDemoCleanupWorker();
-
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log("Server in listening at port : " + PORT);
-    });
+    await connectDB();
+    console.log("MongoDB connected");
   } catch (error) {
-    console.error("Error in connection: " + error);
+    console.error("MongoDB connection failed:", error);
+    process.exit(1);
   }
+
+  client.connect()
+    .then(() => console.log("Redis connected"))
+    .catch((error) => console.warn("Redis unavailable at boot; continuing in degraded mode:", error.code || error.message));
+
+  initDemoCleanupWorker();
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log("Server in listening at port : " + PORT);
+  });
 };
 
 initializeConnection();
