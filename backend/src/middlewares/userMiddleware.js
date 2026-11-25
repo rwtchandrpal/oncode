@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { isTokenBlocked, JWT_ERROR_NAMES } = require("../utils/tokenBlocklist");
+const logger = require('../utils/logger');
 
 // verify user is valid and logged in
 const userMiddleware = async (req, res, next) => {
@@ -55,7 +56,7 @@ const userMiddleware = async (req, res, next) => {
     }
     // Infrastructure failure (e.g. MongoDB unreachable): not the user's fault, so no 401 that would
     // make the client throw away a valid token.
-    console.error("[auth] middleware error:", err);
+    logger.error({ err }, "[auth] middleware error");
     res.status(503).json({ message: "Service temporarily unavailable. Please try again." });
   }
 };

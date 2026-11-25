@@ -14,9 +14,21 @@ const submitRouter = require("./routes/submitRoute");
 const adminRouter = require('./routes/adminRoutes');
 const chatAIRouter = require('./routes/chatAIRoute');
 const { initDemoCleanupWorker } = require("./utils/cleanupDemoWorker");
+const logger = require("./utils/logger");
+const pinoHttp = require("pino-http");
 
 
 const app = express();
+
+// Request logging with redacted Authorization header (CQ-06)
+app.use(pinoHttp({
+  logger,
+  customLogLevel: (req, res, err) => (err || res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info"),
+  serializers: {
+    req: (req) => ({ id: req.id, method: req.method, url: req.url, headers: { authorization: req.headers.authorization } }),
+    res: (res) => ({ statusCode: res.statusCode }),
+  },
+}));
 
 app.use(cors({
     origin: env.CLIENT_URL,
@@ -49,7 +61,7 @@ app.use((err, req, res, next) => {
   if (err.type === "entity.parse.failed") {
     return res.status(400).json({ message: "Malformed JSON in request body." });
   }
-  console.error("Global Error:", err);
+  logger.error({ err }, "Unhandled error");
   res.status(500).json({
     success: false,
     message: "Something went wrong on the server."
@@ -62,21 +74,21 @@ app.use((err, req, res, next) => {
 const initializeConnection = async () => {
   try {
     await connectDB();
-    console.log("MongoDB connected");
+    logger.info("MongoDB connected");
   } catch (error) {
-    console.error("MongoDB connection failed:", error);
+    logger.fatal({ err: error }, "MongoDB connection failed");
     process.exit(1);
   }
 
   client.connect()
-    .then(() => console.log("Redis connected"))
-    .catch((error) => console.warn("Redis unavailable at boot; continuing in degraded mode:", error.code || error.message));
+    .then(() => logger.info("Redis connected"))
+    .catch((error) => logger.warn({ code: error.code || error.message }, "Redis unavailable at boot; continuing in degraded mode"));
 
   initDemoCleanupWorker();
 
   const PORT = env.PORT;
   app.listen(PORT, () => {
-    console.log("Server in listening at port : " + PORT);
+    logger.info("Server in listening at port : " + PORT);
   });
 };
 

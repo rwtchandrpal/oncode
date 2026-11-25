@@ -1,4 +1,5 @@
 const { createClient } = require('redis');
+const logger = require('../utils/logger');
 
 const client = createClient({
     username: 'default',
@@ -22,12 +23,12 @@ client.on('error', (err) => {
     const now = Date.now();
     if (now - lastErrorLoggedAt > 30000) {
         lastErrorLoggedAt = now;
-        console.warn(`[redis] connection error: ${err.code || err.message || err.name} (will keep retrying)`);
+        logger.warn({ code: err.code || err.message || err.name }, '[redis] connection error (will keep retrying)');
     }
 });
 client.on('ready', () => {
     lastErrorLoggedAt = 0;
-    console.log('[redis] ready');
+    logger.info('[redis] ready');
 });
 
 module.exports = client;

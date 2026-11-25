@@ -4,6 +4,7 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const Submission = require('../models/submission');
 const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
+const logger = require('../utils/logger');
 
 const encodeBase64 = (str) => {
     if (!str) return "";
@@ -71,10 +72,10 @@ const validateAndTestProblem = async (problemData) => {
         }
     } catch (err) {
         if (err instanceof Judge0UnavailableError) {
-            console.error("Judge0 unavailable during problem validation:", err.cause || err);
+            logger.error({ err: err.cause || err }, "Judge0 unavailable during problem validation");
             return { isValid: false, status: 503, error: EXECUTION_UNAVAILABLE_MESSAGE };
         }
-        console.error("Problem validation error:", err);
+        logger.error({ err }, "Problem validation error");
         return { isValid: false, status: 500, error: "Problem validation failed. Please try again." };
     }
 
@@ -105,7 +106,7 @@ const createProblem = async (req, res) => {
         });
     } catch (err) {
         if (err.name === 'ValidationError' || err.code === 11000) {
-            console.warn("Create problem rejected:", err);
+            logger.warn({ err }, "Create problem rejected");
             return res.status(400).json({ message: err.code === 11000 ? "A problem with this title already exists." : "Invalid problem data." });
         }
         return sendError(res, err, "Failed to create problem.");
@@ -144,7 +145,7 @@ const updateProblem = async (req, res) => {
         });
     } catch (err) {
         if (err.name === 'ValidationError' || err.name === 'CastError' || err.code === 11000) {
-            console.warn("Update problem rejected:", err);
+            logger.warn({ err }, "Update problem rejected");
             return res.status(400).json({ message: err.code === 11000 ? "A problem with this title already exists." : "Invalid problem data." });
         }
         sendError(res, err, "Failed to update problem.");

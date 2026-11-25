@@ -1,4 +1,5 @@
 const { GoogleGenAI } = require('@google/genai');
+const logger = require('../utils/logger');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -55,7 +56,7 @@ const chatWithAI = async (req, res) => {
         res.status(200).json({ reply: response.text });
 
     } catch (error) {
-        console.error("Error generating AI response:", error);
+        logger.error({ err: error }, "Error generating AI response");
         res.status(500).json({ message: "Failed to generate AI response." });
     }
 };

@@ -1,4 +1,5 @@
 const client = require("../config/redis");
+const logger = require('./logger');
 
 const JWT_ERROR_NAMES = new Set(["JsonWebTokenError", "TokenExpiredError", "NotBeforeError"]);
 
@@ -9,7 +10,7 @@ const isTokenBlocked = async (token) => {
   try {
     return Boolean(await client.exists(`token:${token}`));
   } catch (err) {
-    console.warn("[auth] token blocklist check skipped (Redis unavailable):", err.code || err.message);
+    logger.warn({ code: err.code || err.message }, "[auth] token blocklist check skipped (Redis unavailable)");
     return false;
   }
 };

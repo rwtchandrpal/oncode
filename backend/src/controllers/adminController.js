@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const Problem = require('../models/problem');
 const Submission = require('../models/submission');
+const logger = require('../utils/logger');
 const { UNGRADED_STATUSES } = Submission;
 
 const getDashboardStats = async (req, res) => {
@@ -86,7 +87,7 @@ const getDashboardStats = async (req, res) => {
         return res.status(200).json(dashboardData);
 
     } catch (error) {
-        console.error("Dashboard Stats Error:", error);
+        logger.error({ err: error }, "Dashboard stats error");
         return res.status(500).json({ message: "Failed to fetch dashboard statistics." });
     }
 };

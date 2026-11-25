@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { AppError, Judge0UnavailableError } = require('./AppError');
+const logger = require('./logger');
 
 const JUDGE0_BASE_URL = process.env.JUDGE0_BASE_URL;
 // Per-HTTP-request timeout (a stopped EC2 drops packets, so each call would otherwise hang).
@@ -38,7 +39,7 @@ const checkJudge0Health = async () => {
     };
   } catch (error) {
     // Never return error.message: it contains the Judge0 host and port (SEC-05).
-    console.warn('Judge0 health check failed:', error.code || error.message);
+    logger.warn({ code: error.code || error.message }, 'Judge0 health check failed');
     return {
       isOnline: false,
       code: error.code || 'UNREACHABLE'

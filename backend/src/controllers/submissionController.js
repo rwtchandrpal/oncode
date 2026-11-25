@@ -4,6 +4,7 @@ const Submission = require('../models/submission');
 const client = require('../config/redis');
 const { getLanguageId, getstatusById, createSubmission, getSubmission, newDeadline } = require('../utils/judge0Utility');
 const { sendError } = require('../utils/AppError');
+const logger = require('../utils/logger');
 
 const checkDemoExecutionLimit = async (user) => {
     if (!user || !user.isDemo) return { allowed: true };
@@ -21,7 +22,7 @@ const checkDemoExecutionLimit = async (user) => {
         }
         return { allowed: true, remaining: 20 - count, key };
     } catch (err) {
-        console.warn("Redis error checking demo execution limit:", err.message);
+        logger.warn({ err }, "Redis error checking demo execution limit");
         return { allowed: true };
     }
 };
@@ -32,7 +33,7 @@ const refundDemoExecution = async (key) => {
     try {
         await client.decr(key);
     } catch (err) {
-        console.warn("Redis error refunding demo execution:", err.message);
+        logger.warn({ err }, "Redis error refunding demo execution");
     }
 };
 
@@ -143,7 +144,7 @@ const submitCode = async (req, res) => {
             if (submittedResult) {
                 submittedResult.status = 'System Error';
                 submittedResult.errorMessage = 'Execution service unavailable';
-                await submittedResult.save().catch((saveErr) => console.error("Failed to mark submission as System Error:", saveErr));
+                await submittedResult.save().catch((saveErr) => logger.error({ err: saveErr }, "Failed to mark submission as System Error"));
             }
             throw execErr;
         }

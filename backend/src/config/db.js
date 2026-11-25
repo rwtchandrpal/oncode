@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('../utils/logger');
 
 // Strip query operators ($ne, $gt, $regex, ...) from user-supplied filter objects (SEC-01).
 // The codebase builds no filters from raw user objects that need `$` keys; operators written in code
@@ -9,7 +10,7 @@ const connectDB = async ()=>{
     try{
         await mongoose.connect(process.env.MONGO_URI);
     }catch(error){
-        console.error(`Error connecting to MongoDB: ${error.message}`);
+        logger.fatal({ err: error }, "Error connecting to MongoDB");
 
         process.exit(1);
     }

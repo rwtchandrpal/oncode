@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const client = require("../config/redis");
 const crypto = require("crypto");
 const { AppError, sendError } = require("../utils/AppError");
+const logger = require('../utils/logger');
 
 // handler for temporary isolated demo session
 const demoLogin = async (req, res) => {
@@ -102,7 +103,7 @@ const register = async (req, res) => {
     }
     if (err instanceof AppError) return sendError(res, err);
     if (err.name === "ValidationError") {
-      console.warn("Register rejected:", err);
+      logger.warn({ err }, "Register rejected");
       return res.status(400).json({ message: "Invalid registration data." });
     }
     sendError(res, err, "Registration failed. Please try again.");
@@ -154,7 +155,7 @@ const login = async (req, res) => {
       message: "Logged in successfully",
     });
   } catch (err) {
-    console.error("Login error:", err);
+    logger.error({ err }, "Login error");
     res.status(500).json({ message: "Login failed. Please try again." });
   }
 };
@@ -199,7 +200,7 @@ const adminRegister = async (req, res) => {
     }
     if (err instanceof AppError) return sendError(res, err);
     if (err.name === "ValidationError") {
-      console.warn("Admin register rejected:", err);
+      logger.warn({ err }, "Admin register rejected");
       return res.status(400).json({ message: "Invalid registration data." });
     }
     sendError(res, err, "Registration failed. Please try again.");
@@ -268,7 +269,7 @@ const getUserStats = async (req, res) => {
     if (validProblems.length !== rawSolved.length) {
       const validIds = validProblems.map(p => p._id);
       User.updateOne({ _id: userId }, { $set: { problemsSolved: validIds } })
-        .catch(err => console.error("Self-healing cleanup error:", err.message));
+        .catch(err => logger.error({ err }, "Self-healing cleanup error"));
     }
 
     let easySolved = 0;

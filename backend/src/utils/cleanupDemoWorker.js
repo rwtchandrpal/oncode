@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const Submission = require('../models/submission');
+const logger = require('./logger');
 
 /**
  * Sweeps expired demo sessions and cascades the deletion to all associated submissions.
@@ -38,12 +39,12 @@ const cleanupExpiredDemoSessions = async () => {
     deletedSubmissionsCount += orphanedSubResult.deletedCount || 0;
 
     if (deletedUsersCount > 0 || deletedSubmissionsCount > 0) {
-      console.log(
+      logger.info(
         `[DemoCleanupWorker] Cleaned ${deletedUsersCount} expired demo user(s) and ${deletedSubmissionsCount} associated submission(s).`
       );
     }
   } catch (error) {
-    console.error("[DemoCleanupWorker] Error during demo cleanup sweep:", error.message);
+    logger.error({ err: error }, "[DemoCleanupWorker] Error during demo cleanup sweep");
   }
 };
 
