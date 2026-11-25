@@ -355,9 +355,46 @@ schemas · `99d17c4` required-field messages.
 `0808e96` drafts/reset · `3bdce90` URL filters/error state.
 
 ---
+## Phase E3: cleanup and docs (SEC-15, CQ-03, CQ-05, CQ-07 partial, OPS-03)
+
+**What changed**
+- E3.1 `middlewares/authenticate.js` exports `requireUser`, `requireAdmin` and `optionalUser`, all built on one
+  `resolveUser()`; the three old middleware files were deleted and every route switched over. The missing-token
+  message is now the same on admin routes ("Authentication token is missing. Please log in." instead of
+  "Authentication required"); status codes are unchanged.
+- E3.2 `pages/authentication/Login.jsx` and `Signup.jsx` deleted. `/login` and `/signup` redirect to `/` with the
+  modal open in that mode; an unauthenticated `/admin` visit now also lands on `/` with the modal (it used to go to
+  `/login`).
+- E3.3 `backend/src/utils/base64.js` and `frontend/src/utils/difficulty.js` replace the copies in two controllers and
+  three components.
+- E3.4 `cookie-parser` removed, `validator` removed (unused since C1), CORS `credentials: true` removed, `nodemon` moved
+  to devDependencies. The stray root `node_modules/` (compression only, untracked, no root package.json) and the
+  empty `docs/` were **deleted** (permission was not refused). `USER_ID` in `backend/.env` was **not** removed:
+  reading `.env` is blocked for me, and the env schema ignores unknown keys anyway. Listed in OWNER_TODO.
+- E3.5 `services/judgeService.js` (`buildSource`, `buildPayload`, `startBatch`/`awaitBatch`, `runBatch`) is used by
+  submit, run and problem validation. Behaviour change: reference solutions are now compiled with the same C++
+  options as user code (`-Wall -Werror=return-type`).
+- E3.6 README rewritten: real clone URL, features as implemented (demo mode, admin feature set, and no "view all
+  submissions"), the env table generated against `config/env.js`, local Docker stack and mock Judge0, operations
+  and deploy notes.
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| `npm ls cookie-parser` is empty | PASS | `(empty)` |
+| `grep -rn "jwt.verify" backend/src` shows 1 hit | PASS | `middlewares/authenticate.js:27` |
+| All Phase 3 browser flows pass | PASS | `/signup` opens the signup modal and creates an account; workspace Run shows the generic 503 panel; `/login` opens the login modal; admin dashboard loads (`screenshots/fixes/E3-admin-dashboard.jpg`); auth matrix anon/user/admin/garbage = 401/200/200/401 on `/user/check` and 401/403/200/401 on `/admin/dashboard` |
+| README env list matches `config/env.js` | PASS | script check: 15 variables in env.js, 0 missing from the README |
+| judgeService regression (mock Judge0) | PASS | Accepted 2/2, WA, CE (compiler output), RE (generic message), poll failure → 503 + System Error; run WA; admin create 201; Judge0 off → 503 |
+
+**Commits:** `1bebc6b` authenticate · `81d7642` Login/Signup removal · `10872ad` shared helpers · `0205be8` dead deps ·
+`05c674d` judgeService · `007039f` README.
+
+---
 ## Noticed but not fixed
 - Compile errors on hidden tests return compiler output, which can quote driver-code lines (allowed by plan A4).
 - Problems may have a language snippet without a reference solution; that driver stays unverified (E1.2).
 - `problemWorkspace` chunk is 2.98 MB (Monaco) and triggers Vite's size warning; it is lazy-loaded.
 - CSP `connect-src` allows any `https:` because the production API host is not in the repo; tighten it to the real host.
 - With the backend unreachable, `checkAuth` removes the stored token on any error (network included), so a backend outage signs users out. Pre-existing; not in the plan.
+- `CLAUDE.md` §3 (repo map) and §7 (known limitations) describe the pre-fix code (three middlewares, `validate.js`, `docs/`, single-language problems, metadata-only edit form). It is project guidance written for the audit, so I left it unchanged; it should be refreshed.

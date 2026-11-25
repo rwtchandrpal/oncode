@@ -1,6 +1,6 @@
 # Fix progress (`fix/all-phases`)
 
-**Status: A–E2 complete; E3, F and the final reports in progress.**
+**Status: A–E3 complete; F and the final reports in progress.**
 
 Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] skipped
 
@@ -80,13 +80,13 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] E2 acceptance criteria verified
 
 ## Phase E3: cleanup/docs
-- [ ] E3.1 Single authenticate middleware (CQ-03)
-- [ ] E3.2 Remove Login/Signup pages (CQ-03)
-- [ ] E3.3 Shared base64/difficulty utils (CQ-03)
-- [ ] E3.4 Dead deps, root node_modules, docs/ (SEC-15, CQ-05)
-- [ ] E3.5 judgeService (CQ-07)
-- [ ] E3.6 README (OPS-03)
-- [ ] E3 acceptance criteria verified
+- [x] E3.1 Single authenticate middleware (CQ-03)
+- [x] E3.2 Remove Login/Signup pages (CQ-03)
+- [x] E3.3 Shared base64/difficulty utils (CQ-03)
+- [x] E3.4 Dead deps, root node_modules, docs/ (SEC-15, CQ-05)
+- [x] E3.5 judgeService (CQ-07)
+- [x] E3.6 README (OPS-03)
+- [x] E3 acceptance criteria verified
 
 ## Phase F: tests + CI
 - [ ] F1 Backend test infra (vitest, supertest, mongodb-memory-server)
