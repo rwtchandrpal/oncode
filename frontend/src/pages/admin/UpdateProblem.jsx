@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams, useNavigate } from 'react-router'; 
 import axiosClient from '../../utils/axiosClient';
 import problemSchema from '../../validations/problemSchema'; 
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const UpdateProblem = () => {
   const { problemId } = useParams();
@@ -72,7 +73,7 @@ const UpdateProblem = () => {
       
     } catch (error) {
       console.error("Failed to update problem:", error);
-      setSubmitError(error.response?.data?.message || "An unexpected error occurred.");
+      setSubmitError(getApiErrorMessage(error, "An unexpected error occurred."));
     }
   };
 

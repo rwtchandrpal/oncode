@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Check, Copy, Lightbulb, Lock } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const SolutionBlock = ({ solution }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -66,7 +67,7 @@ const ProblemSolution = ({ problemId }) => {
         if (isMounted) {
           if (err.response?.status === 403) {
             setIsLocked(true);
-            setMessage(err.response?.data?.message || "Solve this problem to unlock the official solution.");
+            setMessage(getApiErrorMessage(err, "Solve this problem to unlock the official solution."));
           } else {
             setMessage("Failed to load reference solutions.");
           }

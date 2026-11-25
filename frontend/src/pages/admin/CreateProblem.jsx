@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
 import { createProblemSchema } from '../../validations/problemSchema';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const DEFAULT_CPP_SNIPPET = `class Solution {
 public:
@@ -140,7 +141,7 @@ const CreateProblem = () => {
       navigate('/admin/problems');
     } catch (err) {
       console.error('Problem creation failed:', err);
-      const serverMsg = err.response?.data?.message || err.message || 'An unexpected error occurred while creating the problem.';
+      const serverMsg = getApiErrorMessage(err, 'An unexpected error occurred while creating the problem.');
       setSubmitError(serverMsg);
     } finally {
       setIsSubmittingToJudge0(false);

@@ -15,6 +15,7 @@ import ProblemSubmissions from "../../components/ProblemSubmissions";
 import ProblemCodeEditor from "../../components/ProblemCodeEditor";
 import ProblemTestcase from "../../components/ProblemTestcase";
 import ProblemResult from "../../components/ProblemResult";
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const DEFAULT_SPLIT_RATIO = 40;
 const MIN_SPLIT_RATIO = 20;
@@ -246,7 +247,7 @@ const ProblemWorkSpace = () => {
       console.error("Failed to execute code:", error);
       setRunResult({
         status: "System Error",
-        errorMessage: error.response?.data?.message || error.userMessage || "Failed to connect to the execution server.",
+        errorMessage: getApiErrorMessage(error, "Failed to connect to the execution server."),
         input: "",
         expectedOutput: "",
         actualOutput: "",
@@ -284,7 +285,7 @@ const ProblemWorkSpace = () => {
       console.error("Failed to submit code:", error);
       setSubmitResult({
         status: "System Error",
-        errorMessage: error.response?.data?.message || error.userMessage || "Failed to connect to the evaluation server.",
+        errorMessage: getApiErrorMessage(error, "Failed to connect to the evaluation server."),
         testCasesPassed: 0,
         testCasesTotal: 0,
         runtime: 0,

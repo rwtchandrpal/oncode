@@ -5,6 +5,7 @@ import { CheckCircle, Circle, Search, X, ChevronLeft, ChevronRight, RotateCcw } 
 import axiosClient from '../utils/axiosClient';
 import GlobalNavbar from '../components/GlobalNavbar';
 import { openAuthModal } from '../features/auth/authSlice';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const getDifficultyColor = (difficulty) => {
   switch (difficulty?.toLowerCase()) {
@@ -158,7 +159,7 @@ const Home = () => {
           setSolvedProblems(solvedRes.data.solvedProblems || []);
         }
       } catch (error) {
-        console.error("Error fetching data: ", error.response?.data?.message || error.message);
+        console.error("Error fetching data: ", getApiErrorMessage(error, error.message));
       } finally {
         if (isMounted) {
           setIsLoading(false);

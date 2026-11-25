@@ -1,4 +1,5 @@
 const { GoogleGenAI } = require('@google/genai');
+const { errorBody } = require('../utils/AppError');
 const logger = require('../utils/logger');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -8,7 +9,7 @@ const chatWithAI = async (req, res) => {
         const { problemTitle, problemDescription, userLanguage, userCode, userQuestion } = req.body;
 
         if (!userQuestion || !userCode) {
-            return res.status(400).json({ error: "Missing required fields." });
+            return res.status(400).json(errorBody(400, "Missing required fields.", "VALIDATION_ERROR"));
         }
 
         // Truncate inputs to protect your token limits and wallet
@@ -57,7 +58,7 @@ const chatWithAI = async (req, res) => {
 
     } catch (error) {
         logger.error({ err: error }, "Error generating AI response");
-        res.status(500).json({ message: "Failed to generate AI response." });
+        res.status(500).json(errorBody(500, "Failed to generate AI response."));
     }
 };
 

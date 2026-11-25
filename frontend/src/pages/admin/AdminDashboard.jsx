@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Code2, Users, Activity, Target, Shield, User, AlertCircle, RefreshCw, Plus } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
       } catch (err) {
         if (isMounted) {
           console.error("Dashboard Stats Error:", err);
-          setError(err.response?.data?.message || "Failed to fetch dashboard statistics. Please try again.");
+          setError(getApiErrorMessage(err, "Failed to fetch dashboard statistics. Please try again."));
         }
       } finally {
         if (isMounted) {

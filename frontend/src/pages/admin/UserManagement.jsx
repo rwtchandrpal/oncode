@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UserPlus, Shield, AlertCircle, CheckCircle } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
 import { adminUserRegistrationSchema } from '../../validations/authSchemas';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const UserManagement = () => {
   const [submitError, setSubmitError] = useState('');
@@ -36,7 +37,7 @@ const UserManagement = () => {
       reset();
       
     } catch (error) {
-      setSubmitError(error.response?.data?.message || "Failed to register the new user. Please try again.");
+      setSubmitError(getApiErrorMessage(error, "Failed to register the new user. Please try again."));
     }
   };
 

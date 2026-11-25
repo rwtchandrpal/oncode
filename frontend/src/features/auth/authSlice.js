@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../utils/axiosClient';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 // Helper to handle axios errors consistently
 export const handleAxiosError = (error, rejectWithValue) => {
     if (error.response) {
-        const backendMessage = error.response.data?.message || 'Server rejected the request.';
+        const backendMessage = getApiErrorMessage(error, 'Server rejected the request.');
         return rejectWithValue(backendMessage);
     } 
     if (error.request) {

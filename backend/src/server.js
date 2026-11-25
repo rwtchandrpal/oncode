@@ -16,9 +16,14 @@ const chatAIRouter = require('./routes/chatAIRoute');
 const { initDemoCleanupWorker } = require("./utils/cleanupDemoWorker");
 const logger = require("./utils/logger");
 const pinoHttp = require("pino-http");
+const errorShape = require("./middlewares/errorShape");
+const { AppError, sendError, errorBody } = require("./utils/AppError");
 
 
 const app = express();
+
+// Normalize every error body to { error: { code, message } } (CQ-04)
+app.use(errorShape);
 
 // Request logging with redacted Authorization header (CQ-06)
 app.use(pinoHttp({
@@ -53,19 +58,26 @@ app.use("/submission", submitRouter);
 app.use("/admin", adminRouter);
 app.use("/chatAI", chatAIRouter);
 
+// Unknown routes
+app.use((req, res) => {
+  res.status(404).json(errorBody(404, "Route not found."));
+});
+
+// Central error handler (BUG-11, CQ-04): every error leaves as { error: { code, message } }.
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  // body-parser errors carry a 4xx status (entity.too.large -> 413, entity.parse.failed -> 400)
+  // body-parser errors carry a type (entity.too.large -> 413, entity.parse.failed -> 400)
   if (err.type === "entity.too.large") {
-    return res.status(413).json({ message: "Request body is too large." });
+    return res.status(413).json(errorBody(413, "Request body is too large."));
   }
   if (err.type === "entity.parse.failed") {
-    return res.status(400).json({ message: "Malformed JSON in request body." });
+    return res.status(400).json(errorBody(400, "Malformed JSON in request body.", "INVALID_JSON"));
+  }
+  if (err instanceof AppError) {
+    return sendError(res, err);
   }
   logger.error({ err }, "Unhandled error");
-  res.status(500).json({
-    success: false,
-    message: "Something went wrong on the server."
-  });
+  res.status(500).json(errorBody(500, "Something went wrong on the server."));
 });
 
 // Boot policy (BUG-03): MongoDB is required, so a failed connect exits non-zero and a supervisor can

@@ -5,6 +5,7 @@ import { LogOut, Trash2, Shield, Calendar, Mail, Zap } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
 import { logoutUser } from '../features/auth/authSlice';
 import GlobalNavbar from '../components/GlobalNavbar'; 
+import { getApiErrorMessage } from '../utils/apiError';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -72,7 +73,7 @@ const UserProfile = () => {
       window.location.replace('/');
     } catch (err) {
       console.error("Failed to delete account:", err);
-      setDeleteError(err.response?.data?.message || "Failed to delete account. Please try again.");
+      setDeleteError(getApiErrorMessage(err, "Failed to delete account. Please try again."));
     } finally {
       setIsDeleting(false);
     }
