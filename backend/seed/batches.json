@@ -10,5 +10,17 @@
     "missing-number",
     "number-of-1-bits",
     "counting-bits"
+  ],
+  "2": [
+    "product-of-array-except-self",
+    "longest-consecutive-sequence",
+    "container-with-most-water",
+    "maximum-subarray",
+    "jump-game",
+    "house-robber",
+    "house-robber-ii",
+    "sum-of-two-integers",
+    "reverse-bits",
+    "find-minimum-in-rotated-sorted-array"
   ]
 }

@@ -38,5 +38,45 @@
   "counting-bits": {
     "sha256": "52d781a34ec24b0aa6c000988df49e1c50312807928f3c61510779e4f90783dd",
     "verifiedAt": "2026-11-25T19:09:01.762Z"
+  },
+  "product-of-array-except-self": {
+    "sha256": "f159771a2e5a3f2564db48ab33b46452a427d446322add747e8749eb81e4bf41",
+    "verifiedAt": "2026-11-25T19:20:36.409Z"
+  },
+  "longest-consecutive-sequence": {
+    "sha256": "701d1a6008f424ec76cfea29d8b25fcecf091d3176d3eee8323801c78f462803",
+    "verifiedAt": "2026-11-25T19:21:13.651Z"
+  },
+  "container-with-most-water": {
+    "sha256": "27b078aed84bec7c05520df5e6185ef6585791cda85bd8e2289ee4aa16b6c1f4",
+    "verifiedAt": "2026-11-25T19:21:53.444Z"
+  },
+  "maximum-subarray": {
+    "sha256": "13af28a10a187048e4cbd64ab38abf95e51ad931c2a28bdd28569fd01a9bc80b",
+    "verifiedAt": "2026-11-25T19:22:30.585Z"
+  },
+  "jump-game": {
+    "sha256": "b6a513db0dd5dd99579d1bfbe4179fdad9a9ae210814d2a414dc65a13171eb92",
+    "verifiedAt": "2026-11-25T19:23:05.636Z"
+  },
+  "house-robber": {
+    "sha256": "05d49d8471b729d18812c5decd52c8137315e50363753e65aa1d9b0f38f8c2e4",
+    "verifiedAt": "2026-11-25T19:24:04.466Z"
+  },
+  "house-robber-ii": {
+    "sha256": "7f204bceb992d3a3d039a0c732589b332754ca6232c65173e6c4b9872990de75",
+    "verifiedAt": "2026-11-25T19:24:36.822Z"
+  },
+  "sum-of-two-integers": {
+    "sha256": "5a9bc3d66fffaf28bbf184ab8cb992268aec58842e3637331a5f68f3bfd16145",
+    "verifiedAt": "2026-11-25T19:25:04.517Z"
+  },
+  "reverse-bits": {
+    "sha256": "0ea903a04c66b4e74d5a7f8d1ac2e54ce5582b45460aa527450631b1b9c69b5c",
+    "verifiedAt": "2026-11-25T19:25:34.172Z"
+  },
+  "find-minimum-in-rotated-sorted-array": {
+    "sha256": "798093d48c107dc46022a04f51ead399da2fa0578449f391cd0236b308792b61",
+    "verifiedAt": "2026-11-25T19:26:07.399Z"
   }
 }

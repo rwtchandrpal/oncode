@@ -109,6 +109,44 @@
         return a;
     }
     static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }
+    static Integer readNullableInt() {
+        ws();
+        if (matchWord("null")) return null;
+        return readInt();
+    }
+    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }
+
+    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.
+    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {
+        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {
+            int c = a.get(i).compareTo(b.get(i));
+            if (c != 0) return c;
+        }
+        return Integer.compare(a.size(), b.size());
+    }
+    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {
+        List<List<T>> r = new ArrayList<>();
+        for (List<T> v : x) {
+            List<T> c = new ArrayList<>(v);
+            if (sortInner) Collections.sort(c);
+            r.add(c);
+        }
+        r.sort(Main::compareLists);
+        return r;
+    }
+    static <T extends Comparable<T>> List<T> sortList(List<T> x) {
+        List<T> r = new ArrayList<>(x);
+        Collections.sort(r);
+        return r;
+    }
+    static int[][] sortRows(int[][] x) {
+        int[][] r = x.clone();
+        Arrays.sort(r, (a, b) -> {
+            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);
+            return Integer.compare(a.length, b.length);
+        });
+        return r;
+    }
     static void endInput() {
         ws();
         if (inPos != inBuf.length) throw fail("unexpected trailing input");

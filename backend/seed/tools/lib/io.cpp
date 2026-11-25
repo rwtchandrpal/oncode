@@ -2,6 +2,12 @@
 // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.
 namespace oncode {
 
+// Nullable int, for level-order tree arrays such as [1,null,2].
+struct Opt {
+    bool has = false;
+    int v = 0;
+};
+
 struct Reader {
     std::string s;
     size_t p = 0;
@@ -60,6 +66,11 @@ struct Reader {
         if (p >= s.size()) fail("unterminated string");
         p++;
     }
+    void read(Opt& o) {
+        ws();
+        if (s.compare(p, 4, "null") == 0) { o.has = false; p += 4; }
+        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }
+    }
     void read(char& x) {
         std::string t;
         read(t);
@@ -99,6 +110,10 @@ struct Writer {
         out += '"';
     }
     void write(char c) { write(std::string(1, c)); }
+    void write(const Opt& o) {
+        if (o.has) write(o.v);
+        else out += "null";
+    }
     template <class T> void write(const std::vector<T>& v) {
         out += '[';
         for (size_t i = 0; i < v.size(); i++) {

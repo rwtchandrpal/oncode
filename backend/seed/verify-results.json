@@ -528,5 +528,465 @@
     "notes": [],
     "ok": true,
     "verifiedAt": "2026-11-25T19:09:01.762Z"
+  },
+  "product-of-array-except-self": {
+    "slug": "product-of-array-except-self",
+    "title": "Product of Array Except Self",
+    "hash": "f159771a2e5a3f2564db48ab33b46452a427d446322add747e8749eb81e4bf41",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 30,
+        "maxMemoryKb": 4052,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 221,
+        "maxMemoryKb": 38244,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-division.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Runtime Error (NZEC) x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:20:36.409Z"
+  },
+  "longest-consecutive-sequence": {
+    "slug": "longest-consecutive-sequence",
+    "title": "Longest Consecutive Sequence",
+    "hash": "701d1a6008f424ec76cfea29d8b25fcecf091d3176d3eee8323801c78f462803",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 35,
+        "maxMemoryKb": 4588,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 214,
+        "maxMemoryKb": 40684,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-duplicates.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:21:13.651Z"
+  },
+  "container-with-most-water": {
+    "slug": "container-with-most-water",
+    "title": "Container With Most Water",
+    "hash": "27b078aed84bec7c05520df5e6185ef6585791cda85bd8e2289ee4aa16b6c1f4",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 24,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 144,
+        "maxMemoryKb": 37504,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Time Limit Exceeded x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:21:53.444Z"
+  },
+  "maximum-subarray": {
+    "slug": "maximum-subarray",
+    "title": "Maximum Subarray",
+    "hash": "13af28a10a187048e4cbd64ab38abf95e51ad931c2a28bdd28569fd01a9bc80b",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 21,
+        "maxMemoryKb": 3704,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 188,
+        "maxMemoryKb": 37580,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-empty-allowed.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:22:30.585Z"
+  },
+  "jump-game": {
+    "slug": "jump-game",
+    "title": "Jump Game",
+    "hash": "b6a513db0dd5dd99579d1bfbe4179fdad9a9ae210814d2a414dc65a13171eb92",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 34,
+        "maxMemoryKb": 3532,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 157,
+        "maxMemoryKb": 37504,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "wrong-farthest.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Wrong Answer x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:23:05.636Z"
+  },
+  "house-robber": {
+    "slug": "house-robber",
+    "title": "House Robber",
+    "hash": "05d49d8471b729d18812c5decd52c8137315e50363753e65aa1d9b0f38f8c2e4",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 13,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 124,
+        "maxMemoryKb": 34816,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Time Limit Exceeded x4",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Time Limit Exceeded x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:24:04.466Z"
+  },
+  "house-robber-ii": {
+    "slug": "house-robber-ii",
+    "title": "House Robber II",
+    "hash": "7f204bceb992d3a3d039a0c732589b332754ca6232c65173e6c4b9872990de75",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 10,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 141,
+        "maxMemoryKb": 35072,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-linear.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:24:36.822Z"
+  },
+  "sum-of-two-integers": {
+    "slug": "sum-of-two-integers",
+    "title": "Sum of Two Integers",
+    "hash": "5a9bc3d66fffaf28bbf184ab8cb992268aec58842e3637331a5f68f3bfd16145",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 23,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 159,
+        "maxMemoryKb": 34176,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:25:04.517Z"
+  },
+  "reverse-bits": {
+    "slug": "reverse-bits",
+    "title": "Reverse Bits",
+    "hash": "0ea903a04c66b4e74d5a7f8d1ac2e54ce5582b45460aa527450631b1b9c69b5c",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 9,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 107,
+        "maxMemoryKb": 33792,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-31-bits.cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:25:34.172Z"
+  },
+  "find-minimum-in-rotated-sorted-array": {
+    "slug": "find-minimum-in-rotated-sorted-array",
+    "title": "Find Minimum In Rotated Sorted Array",
+    "hash": "798093d48c107dc46022a04f51ead399da2fa0578449f391cd0236b308792b61",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 15,
+        "maxMemoryKb": 3696,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 165,
+        "maxMemoryKb": 36848,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-first.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:26:07.399Z"
   }
 }

@@ -55,6 +55,7 @@ const makeCases = (slug, spec, gen) => {
 const build = async (slug) => {
   const entry = P.listEntry(slug);
   const { spec, gen, refs } = loadSources(slug);
+  if (!spec.drivers) codegen.checkSignature(spec.signature);
   const snippets = codegen.generate(spec);
   const cases = makeCases(slug, spec, gen);
 

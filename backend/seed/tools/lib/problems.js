@@ -73,6 +73,19 @@ const checkValue = (value, type, where) => {
     return;
   }
   switch (type) {
+    case "uint32":
+      if (!Number.isInteger(value) || value < 0 || value > 4294967295) bad(`not an unsigned 32-bit integer: ${value}`);
+      return;
+    case "ListNode":
+      checkValue(value, "int[]", where);
+      return;
+    case "TreeNode":
+      if (!Array.isArray(value)) bad("expected a level-order array");
+      if (value.length && value[0] === null) bad("root cannot be null (use [] for an empty tree)");
+      if (value.length && value[value.length - 1] === null) bad("trailing null");
+      value.forEach((v, i) => v === null || checkValue(v, "int", `${where}[${i}]`));
+      return;
+    case "TreeNodeRef":
     case "int":
       if (!Number.isInteger(value) || value < INT_MIN || value > INT_MAX) bad(`not a 32-bit integer: ${value}`);
       return;
