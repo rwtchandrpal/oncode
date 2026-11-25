@@ -122,6 +122,14 @@ const authSlice = createSlice({
         setAuthModalMode: (state, action) => {
             state.authModal.mode = action.payload;
             state.error = null;
+        },
+        // Local sign-out with no API call: used when the server says the session is gone (401),
+        // after account deletion, and as the fallback when logout fails (BUG-07, BUG-08).
+        sessionCleared: (state) => {
+            state.user = null;
+            state.isAuthenticated = false;
+            state.isCheckingAuth = false;
+            state.isLoading = false;
         }
     },
     extraReducers: (builder) => {
@@ -203,12 +211,14 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
             })
-            .addCase(logoutUser.rejected, (state, action) => {
+            .addCase(logoutUser.rejected, (state) => {
+                // The token is already removed from localStorage; logout must always succeed locally.
                 state.isLoading = false;
-                state.error = action.payload || 'Logout failed';
+                state.user = null;
+                state.isAuthenticated = false;
             })
     }
 });
 
-export const { clearError, openAuthModal, closeAuthModal, setAuthModalMode } = authSlice.actions;
+export const { clearError, openAuthModal, closeAuthModal, setAuthModalMode, sessionCleared } = authSlice.actions;
 export default authSlice.reducer;
