@@ -31,7 +31,7 @@ log('=== PAYLOAD SIZE (code stored before Judge0 call) ===');
 const big = '//' + 'A'.repeat(4_500_000);
 r = await req('POST', `/submission/submit/${pid}`, { token: tU, body: { code: big, language: 'cpp' } });
 log('SUBMIT 4.5MB code ->', r.status, `${r.ms}ms`, short(r.json));
-log('largest stored submission code length (bytes):', mongo('db.submissions.aggregate([{$project:{l:{$strLenBytes:"$code"}}},{$sort:{l:-1}},{$limit:1}]).toArray()[0].l'));
+log('largest stored submission code length (bytes):', mongo('db.submissions.aggregate([{$project:{l:{$strLenBytes:"$code"}}},{$sort:{l:-1}},{$limit:1}]).toArray()[0]?.l ?? 0'));
 r = await req('POST', `/submission/submit/${pid}`, { token: tU, body: { code: 'B'.repeat(6_000_000), language: 'cpp' } });
 log('SUBMIT 6MB code ->', r.status, short(r.json));
 

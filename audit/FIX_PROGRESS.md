@@ -17,14 +17,14 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] A acceptance criteria verified
 
 ## Phase B1: backend stability
-- [ ] B1.1 Redis error listener + reconnect (BUG-02)
-- [ ] B1.2 Boot policy: start anyway (BUG-03)
-- [ ] B1.3 Middlewares fail open on Redis (BUG-04)
-- [ ] B1.4 Submit: no Pending orphans, 503 (BUG-01)
-- [ ] B1.5 Stats exclude Pending/System Error + migration script (BUG-13)
-- [ ] B1.6 Demo quota after validation, DECR on failure (BUG-14)
-- [ ] B1.7 Judge0 overall deadline (BUG-18 backend)
-- [ ] B1 acceptance criteria verified
+- [x] B1.1 Redis error listener + reconnect (BUG-02)
+- [x] B1.2 Boot policy: start anyway (BUG-03)
+- [x] B1.3 Middlewares fail open on Redis (BUG-04)
+- [x] B1.4 Submit: no Pending orphans, 503 (BUG-01)
+- [x] B1.5 Stats exclude Pending/System Error + migration script (BUG-13)
+- [x] B1.6 Demo quota after validation, DECR on failure (BUG-14)
+- [x] B1.7 Judge0 overall deadline (BUG-18 backend)
+- [x] B1 acceptance criteria verified
 
 ## Phase B2: frontend session/workspace
 - [ ] B2.1 sessionCleared + logout rejected clears (BUG-08)

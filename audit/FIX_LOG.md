@@ -78,3 +78,41 @@ Note: screenshots from the built-in browser are JPEG, so the files are `.jpg`, n
 `768d001` payload caps · `02e5115` env examples/README.
 
 ---
+## Phase B1: backend stability and submission pipeline (BUG-01, 02, 03, 04, 13, 14, 18 backend)
+
+**What changed**
+- B1.1 `config/redis.js`: `error` listener (warn, rate-limited to one line per 30 s), `reconnectStrategy`
+  `min(retries*200, 5000)`, `connectTimeout 5000`, and `disableOfflineQueue: true` so commands fail fast instead of
+  hanging while Redis is down.
+- B1.2 boot policy "start anyway": Mongo connect is fatal (`exit 1`), then `listen`, then `client.connect()` in the
+  background (non-fatal).
+- B1.3 new `utils/tokenBlocklist.js` (`isTokenBlocked` fails open with a warning). All three middlewares use it.
+  user/admin middlewares return 401 only for JWT errors and 503 for unexpected errors (e.g. Mongo down).
+  Documented risk: during a Redis outage a logged-out token stays valid until it expires (≤ 1 h, demo ≤ 24 h).
+- B1.4 + B1.6 (one commit: both rewrite the same lines of `submitCode`/`runCode`): the submission record is created
+  only after Judge0 accepts the batch; a polling failure marks it `System Error` / "Execution service unavailable"
+  and returns 503. The demo quota is charged after problem and language validation, and `DECR`ed when execution fails.
+- B1.5 profile stats and admin dashboard exclude `Pending` and `System Error` (`UNGRADED_STATUSES` exported from the
+  submission model). `backend/scripts/mark-stale-pending.js`: dry run by default, `--apply` to write; reads only
+  `MONGO_URI` and prints only host/db. Run here against the local Docker DB only.
+- B1.7 `judge0Utility`: one deadline (`JUDGE0_DEADLINE_MS`, default 30 s) shared by batch create and polling;
+  per-request timeout `JUDGE0_TIMEOUT_MS` default lowered to 5 s; expiry → `Judge0UnavailableError` (503). Reported
+  runtime is the slowest test (was the sum, BUG-18).
+- Harness: `api-tests-2.mjs` crashed once no submission is stored (it read `[0].l` of an empty aggregate). Patched to
+  `?.l ?? 0`; it only affects the report line.
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| `docker stop` Redis while running: process up, `GET /problem/` 200, `/user/check` 200 (fail-open, warning logged), recovers on `docker start` | PASS | `/problem/` 200, `/user/check` 200, `/user/profile` 200, admin-as-user 403; warnings `[auth] token blocklist check skipped`; after start `[redis] ready`, logout+revocation works again. `raw/fixes/B1-redis-outage.log` |
+| Boot with Redis stopped: listens, never hangs | PASS | listening in ~2 s, then `Redis connected` when the container started. `raw/fixes/B1-boot-without-redis.log` |
+| Judge0 off: Submit 503, Pending count 0, Submissions tab has no new Pending, profile total unchanged | PASS | 3 submits → 503, `countDocuments({status:'Pending'})` 0 → 0, profile total 0 → 0; browser Submissions tab "You have not submitted any code" (`screenshots/fixes/B1-submit-judge0-off-no-pending.jpg`) |
+| Demo user: 25 failed runs not rate-limited by the quota | PASS | 25 × 503, no 429; `demo_runs` counter back at 0 |
+| `api-tests-2.mjs` Pending line shows 0 new records | PASS | `raw/fixes/phase-b1-api-tests-2.txt`: "after one failed submit: 0", "demo user 21st run -> 503" |
+| Poll failure after Judge0 accepted → `System Error`, not Pending (mock) | PASS | `MOCK_DOWN_ON_POLL` and `MOCK_PROCESSING` (deadline 6 s → 503 in 4.1 s) both stored `System Error` |
+| Stats exclusion | PASS | DB with 1 Accepted, 1 System Error, 2 Pending → profile total 1 / rate 100; dashboard total 1 |
+
+**Commits:** `1da2503` redis listener · `1105ca2` boot policy · `5e65722` middleware fail-open · `1b5b687` no Pending
++ demo quota · `4a11b8e` stats + cleanup script · `6dce081` Judge0 deadline.
+
+---
