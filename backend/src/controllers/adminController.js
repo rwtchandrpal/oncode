@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const Problem = require('../models/problem');
 const Submission = require('../models/submission');
+const { UNGRADED_STATUSES } = Submission;
 
 const getDashboardStats = async (req, res) => {
     try {
@@ -19,7 +20,8 @@ const getDashboardStats = async (req, res) => {
             ]),
 
             // Pipeline C: Submission metrics (persistent submissions)
-            Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }) }),
+            // graded only (BUG-13)
+            Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }), status: mongoose.trusted({ $nin: UNGRADED_STATUSES }) }),
             
             Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }), status: "Accepted" }) 
         ]);

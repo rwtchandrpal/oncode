@@ -1,5 +1,7 @@
 const User = require("../models/user");
+const mongoose = require("mongoose");
 const Submission = require("../models/submission");
+const { UNGRADED_STATUSES } = Submission;
 const Problem = require("../models/problem");
 const validate = require("../utils/validate");
 const bcrypt = require("bcrypt");
@@ -291,7 +293,8 @@ const getUserStats = async (req, res) => {
     const totalHard = platformCounts.find(p => p._id === 'hard')?.count || 0;
     const totalPlatformProblems = totalEasy + totalMedium + totalHard;
 
-    const totalSubmissions = await Submission.countDocuments({ userId });
+    // Only graded submissions count; Pending / System Error never had a verdict (BUG-13)
+    const totalSubmissions = await Submission.countDocuments({ userId, status: mongoose.trusted({ $nin: UNGRADED_STATUSES }) });
     const acceptedSubmissions = await Submission.countDocuments({
       userId,
       status: "Accepted",

@@ -78,4 +78,6 @@ submissionSchema.index({ userId: 1, problemId: 1, createdAt: -1 });
 submissionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, sparse: true });
 const Submission = mongoose.model('Submission', submissionSchema);
 
-module.exports = Submission ;
+module.exports = Submission;
+// Statuses that never produced a verdict. They are excluded from every statistic (BUG-13).
+module.exports.UNGRADED_STATUSES = ['Pending', 'System Error'];
