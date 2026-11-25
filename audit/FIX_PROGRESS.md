@@ -27,12 +27,12 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] B1 acceptance criteria verified
 
 ## Phase B2: frontend session/workspace
-- [ ] B2.1 sessionCleared + logout rejected clears (BUG-08)
-- [ ] B2.2 axios 401 interceptor + submission timeout (BUG-07, BUG-18)
-- [ ] B2.3 Account delete clears session (BUG-08)
-- [ ] B2.4 Per-language editor buffers (BUG-05)
-- [ ] B2.5 Problem not found state (BUG-06)
-- [ ] B2 acceptance criteria verified
+- [x] B2.1 sessionCleared + logout rejected clears (BUG-08)
+- [x] B2.2 axios 401 interceptor + submission timeout (BUG-07, BUG-18)
+- [x] B2.3 Account delete clears session (BUG-08)
+- [x] B2.4 Per-language editor buffers (BUG-05)
+- [x] B2.5 Problem not found state (BUG-06)
+- [x] B2 acceptance criteria verified
 
 ## Phase C1: validation + error contract
 - [ ] C1.1 config/env.js (CQ-02)

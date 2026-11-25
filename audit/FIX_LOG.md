@@ -116,3 +116,37 @@ Note: screenshots from the built-in browser are JPEG, so the files are `.jpg`, n
 + demo quota · `4a11b8e` stats + cleanup script · `6dce081` Judge0 deadline.
 
 ---
+## Phase B2: frontend session and workspace state (BUG-05, 06, 07, 08, 18 frontend)
+
+**What changed**
+- B2.1 `authSlice`: new `sessionCleared` reducer; `logoutUser.rejected` now clears `user`/`isAuthenticated`.
+- B2.2 `axiosClient` (own commit `fb41a00`): `setupInterceptors(store, {sessionCleared, openAuthModal})` called from
+  `main.jsx`. On a 401 (except `/user/login|register|demo|logout`) it removes the token, dispatches `sessionCleared`
+  and opens the auth modal with `redirectPath = location.pathname` (not for the boot-time `/user/check`, which
+  `checkAuth` handles). `/submission/*` requests get a 60 s timeout and a friendly `error.userMessage`.
+- B2.3 `UserProfile` delete: removes the token and does a hard `window.location.replace('/')`, with no logout call.
+  First attempt (`navigate('/')` + `dispatch(sessionCleared())`) landed signed out but re-opened the sign-in modal,
+  because the Redux update renders before react-router's transition and `ProtectedRoute` redirects with
+  `openAuthModal`. The hard redirect fixes that (follow-up commit `c47af32`).
+- B2.4 `ProblemCodeEditor` takes `path` + `defaultValue` (one Monaco model per `problemId-language`) instead of
+  a controlled `value`; `handleCodeChange` reads the language from a ref.
+- B2.5 workspace `loadError` state: 400/404 → "Problem not found" + "Back to problems"; other errors → Retry.
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| Garbage `localStorage.token`, click "View Profile": modal opens, navbar shows "Get Started", no zeros page | PASS | `{dialogOpen:true, getStarted:true, path:'/', token:null}`; logging in from that modal lands on `/profile` with real data. `screenshots/fixes/B2-garbage-token-auth-modal.jpg` |
+| Expired token (signed with the local harness key, exp −1 h) | PASS | API 401 "Your session has expired"; in the UI the next request signs out and opens the modal |
+| Logout | PASS | lands on `/`, token removed, old token → 401 on `/user/check`, no stray modal |
+| Delete a throwaway account → `/` signed out | PASS | `{path:'/', token:null, modalOpen:false, getStarted:true}`; `screenshots/fixes/B2-after-account-delete.jpg` |
+| Edit C++, switch to Java, edit Java, switch back: both edits survive (`monaco.editor.getEditors()[0].getValue()`) | PASS | cppBack starts `// CPP EDIT`, javaBack starts `// JAVA EDIT` |
+| `/problem/not-a-real-id` and `/problem/000000000000000000000000` show "Problem not found" within 2 s | PASS | both pages show the message at the 2 s check; `screenshots/fixes/B2-problem-not-found.jpg` |
+| `npm run lint` passes; `npm run build` succeeds | PASS | after every task |
+
+Observed during testing: with an expired token the workspace still rendered the problem from the **browser cache**
+(`Cache-Control: public, max-age=120` on `GET /problem/:id`). That is SEC-13; it is fixed in Phase D.
+
+**Commits:** `788b1a8` sessionCleared · `fb41a00` interceptor + timeout · `16fedeb` delete clears session ·
+`3dd983a` per-language models · `fec7fbb` problem not found · `c47af32` delete hard-redirect.
+
+---
