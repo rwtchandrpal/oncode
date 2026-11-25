@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router'; 
 import { LogOut, Trash2, Shield, Calendar, Mail, Zap } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
-import { logoutUser, sessionCleared } from '../features/auth/authSlice';
+import { logoutUser } from '../features/auth/authSlice';
 import GlobalNavbar from '../components/GlobalNavbar'; 
 
 const UserProfile = () => {
@@ -66,9 +66,10 @@ const UserProfile = () => {
       await axiosClient.delete('/user/profile');
       setIsDeleteModalOpen(false);
       // The account no longer exists, so a logout API call would only 401. Clear locally (BUG-08).
+      // A hard redirect (rather than dispatch + navigate) avoids ProtectedRoute briefly seeing the
+      // cleared session and reopening the sign-in modal; the reload starts signed out.
       localStorage.removeItem('token');
-      navigate('/', { replace: true });
-      dispatch(sessionCleared());
+      window.location.replace('/');
     } catch (err) {
       console.error("Failed to delete account:", err);
       setDeleteError(err.response?.data?.message || "Failed to delete account. Please try again.");
