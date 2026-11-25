@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const client = require("../config/redis");
+const { isTokenBlocked } = require("../utils/tokenBlocklist");
 
 /**
  * Optional User Authentication Middleware
@@ -32,14 +32,9 @@ const optionalUserMiddleware = async (req, res, next) => {
     }
 
     // Check Redis blacklist
-    try {
-      const isBlocked = await client.exists(`token:${token}`);
-      if (isBlocked) {
-        req.user = null;
-        return next();
-      }
-    } catch (redisErr) {
-      console.warn("Redis check failed in optionalUserMiddleware:", redisErr.message);
+    if (await isTokenBlocked(token)) {
+      req.user = null;
+      return next();
     }
 
     // Lookup user in MongoDB

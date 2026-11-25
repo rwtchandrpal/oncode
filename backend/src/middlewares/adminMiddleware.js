@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const client = require("../config/redis");
+const { isTokenBlocked, JWT_ERROR_NAMES } = require("../utils/tokenBlocklist");
 
 const adminMiddleware = async (req, res, next) => {
   try {
@@ -19,7 +19,7 @@ const adminMiddleware = async (req, res, next) => {
     }
 
     // check in redis blockList
-    const isBlocked = await client.exists(`token:${token}`);
+    const isBlocked = await isTokenBlocked(token);
     if (isBlocked) {
       return res
         .status(401)
@@ -44,13 +44,17 @@ const adminMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    const errorMessage =
-      err.name === "TokenExpiredError"
-        ? "Your session has expired. Please log in again."
-        : "Authentication failed.";
-
-    
-    res.status(401).json({ message: errorMessage });
+    if (JWT_ERROR_NAMES.has(err.name)) {
+      const errorMessage =
+        err.name === "TokenExpiredError"
+          ? "Your session has expired. Please log in again."
+          : "Authentication failed.";
+      return res.status(401).json({ message: errorMessage });
+    }
+    // Infrastructure failure (e.g. MongoDB unreachable): not the user's fault, so no 401 that would
+    // make the client throw away a valid token.
+    console.error("[auth] middleware error:", err);
+    res.status(503).json({ message: "Service temporarily unavailable. Please try again." });
   }
 };
 
