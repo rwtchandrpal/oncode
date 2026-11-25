@@ -12,3 +12,21 @@
 ## Not covered
 - Judge0-dependent behaviour (verdict mapping, TLE, compile errors, polling latency); see the checklist in AUDIT_REPORT §7.
 - The live Vercel deployment and the backend host were deliberately not touched.
+
+## Fix phases (branch `fix/all-phases`)
+
+| Phase | Status | Notes |
+|---|---|---|
+| A. Critical security | Done | SEC-01/02/03/05/08/10/14; see `FIX_LOG.md` |
+| B1. Backend stability | Done | Redis start-anyway policy, no Pending orphans |
+| B2. Frontend session/workspace | Done | 401 interceptor, per-language buffers |
+| C1. Validation + error contract | Done | zod env + request validation, `{error:{code,message}}`, pino |
+| C2. Platform hardening | Done | helmet, Redis rate limits, AI limits, self-hosted Monaco + CSP, health, shutdown; Judge0 TLS → owner |
+| D. Performance/data | Done | pagination, topics cache, isSolved, submission detail, counters, lazy modal |
+| E1. Admin authoring | Done | metadata edits without Judge0, all reference solutions validated, shared form |
+| E2. UX/a11y | Done | typography, modal focus, labels, landmarks, drafts, URL filters |
+| E3. Cleanup/docs | Done | one auth middleware, judgeService, README |
+| F. Tests + CI | Done | 34 backend + 9 frontend tests, ESLint, CI workflow, Dockerfile; GitHub run pending push |
+| G. Judge0 re-test | Skipped | Judge0 off; checklist in `OWNER_TODO.md` |
+
+Final summary: `FINAL_REPORT.md`. Owner steps: `OWNER_TODO.md`. Progress checklist: `FIX_PROGRESS.md`.

@@ -391,6 +391,47 @@ schemas · `99d17c4` required-field messages.
 `05c674d` judgeService · `007039f` README.
 
 ---
+## Phase F: tests and CI (CQ-01, OPS-04)
+
+**What changed**
+- F1 `src/app.js` (Express app, no I/O) split from `src/server.js` (connect, listen, shutdown). Backend devDeps
+  `vitest`, `@vitest/coverage-v8`, `supertest`. **Deviation:** no `mongodb-memory-server` / `ioredis-mock`. Tests use a
+  real MongoDB replica set and Redis (locally the audit Docker containers, DB `oncode_test`; in CI service
+  containers started in the workflow). This avoids downloading a MongoDB binary at test time, exercises
+  transactions, sanitizeFilter and the Redis-backed rate limits for real, and needs no module mocking of CommonJS
+  code. `tests/helpers/app.js` refuses to run unless the host is local (or `CI` is set) and the DB name contains
+  "test". Judge0 is an in-process mock started by `globalSetup` (markers `MOCK_WA/CE/RE/TLE/DOWN`).
+- F2 34 backend tests in 4 files: register/login/logout/token tampering/error contract, **SEC-01 regression**
+  (5 operator/array payloads → 400, no token), **authorization matrix** (7 admin routes: anon 401, user 403;
+  DB role beats token role), **data exposure** (marker strings absent from every non-admin response, present in
+  the admin endpoint), **submit with mocked Judge0** (Accepted, Wrong Answer without hidden data, compile error,
+  runtime error without the stdin echo, **Judge0 down → 503 and no Pending/new record**, run, 413/400), submission
+  history owner scoping, **stats exclusion**, metadata-only edit without Judge0, and concurrent numbering.
+- F3 frontend devDeps `vitest`, `@testing-library/react`/`dom`, `jsdom`; 9 tests: `authSlice` (`sessionCleared`, a failed
+  logout still clears), the axios 401 interceptor (clears session + opens modal with redirect; login 401 and 503
+  leave the session; 60 s run/submit timeout), workspace (only the problem's languages; C++→Java→C++ keeps both
+  edits; draft saved after 500 ms and restored on the next visit). Monaco is replaced by a small per-path model stub.
+- F4 backend ESLint 9 flat config with `eslint-plugin-n`. Findings fixed: unused destructured vars in
+  register/adminRegister (CQ-05), needless shebang. Prettier config + `format`/`format:check` scripts in both apps,
+  **not enforced in CI**: 27 backend and 31 frontend files are not Prettier-formatted, and enforcing would need a
+  large formatting-only commit (owner decision).
+- F5 `.github/workflows/ci.yml` (Node 22): backend job (Mongo rs + Redis containers, `npm ci`, lint,
+  `npm audit --omit=dev --audit-level=high`, `test:coverage`, `docker build`), frontend job (`npm ci`, lint, test, audit,
+  build). `backend/Dockerfile` (node:22-alpine, prod deps only, non-root `node` user, HEALTHCHECK on `/healthz`) and
+  `.dockerignore` (excludes `.env`); it was already built and used for the C2 SIGTERM test.
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| CI green on the PR | DEFERRED (no push/PR by instruction) | every CI step run locally and passing: `raw/fixes/F-ci-local-backend.txt`, `F-ci-local-frontend.txt`; lockfiles consistent with node_modules (`npm ls`) |
+| Coverage reported for `controllers/` and `middlewares/` (target ≥ 60 % lines) | PASS | controllers 61.05 %, middlewares 93.57 %, all src 67.99 % lines |
+| Deliberately reverting the SEC-01 fix makes a test fail | PASS | with the route validation, the controller type check and sanitizeFilter reverted, 5 SEC-01 tests fail (the `$ne` + admin password case returned **200**, i.e. the exploit is back); restored from git → 14/14 pass (`raw/fixes/F-sec01-revert-check.txt`) |
+| Lint, test, `npm audit --omit=dev --audit-level=high`, build run locally | PASS | backend lint 0 problems, 34/34 tests, audit 0 vulnerabilities, image builds; frontend lint 0, 9/9 tests, audit 0, build OK |
+
+**Commits:** `7b7c543` test infra + app split · `592eff5` backend tests · `7c2726e` frontend tests · `629fbba` ESLint/Prettier ·
+`28c93f6` CI + Dockerfile.
+
+---
 ## Noticed but not fixed
 - Compile errors on hidden tests return compiler output, which can quote driver-code lines (allowed by plan A4).
 - Problems may have a language snippet without a reference solution; that driver stays unverified (E1.2).
@@ -398,3 +439,5 @@ schemas · `99d17c4` required-field messages.
 - CSP `connect-src` allows any `https:` because the production API host is not in the repo; tighten it to the real host.
 - With the backend unreachable, `checkAuth` removes the stored token on any error (network included), so a backend outage signs users out. Pre-existing; not in the plan.
 - `CLAUDE.md` §3 (repo map) and §7 (known limitations) describe the pre-fix code (three middlewares, `validate.js`, `docs/`, single-language problems, metadata-only edit form). It is project guidance written for the audit, so I left it unchanged; it should be refreshed.
+- Prettier is configured but most existing files are not formatted (see F4).
+- Vite warns that the lazy `problemWorkspace` chunk is larger than 600 kB because of the bundled Monaco (2.98 MB / 771 kB gzip).

@@ -1,6 +1,6 @@
 # Fix progress (`fix/all-phases`)
 
-**Status: A–E3 complete; F and the final reports in progress.**
+**Status: A–F complete (G skipped: Judge0 off). Final reports written.**
 
 Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] skipped
 
@@ -89,16 +89,16 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] E3 acceptance criteria verified
 
 ## Phase F: tests + CI
-- [ ] F1 Backend test infra (vitest, supertest, mongodb-memory-server)
-- [ ] F2 Backend tests (auth, authz matrix, exposure, submit mocked, stats)
-- [ ] F3 Frontend tests
-- [ ] F4 Backend ESLint + Prettier
-- [ ] F5 CI workflow + Dockerfile
-- [ ] F SEC-01 revert check, CI steps run locally
+- [x] F1 Backend test infra (vitest, supertest, mongodb-memory-server)
+- [x] F2 Backend tests (auth, authz matrix, exposure, submit mocked, stats)
+- [x] F3 Frontend tests
+- [x] F4 Backend ESLint + Prettier
+- [x] F5 CI workflow + Dockerfile
+- [x] F SEC-01 revert check, CI steps run locally (CI on GitHub: deferred, no push)
 
 ## Phase G
 - [-] Skipped: Judge0 is off (checklist listed in OWNER_TODO.md / FINAL_REPORT.md)
 
 ## Final
-- [ ] FINAL_REPORT.md
-- [ ] OWNER_TODO.md
+- [x] FINAL_REPORT.md
+- [x] OWNER_TODO.md
