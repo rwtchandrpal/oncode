@@ -1,10 +1,10 @@
+// Must be first: loads .env and validates every variable, exiting with the missing names (CQ-02).
+const env = require("./config/env");
 const express = require("express");
-const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const compression = require("compression");
 
-dotenv.config();
 
 const connectDB = require("./config/db");
 const client = require("./config/redis");
@@ -19,7 +19,7 @@ const { initDemoCleanupWorker } = require("./utils/cleanupDemoWorker");
 const app = express();
 
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: env.CLIENT_URL,
     credentials: true
 }));
 app.use(compression({
@@ -74,7 +74,7 @@ const initializeConnection = async () => {
 
   initDemoCleanupWorker();
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = env.PORT;
   app.listen(PORT, () => {
     console.log("Server in listening at port : " + PORT);
   });
