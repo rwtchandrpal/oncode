@@ -4,6 +4,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const compression = require("compression");
+const helmet = require("helmet");
 
 
 const connectDB = require("./config/db");
@@ -21,6 +22,15 @@ const { AppError, sendError, errorBody } = require("./utils/AppError");
 
 
 const app = express();
+
+// Security headers (SEC-12). The API is called cross-origin by the SPA, so resources must be
+// readable cross-origin; CORS below still restricts which origin may call it.
+app.disable("x-powered-by");
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+
+// Number of reverse proxies in front of the API (SEC-09). 0 (default) trusts none, so req.ip is the
+// socket address and X-Forwarded-For cannot be spoofed. Set TRUST_PROXY_HOPS to the host's real hop count.
+app.set("trust proxy", env.TRUST_PROXY_HOPS);
 
 // Normalize every error body to { error: { code, message } } (CQ-04)
 app.use(errorShape);
