@@ -1,7 +1,6 @@
 // Must be first: loads .env and validates every variable, exiting with the missing names (CQ-02).
 const env = require("./config/env");
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const compression = require("compression");
 const helmet = require("helmet");
@@ -49,9 +48,9 @@ app.use(pinoHttp({
   },
 }));
 
+// Bearer tokens, no cookies: credentials are not needed (SEC-15). Only the configured SPA origin.
 app.use(cors({
-    origin: env.CLIENT_URL,
-    credentials: true
+    origin: env.CLIENT_URL
 }));
 app.use(compression({
     threshold: 1024,
@@ -65,7 +64,6 @@ app.use(compression({
 // one skips those requests.
 app.use("/problem", express.json({ limit: "2mb" }));
 app.use(express.json({ limit: "100kb" }));
-app.use(cookieParser());
 app.use(healthRouter);
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);

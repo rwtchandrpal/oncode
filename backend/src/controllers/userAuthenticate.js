@@ -61,7 +61,6 @@ const demoLogin = async (req, res) => {
   }
 };
 
-// cookieOptions are no longer needed as we use localStorage + Bearer tokens
 
 // handler for authentication register, login, logout
 const register = async (req, res) => {
