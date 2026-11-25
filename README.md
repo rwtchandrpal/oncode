@@ -83,25 +83,25 @@ npm install
 ```
 
 ### Environment Variables
-Create a `.env` file in both directories.
-
-**Backend `.env`:**
-```env
-PORT=3000
-MONGO_URI=your_mongodb_uri
-JWT_KEY=your_jwt_secret
-REDIS_HOST=your_redis_host
-REDIS_PORT=your_redis_port
-REDIS_PASS=your_redis_password
-JUDGE0_BASE_URL=http://your-judge0-instance:2358
-JUDGE0_AUTH_TOKEN=your_token
-CLIENT_URL=http://localhost:5173
+Copy the examples and fill them in:
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
+See [`backend/.env.example`](backend/.env.example) and [`frontend/.env.example`](frontend/.env.example) for every variable.
 
-**Frontend `.env`:**
-```env
-VITE_API_URL=http://localhost:3000
+> **Do not point a local `.env` at the production MongoDB Atlas cluster or Redis Cloud.** Use separate dev
+> credentials, or the local Docker stack below.
+
+### Local development stack (Docker)
+```bash
+docker run -d --name oncode-dev-mongo -p 127.0.0.1:27017:27017 mongo:7 --replSet rs0 --bind_ip_all
+docker exec oncode-dev-mongo mongosh --quiet --eval "rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]})"
+docker run -d --name oncode-dev-redis -p 127.0.0.1:6379:6379 redis:7-alpine
 ```
+Then use `MONGO_URI=mongodb://127.0.0.1:27017/oncode_dev?replicaSet=rs0&directConnection=true`,
+`REDIS_HOST=127.0.0.1`, `REDIS_PORT=6379` and an empty `REDIS_PASS`. A replica set is needed because problem
+deletion uses a transaction. `audit/harness/` has a seeded variant (test accounts, sample problems and a mock Judge0).
 
 ### Start Servers
 Run this in both `frontend` and `backend` directories:
