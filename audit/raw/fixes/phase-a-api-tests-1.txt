@@ -1,0 +1,63 @@
+=== AUTH ===
+login admin 200 user 200 other 200 | response keys ["user","token","message"] | user keys ["firstName","lastName","email","_id","role"]
+JWT payload (user): {"_id":"6b06e28e2dadc0a6c965d7c8","email":"user@audit.test","role":"user","iat":1795613329,"exp":1795616929}
+login uppercase email: 200
+wrong password -> 401 {"message":"Invalid credentials."} 58ms | nonexistent user -> 401 {"message":"Invalid credentials."} 57ms
+=== NOSQL INJECTION (login) ===
+{email:{$ne:null},password:{$ne:null}} -> 400 {"message":"Please provide both email and password."}
+{email:{$ne:null},password:<admin pw>} -> 400 {"message":"Please provide both email and password."} (200 means the operator reached MongoDB and the first matching user was returned)
+{email:{$regex:"^adm"},password:"x"} -> 400 {"message":"Please provide both email and password."} 2ms
+{email:{$regex:"^zzz"},password:"x"} -> 400 {"message":"Please provide both email and password."} 2ms (timing gap = blind regex enumeration of emails)
+=== REGISTER ===
+register with role:"admin" -> 201 role in response = user
+register with problemsSolved -> 400 {"message":"Invalid properties provided in the request."}
+register duplicate email -> 400 {"message":"Email is already registered."} (enumeration)
+register weak password -> 400 {"message":"Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character."}
+register empty -> 400 {"message":"Missing required fields: firstName, email, password."}
+register firstName 51 chars -> 400 {"message":"First name must be between 1 and 50 characters long."}
+register 200KB password -> 413 {"message":"Request body is too large."} 3ms
+login with different password sharing first 72 bytes -> 401 {"message":"Invalid credentials."} (200 = bcrypt 72-byte truncation)
+register mixed-case email -> 201 stored email = mixed.case@audit.test
+register HTML in firstName -> 201 stored firstName = <img src=x onerror=alert(1)>
+malformed JSON body -> 400 {"message":"Malformed JSON in request body."}
+=== AUTHORIZATION: normal user -> admin endpoints ===
+GET /admin/dashboard: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+POST /problem/: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+PUT /problem/6b06e28e2dadc0a6c965d7ca: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+DELETE /problem/6b06e28e2dadc0a6c965d7ca: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+POST /user/admin/register: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+=== DATA EXPOSURE ===
+GET /problem/ (anon, no paging) -> 200 count 12 limit 12 leaks markers? false cache-control public, max-age=30, stale-while-revalidate=60
+GET /problem/:id (user) -> 200 keys ["_id","title","topics","description","difficulty","codeSnippets","constraints","visibleTestCase","examples","number"] leaks markers? false cache-control public, max-age=120, stale-while-revalidate=300
+GET /problem/:id (anon) -> 401
+GET /problem/:id/solution (user, unsolved) -> 403 {"isLocked":true,"message":"You must solve this problem before viewing the official solution."}
+GET /problem/:id/solution (admin) -> 200 has reference marker true
+GET /user/profile (user) -> 200 leaks? false
+GET /user/check -> 200 {"user":{"firstName":"Audit","lastName":"User","email":"user@audit.test","_id":"6b06e28e2dadc0a6c965d7c8","role":"user","isDemo":false,"expiresAt":null},"message":"valid user session."}
+GET /problem/solved -> {"solvedProblems":[]}
+GET /admin/dashboard (admin) -> {"metrics":{"totalProblems":12,"totalUsers":6,"totalSubmissions":0},"acceptanceRate":0,"difficulty":{"easy":4,"medium":4,"hard":4},"demographics":{"standard":5,"admin":1}}
+=== INPUT VALIDATION / ERROR LEAKS ===
+GET /problem/?search=a&search=b -> 500 {"message":"Failed to fetch problems."}
+GET /problem/?difficulty[$ne]=x -> 200 {"allProblems":[{"_id":"6b06e28e2dadc0a6c965d7ca","title":"Double It","topics":["String"],"difficulty":"Medium","number":1},{"_id":"6b06e28e2dadc0a6c965d7d1","title":"Audit Problem 2","topics":["Math"],"difficulty":"Hard
+GET /problem/?search=(a+)+$ -> 200 count 0 (escaped)
+GET /problem/?page=-5&limit=100000 -> 200 limit 100 page 1
+GET /problem/submissions/not-an-id -> 500 {"message":"Failed to get past submissions."}
+POST /submission/submit/not-an-id -> 500 {"message":"Failed to submit code. Please try again."}
+POST submit language as object -> 400 {"message":"Missing required field."}
+GET /submission/health (anon) -> 401 {"message":"Authentication required"}
+=== HEADERS / CORS ===
+x-powered-by: Express | ACAO for evil origin: http://localhost:5174 | x-frame-options: null | strict-transport-security: null | x-content-type-options: null
+ACAO for allowed origin: http://localhost:5174 credentials: true
+unknown route -> 404 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /none
+=== TOKEN HANDLING ===
+tampered token (role:admin) /user/check -> 401
+alg:none token -> 401
+logout other -> 200 | reuse after logout -> 401 {"message":"Session expired. Please log in again."}
+__TOKENS__{"tA":"<redacted>","tU":"<redacted>","pid":"6b06e28e2dadc0a6c965d7ca"}

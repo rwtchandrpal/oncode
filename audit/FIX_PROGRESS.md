@@ -8,13 +8,13 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] Baseline recorded in FIX_LOG.md
 
 ## Phase A: critical security
-- [ ] A1 Dependency bumps (SEC-02)
-- [ ] A2 Login hardening + sanitizeFilter (SEC-01, SEC-10)
-- [ ] A3 Error leakage, Judge0 503, health admin-only (SEC-05)
-- [ ] A4 Hidden tests not in submit response (SEC-03)
-- [ ] A5 Payload caps (SEC-08)
-- [ ] A6 .env.example files + README dev stack (SEC-14)
-- [ ] A acceptance criteria verified
+- [x] A1 Dependency bumps (SEC-02)
+- [x] A2 Login hardening + sanitizeFilter (SEC-01, SEC-10)
+- [x] A3 Error leakage, Judge0 503, health admin-only (SEC-05)
+- [x] A4 Hidden tests not in submit response (SEC-03)
+- [x] A5 Payload caps (SEC-08)
+- [x] A6 .env.example files + README dev stack (SEC-14)
+- [x] A acceptance criteria verified
 
 ## Phase B1: backend stability
 - [ ] B1.1 Redis error listener + reconnect (BUG-02)
