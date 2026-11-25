@@ -318,29 +318,46 @@ schemas · `99d17c4` required-field messages.
 **Commits:** `e86122e` backend · `4c005a9` ProblemForm · `98643a3` workspace languages.
 
 ---
-## Phase E2: UX and accessibility (IN PROGRESS, stopped: usage limit reached)
+## Phase E2: UX and accessibility (UX-01..07, BUG-15)
 
-Done:
-- E2.1 `@tailwindcss/typography` + bordered tables, `whitespace-pre-wrap` removed (`b814f04`). PASS: styled h3,
-  disc bullets, bordered table (`screenshots/fixes/E2-problem-markdown-styled.png`); XSS probes still inert.
-- E2.2 AuthModal focus management + sr-only labels. PASS (browser): opening focuses `#auth-login-email`; Esc
-  closes and returns focus to "Get Started". The Tab-cycling check was a synthetic event only, so it is not
-  fully verified. Needs a manual Tab check.
+(Work stopped once at E2.2 because of a usage limit and resumed in a second run.)
 
-Not started: E2.3 (UserManagement labels; ProblemForm already done in E1), E2.4, E2.5, E2.6, E2 acceptance at
-desktop and 390 px.
+**What changed**
+- E2.1 `@tailwindcss/typography` plugin, `whitespace-pre-wrap` removed from the statement wrapper, bordered table cells
+  via prose modifiers. Optional KaTeX (`remark-math`/`rehype-katex`) was **not** added: it is optional in the plan and
+  its fonts would need to be allowed by the new CSP.
+- E2.2 `AuthModal`: focus moves to the first field on open and on mode switch, Tab/Shift+Tab are trapped, Esc and close
+  restore focus to the opener, and every input has an `sr-only` `<label htmlFor>`. The existing overlay (which sits
+  below the sticky navbar on purpose) was kept instead of switching to `<dialog>`.
+- E2.3 admin forms: ProblemForm was already done in E1; `UserManagement` inputs now have `id` + `htmlFor`, and the
+  role radios form a labelled `radiogroup`.
+- E2.4 `GlobalNavbar` is a `<nav aria-label="Main">`; Home is a `<main>` with a visually hidden `<h1>Problems</h1>`;
+  the 404 page is a `<main>` with a "Back to problems" link.
+- E2.5 `utils/editorStorage.js` (guarded localStorage). The workspace saves each language's draft 500 ms after the last
+  keystroke (`oncode:code:<problemId>:<lang>`) and uses it as the initial value of that language's Monaco model. A
+  "Reset" button in the editor toolbar (with a confirm dialog) restores the starter snippet and deletes the draft.
+- E2.6 Home: `page`, `search`, `difficulty`, `topic` and `status` live in the URL (`useSearchParams`; defaults are
+  omitted; typing uses `replace`, other changes push history). Topic badges on the statement link to `/?topic=X`. A
+  failed list fetch shows "Couldn't load problems." with Retry instead of "No problems found".
 
-## Remaining work (not done in this run)
-- Phase E2: tasks 3–6 and acceptance.
-- Phase E3: all tasks (middleware merge, remove Login/Signup pages, shared utils, dead deps, delete root
-  `node_modules/` and empty `docs/`, judgeService, README rewrite). `backend/Dockerfile` and `.dockerignore`
-  exist **uncommitted** (built and used for the C2 SIGTERM test), intended for Phase F5.
-- Phase F: all tasks (tests, ESLint/Prettier, CI workflow, SEC-01 revert check).
-- Final: `audit/FINAL_REPORT.md`; complete `audit/OWNER_TODO.md` (currently a stub).
-- Phase G: skipped (Judge0 off).
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| Statement shows a styled `h3`, bullets and a bordered table | PASS | h3 22.5 px / 600, `list-style: disc`, td borders 0.8 px solid (`screenshots/fixes/E2-problem-markdown-styled.png`; compare `03-problem-markdown-unstyled.jpg`) |
+| Opening the modal moves focus into it; Tab cycles within it; Esc closes and returns focus to "Get Started" | PASS | real key presses: focus starts on `#auth-login-email`; 14×Tab + 4×Shift+Tab = 18 focus moves, all inside the dialog; Esc → closed, focus on "Get Started" |
+| `/?page=2&difficulty=hard` reloads to the same view | PASS | the select shows `hard` and the API call is `page=2...difficulty=hard`; `/?page=2` shows problems 11–14 with page 2 active |
+| Reloading the workspace keeps edited code; Reset restores the snippet | PASS | `screenshots/fixes/E2-editor-draft-after-reload.png`, `E2-editor-after-reset.png` (draft key removed). Reading `.view-lines` right after load returned empty text because Monaco paints lazily, so the screenshots are the evidence |
+| Stopping the backend and reloading Home shows "Couldn't load problems. Retry" | PASS | `screenshots/fixes/E2-home-load-error-retry.jpg`; after restarting the backend, Retry loaded 10 problems |
+| Topic badges link to the filtered list (UX-07) | PASS | badge `/?topic=Greedy` → 2 results, topic select set to Greedy |
+| Desktop and 390 px | PASS | 390 px: no horizontal scroll on Home, statement, editor (Reset visible) or the admin form (`screenshots/fixes/E2-390-*.jpg`) |
 
+**Commits:** `b814f04` typography · `dce9a64` modal focus · `c51ecf5` admin labels · `ab4145e` landmarks/404 ·
+`0808e96` drafts/reset · `3bdce90` URL filters/error state.
+
+---
 ## Noticed but not fixed
 - Compile errors on hidden tests return compiler output, which can quote driver-code lines (allowed by plan A4).
 - Problems may have a language snippet without a reference solution; that driver stays unverified (E1.2).
 - `problemWorkspace` chunk is 2.98 MB (Monaco) and triggers Vite's size warning; it is lazy-loaded.
 - CSP `connect-src` allows any `https:` because the production API host is not in the repo; tighten it to the real host.
+- With the backend unreachable, `checkAuth` removes the stored token on any error (network included), so a backend outage signs users out. Pre-existing; not in the plan.

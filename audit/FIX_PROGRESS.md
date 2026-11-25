@@ -71,12 +71,12 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 
 ## Phase E2: UX/a11y
 - [x] E2.1 Typography plugin (UX-01)
-- [~] E2.2 Accessible AuthModal (UX-02)
-- [ ] E2.3 Admin form labels (UX-03)
-- [ ] E2.4 Landmarks + 404 link (UX-04)
-- [ ] E2.5 Editor persistence + reset (UX-05)
-- [ ] E2.6 URL-synced filters, topic badges, Home error state (UX-06, UX-07, BUG-15)
-- [ ] E2 acceptance criteria verified
+- [x] E2.2 Accessible AuthModal (UX-02)
+- [x] E2.3 Admin form labels (UX-03)
+- [x] E2.4 Landmarks + 404 link (UX-04)
+- [x] E2.5 Editor persistence + reset (UX-05)
+- [x] E2.6 URL-synced filters, topic badges, Home error state (UX-06, UX-07, BUG-15)
+- [x] E2 acceptance criteria verified
 
 ## Phase E3: cleanup/docs
 - [ ] E3.1 Single authenticate middleware (CQ-03)
