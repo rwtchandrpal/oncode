@@ -81,8 +81,8 @@ const UserManagement = () => {
           {/* First Name & Last Name Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="form-control w-full">
-              <label className="label"><span className="label-text text-base-content/60 font-medium">First Name</span></label>
-              <input 
+              <label htmlFor="um-first-name" className="label"><span className="label-text text-base-content/60 font-medium">First Name</span></label>
+              <input id="um-first-name" 
                 type="text" 
                 placeholder="John" 
                 className={`${inputClass} ${errors.firstName ? 'border-error' : ''}`}
@@ -92,8 +92,8 @@ const UserManagement = () => {
             </div>
 
             <div className="form-control w-full">
-              <label className="label"><span className="label-text text-base-content/60 font-medium">Last Name</span></label>
-              <input 
+              <label htmlFor="um-last-name" className="label"><span className="label-text text-base-content/60 font-medium">Last Name</span></label>
+              <input id="um-last-name" 
                 type="text" 
                 placeholder="Doe" 
                 className={`${inputClass} ${errors.lastName ? 'border-error' : ''}`}
@@ -105,8 +105,8 @@ const UserManagement = () => {
 
           {/* Email Field */}
           <div className="form-control w-full">
-            <label className="label"><span className="label-text text-base-content/60 font-medium">Email Address</span></label>
-            <input 
+            <label htmlFor="um-email" className="label"><span className="label-text text-base-content/60 font-medium">Email Address</span></label>
+            <input id="um-email" 
               type="email" 
               placeholder="e.g., john@example.com" 
               className={`${inputClass} ${errors.email ? 'border-error' : ''}`}
@@ -117,8 +117,8 @@ const UserManagement = () => {
 
           {/* Password Field */}
           <div className="form-control w-full">
-            <label className="label"><span className="label-text text-base-content/60 font-medium">Temporary Password</span></label>
-            <input 
+            <label htmlFor="um-password" className="label"><span className="label-text text-base-content/60 font-medium">Temporary Password</span></label>
+            <input id="um-password" 
               type="password" 
               placeholder="••••••••" 
               className={`${inputClass} ${errors.password ? 'border-error' : ''}`}
@@ -132,10 +132,10 @@ const UserManagement = () => {
 
           {/* Role Selection */}
           <div className="form-control w-full mb-6">
-            <label className="label">
-              <span className="label-text text-base-content/60 font-medium">Platform Role</span>
-            </label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="label">
+              <span id="um-role-label" className="label-text text-base-content/60 font-medium">Platform Role</span>
+            </div>
+            <div role="radiogroup" aria-labelledby="um-role-label" className="grid grid-cols-2 gap-4">
               
               {/* Standard User Radio */}
               <label className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
