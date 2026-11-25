@@ -1,0 +1,532 @@
+{
+  "contains-duplicate": {
+    "slug": "contains-duplicate",
+    "title": "Contains Duplicate",
+    "hash": "a3354f82bd19d9a8ab7dbe8821e627a6526f563f385063cc4c3a0ef683177b4b",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 37,
+        "maxMemoryKb": 4344,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 224,
+        "maxMemoryKb": 39860,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:01:07.549Z"
+  },
+  "valid-anagram": {
+    "slug": "valid-anagram",
+    "title": "Valid Anagram",
+    "hash": "f6c4c6d25a68f5f7f4203f946be5d4ac1f47bd21e9514facfb8b103cd236acdd",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 15,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 157,
+        "maxMemoryKb": 35200,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:02:03.163Z"
+  },
+  "two-sum": {
+    "slug": "two-sum",
+    "title": "Two Sum",
+    "hash": "180c730ebd389b58b17ebe7faf8cf30a05fa7bd5443fe22b3358478548e9dbe6",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 77,
+        "maxMemoryKb": 4332,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 239,
+        "maxMemoryKb": 41600,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-same-index.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:03:03.411Z"
+  },
+  "valid-palindrome": {
+    "slug": "valid-palindrome",
+    "title": "Valid Palindrome",
+    "hash": "304c3fc5bebd80251b92b1727622e86913c95243ae9a3fa3be4bd9d8682895f2",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 20,
+        "maxMemoryKb": 3420,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 155,
+        "maxMemoryKb": 34944,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "wrong-no-digits.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Wrong Answer x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:03:40.819Z"
+  },
+  "best-time-to-buy-and-sell-stock": {
+    "slug": "best-time-to-buy-and-sell-stock",
+    "title": "Best Time to Buy And Sell Stock",
+    "hash": "ec9a12d736224d2f2fce35cc45ca5bf3459838fd8c0570985a6ec54e3b69f040",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 79,
+        "maxMemoryKb": 3760,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 231,
+        "maxMemoryKb": 37576,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Time Limit Exceeded x1",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-min-max.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:04:44.962Z"
+  },
+  "valid-parentheses": {
+    "slug": "valid-parentheses",
+    "title": "Valid Parentheses",
+    "hash": "7880f1b5f44455385256f7ed8f8fd06f6e8cd811bbcefc9b2c4643e0f3bfec42",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 55,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 136,
+        "maxMemoryKb": 34688,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Wrong Answer x3, Accepted x7",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Wrong Answer x3, Accepted x7",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-counts.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Wrong Answer x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:05:48.920Z"
+  },
+  "climbing-stairs": {
+    "slug": "climbing-stairs",
+    "title": "Climbing Stairs",
+    "hash": "371f786ff9c77b527a9434e0ea190d62740d683253c98ccdc04dca9dd1f2ad4e",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 13,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 168,
+        "maxMemoryKb": 34048,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Time Limit Exceeded x1",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:06:48.356Z"
+  },
+  "missing-number": {
+    "slug": "missing-number",
+    "title": "Missing Number",
+    "hash": "fd7d91fbb4a536d56447b0b0092262719d58c6385f653c30dc272f90ef84dc09",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 30,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 180,
+        "maxMemoryKb": 38104,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "slow.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:07:45.130Z"
+  },
+  "number-of-1-bits": {
+    "slug": "number-of-1-bits",
+    "title": "Number of 1 Bits",
+    "hash": "62ab6b9503e1793ed02a0370b06ec0448145569f9ae0fdd25653cf3ec08b3713",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 14,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 142,
+        "maxMemoryKb": 33664,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-30-bits.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:08:21.829Z"
+  },
+  "counting-bits": {
+    "slug": "counting-bits",
+    "title": "Counting Bits",
+    "hash": "52d781a34ec24b0aa6c000988df49e1c50312807928f3c61510779e4f90783dd",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 46,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 159,
+        "maxMemoryKb": 36852,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-length.cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:09:01.762Z"
+  }
+}

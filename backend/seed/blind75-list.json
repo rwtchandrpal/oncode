@@ -1,0 +1,608 @@
+{
+  "source": "https://neetcode.io/practice/practice/blind75",
+  "retrievedAt": "2026-11-25",
+  "count": 75,
+  "problems": [
+    {
+      "order": 1,
+      "title": "Contains Duplicate",
+      "slug": "contains-duplicate",
+      "difficulty": "Easy",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "duplicate-integer"
+    },
+    {
+      "order": 2,
+      "title": "Valid Anagram",
+      "slug": "valid-anagram",
+      "difficulty": "Easy",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "is-anagram"
+    },
+    {
+      "order": 3,
+      "title": "Two Sum",
+      "slug": "two-sum",
+      "difficulty": "Easy",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "two-integer-sum"
+    },
+    {
+      "order": 4,
+      "title": "Group Anagrams",
+      "slug": "group-anagrams",
+      "difficulty": "Medium",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "anagram-groups"
+    },
+    {
+      "order": 5,
+      "title": "Top K Frequent Elements",
+      "slug": "top-k-frequent-elements",
+      "difficulty": "Medium",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "top-k-elements-in-list"
+    },
+    {
+      "order": 6,
+      "title": "Encode and Decode Strings",
+      "slug": "encode-and-decode-strings",
+      "difficulty": "Medium",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "string-encode-and-decode"
+    },
+    {
+      "order": 7,
+      "title": "Product of Array Except Self",
+      "slug": "product-of-array-except-self",
+      "difficulty": "Medium",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "products-of-array-discluding-self"
+    },
+    {
+      "order": 8,
+      "title": "Longest Consecutive Sequence",
+      "slug": "longest-consecutive-sequence",
+      "difficulty": "Medium",
+      "topic": "Arrays & Hashing",
+      "neetcodeSlug": "longest-consecutive-sequence"
+    },
+    {
+      "order": 9,
+      "title": "Valid Palindrome",
+      "slug": "valid-palindrome",
+      "difficulty": "Easy",
+      "topic": "Two Pointers",
+      "neetcodeSlug": "is-palindrome"
+    },
+    {
+      "order": 10,
+      "title": "3Sum",
+      "slug": "3sum",
+      "difficulty": "Medium",
+      "topic": "Two Pointers",
+      "neetcodeSlug": "three-integer-sum"
+    },
+    {
+      "order": 11,
+      "title": "Container With Most Water",
+      "slug": "container-with-most-water",
+      "difficulty": "Medium",
+      "topic": "Two Pointers",
+      "neetcodeSlug": "max-water-container"
+    },
+    {
+      "order": 12,
+      "title": "Best Time to Buy And Sell Stock",
+      "slug": "best-time-to-buy-and-sell-stock",
+      "difficulty": "Easy",
+      "topic": "Sliding Window",
+      "neetcodeSlug": "buy-and-sell-crypto"
+    },
+    {
+      "order": 13,
+      "title": "Longest Substring Without Repeating Characters",
+      "slug": "longest-substring-without-repeating-characters",
+      "difficulty": "Medium",
+      "topic": "Sliding Window",
+      "neetcodeSlug": "longest-substring-without-duplicates"
+    },
+    {
+      "order": 14,
+      "title": "Longest Repeating Character Replacement",
+      "slug": "longest-repeating-character-replacement",
+      "difficulty": "Medium",
+      "topic": "Sliding Window",
+      "neetcodeSlug": "longest-repeating-substring-with-replacement"
+    },
+    {
+      "order": 15,
+      "title": "Minimum Window Substring",
+      "slug": "minimum-window-substring",
+      "difficulty": "Hard",
+      "topic": "Sliding Window",
+      "neetcodeSlug": "minimum-window-with-characters"
+    },
+    {
+      "order": 16,
+      "title": "Find Minimum In Rotated Sorted Array",
+      "slug": "find-minimum-in-rotated-sorted-array",
+      "difficulty": "Medium",
+      "topic": "Binary Search",
+      "neetcodeSlug": "find-minimum-in-rotated-sorted-array"
+    },
+    {
+      "order": 17,
+      "title": "Search In Rotated Sorted Array",
+      "slug": "search-in-rotated-sorted-array",
+      "difficulty": "Medium",
+      "topic": "Binary Search",
+      "neetcodeSlug": "find-target-in-rotated-sorted-array"
+    },
+    {
+      "order": 18,
+      "title": "Reverse Linked List",
+      "slug": "reverse-linked-list",
+      "difficulty": "Easy",
+      "topic": "Linked List",
+      "neetcodeSlug": "reverse-a-linked-list"
+    },
+    {
+      "order": 19,
+      "title": "Merge Two Sorted Lists",
+      "slug": "merge-two-sorted-lists",
+      "difficulty": "Easy",
+      "topic": "Linked List",
+      "neetcodeSlug": "merge-two-sorted-linked-lists"
+    },
+    {
+      "order": 20,
+      "title": "Linked List Cycle",
+      "slug": "linked-list-cycle",
+      "difficulty": "Easy",
+      "topic": "Linked List",
+      "neetcodeSlug": "linked-list-cycle-detection"
+    },
+    {
+      "order": 21,
+      "title": "Reorder List",
+      "slug": "reorder-list",
+      "difficulty": "Medium",
+      "topic": "Linked List",
+      "neetcodeSlug": "reorder-linked-list"
+    },
+    {
+      "order": 22,
+      "title": "Remove Nth Node From End of List",
+      "slug": "remove-nth-node-from-end-of-list",
+      "difficulty": "Medium",
+      "topic": "Linked List",
+      "neetcodeSlug": "remove-node-from-end-of-linked-list"
+    },
+    {
+      "order": 23,
+      "title": "Merge K Sorted Lists",
+      "slug": "merge-k-sorted-lists",
+      "difficulty": "Hard",
+      "topic": "Linked List",
+      "neetcodeSlug": "merge-k-sorted-linked-lists"
+    },
+    {
+      "order": 24,
+      "title": "Valid Parentheses",
+      "slug": "valid-parentheses",
+      "difficulty": "Easy",
+      "topic": "Stack",
+      "neetcodeSlug": "validate-parentheses"
+    },
+    {
+      "order": 25,
+      "title": "Invert Binary Tree",
+      "slug": "invert-binary-tree",
+      "difficulty": "Easy",
+      "topic": "Trees",
+      "neetcodeSlug": "invert-a-binary-tree"
+    },
+    {
+      "order": 26,
+      "title": "Maximum Depth of Binary Tree",
+      "slug": "maximum-depth-of-binary-tree",
+      "difficulty": "Easy",
+      "topic": "Trees",
+      "neetcodeSlug": "depth-of-binary-tree"
+    },
+    {
+      "order": 27,
+      "title": "Same Tree",
+      "slug": "same-tree",
+      "difficulty": "Easy",
+      "topic": "Trees",
+      "neetcodeSlug": "same-binary-tree"
+    },
+    {
+      "order": 28,
+      "title": "Subtree of Another Tree",
+      "slug": "subtree-of-another-tree",
+      "difficulty": "Easy",
+      "topic": "Trees",
+      "neetcodeSlug": "subtree-of-a-binary-tree"
+    },
+    {
+      "order": 29,
+      "title": "Lowest Common Ancestor of a Binary Search Tree",
+      "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+      "difficulty": "Medium",
+      "topic": "Trees",
+      "neetcodeSlug": "lowest-common-ancestor-in-binary-search-tree"
+    },
+    {
+      "order": 30,
+      "title": "Binary Tree Level Order Traversal",
+      "slug": "binary-tree-level-order-traversal",
+      "difficulty": "Medium",
+      "topic": "Trees",
+      "neetcodeSlug": "level-order-traversal-of-binary-tree"
+    },
+    {
+      "order": 31,
+      "title": "Validate Binary Search Tree",
+      "slug": "validate-binary-search-tree",
+      "difficulty": "Medium",
+      "topic": "Trees",
+      "neetcodeSlug": "valid-binary-search-tree"
+    },
+    {
+      "order": 32,
+      "title": "Kth Smallest Element In a BST",
+      "slug": "kth-smallest-element-in-a-bst",
+      "difficulty": "Medium",
+      "topic": "Trees",
+      "neetcodeSlug": "kth-smallest-integer-in-bst",
+      "sourceTitle": "Kth Smallest Element In a Bst"
+    },
+    {
+      "order": 33,
+      "title": "Construct Binary Tree From Preorder And Inorder Traversal",
+      "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
+      "difficulty": "Medium",
+      "topic": "Trees",
+      "neetcodeSlug": "binary-tree-from-preorder-and-inorder-traversal"
+    },
+    {
+      "order": 34,
+      "title": "Binary Tree Maximum Path Sum",
+      "slug": "binary-tree-maximum-path-sum",
+      "difficulty": "Hard",
+      "topic": "Trees",
+      "neetcodeSlug": "binary-tree-maximum-path-sum"
+    },
+    {
+      "order": 35,
+      "title": "Serialize And Deserialize Binary Tree",
+      "slug": "serialize-and-deserialize-binary-tree",
+      "difficulty": "Hard",
+      "topic": "Trees",
+      "neetcodeSlug": "serialize-and-deserialize-binary-tree"
+    },
+    {
+      "order": 36,
+      "title": "Implement Trie Prefix Tree",
+      "slug": "implement-trie-prefix-tree",
+      "difficulty": "Medium",
+      "topic": "Tries",
+      "neetcodeSlug": "implement-prefix-tree"
+    },
+    {
+      "order": 37,
+      "title": "Design Add And Search Words Data Structure",
+      "slug": "design-add-and-search-words-data-structure",
+      "difficulty": "Medium",
+      "topic": "Tries",
+      "neetcodeSlug": "design-word-search-data-structure"
+    },
+    {
+      "order": 38,
+      "title": "Word Search II",
+      "slug": "word-search-ii",
+      "difficulty": "Hard",
+      "topic": "Tries",
+      "neetcodeSlug": "search-for-word-ii"
+    },
+    {
+      "order": 39,
+      "title": "Combination Sum",
+      "slug": "combination-sum",
+      "difficulty": "Medium",
+      "topic": "Backtracking",
+      "neetcodeSlug": "combination-target-sum"
+    },
+    {
+      "order": 40,
+      "title": "Word Search",
+      "slug": "word-search",
+      "difficulty": "Medium",
+      "topic": "Backtracking",
+      "neetcodeSlug": "search-for-word"
+    },
+    {
+      "order": 41,
+      "title": "Find Median From Data Stream",
+      "slug": "find-median-from-data-stream",
+      "difficulty": "Hard",
+      "topic": "Heap / Priority Queue",
+      "neetcodeSlug": "find-median-in-a-data-stream"
+    },
+    {
+      "order": 42,
+      "title": "Number of Islands",
+      "slug": "number-of-islands",
+      "difficulty": "Medium",
+      "topic": "Graphs",
+      "neetcodeSlug": "count-number-of-islands"
+    },
+    {
+      "order": 43,
+      "title": "Clone Graph",
+      "slug": "clone-graph",
+      "difficulty": "Medium",
+      "topic": "Graphs",
+      "neetcodeSlug": "clone-graph"
+    },
+    {
+      "order": 44,
+      "title": "Pacific Atlantic Water Flow",
+      "slug": "pacific-atlantic-water-flow",
+      "difficulty": "Medium",
+      "topic": "Graphs",
+      "neetcodeSlug": "pacific-atlantic-water-flow"
+    },
+    {
+      "order": 45,
+      "title": "Course Schedule",
+      "slug": "course-schedule",
+      "difficulty": "Medium",
+      "topic": "Graphs",
+      "neetcodeSlug": "course-schedule"
+    },
+    {
+      "order": 46,
+      "title": "Graph Valid Tree",
+      "slug": "graph-valid-tree",
+      "difficulty": "Medium",
+      "topic": "Graphs",
+      "neetcodeSlug": "valid-tree"
+    },
+    {
+      "order": 47,
+      "title": "Number of Connected Components In An Undirected Graph",
+      "slug": "number-of-connected-components-in-an-undirected-graph",
+      "difficulty": "Medium",
+      "topic": "Graphs",
+      "neetcodeSlug": "count-connected-components"
+    },
+    {
+      "order": 48,
+      "title": "Alien Dictionary",
+      "slug": "alien-dictionary",
+      "difficulty": "Hard",
+      "topic": "Advanced Graphs",
+      "neetcodeSlug": "foreign-dictionary"
+    },
+    {
+      "order": 49,
+      "title": "Climbing Stairs",
+      "slug": "climbing-stairs",
+      "difficulty": "Easy",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "climbing-stairs"
+    },
+    {
+      "order": 50,
+      "title": "House Robber",
+      "slug": "house-robber",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "house-robber"
+    },
+    {
+      "order": 51,
+      "title": "House Robber II",
+      "slug": "house-robber-ii",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "house-robber-ii"
+    },
+    {
+      "order": 52,
+      "title": "Longest Palindromic Substring",
+      "slug": "longest-palindromic-substring",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "longest-palindromic-substring"
+    },
+    {
+      "order": 53,
+      "title": "Palindromic Substrings",
+      "slug": "palindromic-substrings",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "palindromic-substrings"
+    },
+    {
+      "order": 54,
+      "title": "Decode Ways",
+      "slug": "decode-ways",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "decode-ways"
+    },
+    {
+      "order": 55,
+      "title": "Coin Change",
+      "slug": "coin-change",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "coin-change"
+    },
+    {
+      "order": 56,
+      "title": "Maximum Product Subarray",
+      "slug": "maximum-product-subarray",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "maximum-product-subarray"
+    },
+    {
+      "order": 57,
+      "title": "Word Break",
+      "slug": "word-break",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "word-break"
+    },
+    {
+      "order": 58,
+      "title": "Longest Increasing Subsequence",
+      "slug": "longest-increasing-subsequence",
+      "difficulty": "Medium",
+      "topic": "1-D Dynamic Programming",
+      "neetcodeSlug": "longest-increasing-subsequence"
+    },
+    {
+      "order": 59,
+      "title": "Unique Paths",
+      "slug": "unique-paths",
+      "difficulty": "Medium",
+      "topic": "2-D Dynamic Programming",
+      "neetcodeSlug": "count-paths"
+    },
+    {
+      "order": 60,
+      "title": "Longest Common Subsequence",
+      "slug": "longest-common-subsequence",
+      "difficulty": "Medium",
+      "topic": "2-D Dynamic Programming",
+      "neetcodeSlug": "longest-common-subsequence"
+    },
+    {
+      "order": 61,
+      "title": "Maximum Subarray",
+      "slug": "maximum-subarray",
+      "difficulty": "Medium",
+      "topic": "Greedy",
+      "neetcodeSlug": "maximum-subarray"
+    },
+    {
+      "order": 62,
+      "title": "Jump Game",
+      "slug": "jump-game",
+      "difficulty": "Medium",
+      "topic": "Greedy",
+      "neetcodeSlug": "jump-game"
+    },
+    {
+      "order": 63,
+      "title": "Insert Interval",
+      "slug": "insert-interval",
+      "difficulty": "Medium",
+      "topic": "Intervals",
+      "neetcodeSlug": "insert-new-interval"
+    },
+    {
+      "order": 64,
+      "title": "Merge Intervals",
+      "slug": "merge-intervals",
+      "difficulty": "Medium",
+      "topic": "Intervals",
+      "neetcodeSlug": "merge-intervals"
+    },
+    {
+      "order": 65,
+      "title": "Non Overlapping Intervals",
+      "slug": "non-overlapping-intervals",
+      "difficulty": "Medium",
+      "topic": "Intervals",
+      "neetcodeSlug": "non-overlapping-intervals"
+    },
+    {
+      "order": 66,
+      "title": "Meeting Rooms",
+      "slug": "meeting-rooms",
+      "difficulty": "Easy",
+      "topic": "Intervals",
+      "neetcodeSlug": "meeting-schedule"
+    },
+    {
+      "order": 67,
+      "title": "Meeting Rooms II",
+      "slug": "meeting-rooms-ii",
+      "difficulty": "Medium",
+      "topic": "Intervals",
+      "neetcodeSlug": "meeting-schedule-ii"
+    },
+    {
+      "order": 68,
+      "title": "Number of 1 Bits",
+      "slug": "number-of-1-bits",
+      "difficulty": "Easy",
+      "topic": "Bit Manipulation",
+      "neetcodeSlug": "number-of-one-bits"
+    },
+    {
+      "order": 69,
+      "title": "Counting Bits",
+      "slug": "counting-bits",
+      "difficulty": "Easy",
+      "topic": "Bit Manipulation",
+      "neetcodeSlug": "counting-bits"
+    },
+    {
+      "order": 70,
+      "title": "Reverse Bits",
+      "slug": "reverse-bits",
+      "difficulty": "Easy",
+      "topic": "Bit Manipulation",
+      "neetcodeSlug": "reverse-bits"
+    },
+    {
+      "order": 71,
+      "title": "Missing Number",
+      "slug": "missing-number",
+      "difficulty": "Easy",
+      "topic": "Bit Manipulation",
+      "neetcodeSlug": "missing-number"
+    },
+    {
+      "order": 72,
+      "title": "Sum of Two Integers",
+      "slug": "sum-of-two-integers",
+      "difficulty": "Medium",
+      "topic": "Bit Manipulation",
+      "neetcodeSlug": "sum-of-two-integers"
+    },
+    {
+      "order": 73,
+      "title": "Rotate Image",
+      "slug": "rotate-image",
+      "difficulty": "Medium",
+      "topic": "Math & Geometry",
+      "neetcodeSlug": "rotate-matrix"
+    },
+    {
+      "order": 74,
+      "title": "Spiral Matrix",
+      "slug": "spiral-matrix",
+      "difficulty": "Medium",
+      "topic": "Math & Geometry",
+      "neetcodeSlug": "spiral-matrix"
+    },
+    {
+      "order": 75,
+      "title": "Set Matrix Zeroes",
+      "slug": "set-matrix-zeroes",
+      "difficulty": "Medium",
+      "topic": "Math & Geometry",
+      "neetcodeSlug": "set-zeroes-in-matrix"
+    }
+  ]
+}
