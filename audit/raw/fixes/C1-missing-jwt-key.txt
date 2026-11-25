@@ -1,0 +1,3 @@
+Missing env: JWT_KEY
+See backend/.env.example for the expected variables.
+exit code 1

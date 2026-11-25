@@ -1,0 +1,10 @@
+AI numeric userQuestion: {"details":[{"location":"body","path":"userQuestion","message":"Question must be text."}],"error":{"code":"VALIDATION_ERROR","message":"Question must be text."}} [400]
+6MB body /user/login: {"error":{"code":"PAYLOAD_TOO_LARGE","message":"Request body is too large."}} [413]
+6MB body /problem (2mb parser): {"error":{"code":"PAYLOAD_TOO_LARGE","message":"Request body is too large."}} [413]
+register 73-byte password: {"details":[{"location":"body","path":"password","message":"Password cannot be longer than 72 bytes."}],"error":{"code":"VALIDATION_ERROR","message":"Password cannot be longer than 72 bytes."}} [400]
+register 90KB password: {"details":[{"location":"body","path":"password","message":"Password cannot be longer than 72 bytes."}],"error":{"code":"VALIDATION_ERROR","message":"Password cannot be longer than 72 bytes."}} [400]
+register 200KB password: {"error":{"code":"PAYLOAD_TOO_LARGE","message":"Request body is too large."}} [413]
+register empty lastName: {"user":{"firstName":"No","email":"nolast@audit.test","_id":"6b06e8979206a2a3910c19fe","role":"user"},"token":"<redacted>
+admin update title-only shape (UI payload): {"error":{"code":"SERVICE_UNAVAILABLE","message":"Code execution is temporarily unavailable. Please try again later."}} [503]
+admin create (UI payload shape): {"error":{"code":"SERVICE_UNAVAILABLE","message":"Code execution is temporarily unavailable. Please try again later."}} [503]
+list w/ UI params: 200

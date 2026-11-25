@@ -35,12 +35,12 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] B2 acceptance criteria verified
 
 ## Phase C1: validation + error contract
-- [ ] C1.1 config/env.js (CQ-02)
-- [ ] C1.2 AppError + central error handler (BUG-11, CQ-04)
-- [ ] C1.3 zod validate middleware on every endpoint (BUG-12, SEC-11)
-- [ ] C1.4 Frontend auth schemas aligned (BUG-17)
-- [ ] C1.5 pino logging (CQ-06)
-- [ ] C1 acceptance criteria verified
+- [x] C1.1 config/env.js (CQ-02)
+- [x] C1.2 AppError + central error handler (BUG-11, CQ-04)
+- [x] C1.3 zod validate middleware on every endpoint (BUG-12, SEC-11)
+- [x] C1.4 Frontend auth schemas aligned (BUG-17)
+- [x] C1.5 pino logging (CQ-06)
+- [x] C1 acceptance criteria verified
 
 ## Phase C2: platform hardening
 - [ ] C2.1 helmet, x-powered-by, trust proxy (SEC-12, SEC-09)

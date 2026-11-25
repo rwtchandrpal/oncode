@@ -150,3 +150,45 @@ Observed during testing: with an expired token the workspace still rendered the 
 `3dd983a` per-language models · `fec7fbb` problem not found · `c47af32` delete hard-redirect.
 
 ---
+## Phase C1: input validation and error contract (BUG-11, 12, 17, CQ-02, 04, 06, SEC-11)
+
+**What changed**
+- C1.1 `backend/src/config/env.js`: zod schema for every variable in CLAUDE.md, plus the new optional
+  `JUDGE0_DEADLINE_MS`, `TRUST_PROXY_HOPS` (default 0) and `LOG_LEVEL`. It is required first in `server.js`;
+  failures print `Missing env: A, B` / `Invalid env: C` (names only) and exit 1. `GEMINI_API_KEY` is required.
+- C1.5 (done before C1.2 because `sendError` logs) `utils/logger.js` (pino) + `pino-http` with redaction of
+  `req.headers.authorization`, cookies, `password`, `token`. Every `console.*` in `backend/src` was replaced, except
+  in `env.js`, which runs before the logger exists. New deps: `zod@^4.6.7`, `pino@^9.14`, `pino-http@^10.5`.
+- C1.2 error contract `{ error: { code, message } }`: `AppError`/`sendError`/`errorBody`, an `errorShape` middleware
+  that normalizes legacy `{message}` / `{error:"..."}` bodies (controllers, middlewares, rate limiters), a central
+  handler (malformed JSON 400 `INVALID_JSON`, too large 413, AppError, else 500) and a 404 route handler. Extra fields
+  are kept next to `error` (`isLocked` on the solution 403, `details` on validation errors). Frontend reads messages
+  via the new `frontend/src/utils/apiError.js` (all `response.data.message` reads replaced) in the same commit.
+- C1.3 `middlewares/validate.js` + `backend/src/validation/{common,auth,problem,submission,ai}.js`, applied to
+  every endpoint in AUDIT_REPORT §4 that takes input:
+  register/admin-register (strict bodies, email normalized, password 8+ with classes and ≤ 72 bytes, lastName
+  optional, role enum), login (strings, length-capped), problem list query (single strings, enums, page ≥ 1,
+  limit ≤ 100 or `all` until Phase D), ObjectId params on all `/:id` routes, problem create/update (typed fields,
+  unknown keys stripped, so `number`/`problemCreator` cannot be set), submit/run (`code` string, `language`
+  enum; the 64,000-char cap stays a 413 in the controller), AI doubt (typed and length-capped, rejected not
+  truncated, validated before the AI limiter). `utils/validate.js` was removed.
+  To keep the chat working, its input got `maxLength={1000}` and it now shows the server's message.
+  Behaviour change: register with an extra `role` key is now 400 (strict body); it was silently ignored before.
+- C1.4 frontend `authSchemas.js`: firstName min 1, lastName optional, password ≤ 72 bytes, email ≤ 254; signup
+  placeholder "Last Name (optional)".
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| `api-tests-1.mjs`: `?search=a&search=b`, `/problem/submissions/not-an-id`, `submit/not-an-id`, language object, malformed JSON → 400 (were 500) | PASS | `raw/fixes/phase-c1-api-tests-1.txt` |
+| numeric `userQuestion` → 400 | PASS | `raw/fixes/phase-c1-extra-checks.txt` (no Gemini call made) |
+| 6 MB body → 413 | PASS | `/user/login` and `/problem` (2 MB parser) both 413 |
+| Every error body matches `{error:{code,message}}` | PASS | scan of every 4xx/5xx line in the api-tests-1 output, plus 404 route, 429 limiter, 403 with `isLocked`, 503 Judge0 |
+| `JWT_KEY` unset → `Missing env: JWT_KEY`, exit 1 | PASS | `raw/fixes/C1-missing-jwt-key.txt` |
+| 200 KB password at register → 400 | PASS with note | A 200 KB body now hits the Phase A 100 KB cap first and gets **413**. Passwords from 73 bytes to 90 KB get **400** "Password cannot be longer than 72 bytes" |
+| Frontend flows still work after the schemas | PASS | browser: signup with empty last name; wrong-password login shows "Invalid credentials."; earlier flows. API: UI-shaped admin create/update payloads pass validation (stop at Judge0 503), admin user registration with empty lastName 201, Home list params 200 |
+
+**Commits:** `2268d43` env · `528c832` logging · `1b03327` error contract · `5484103` validation · `f3eb6df` frontend
+schemas · `99d17c4` required-field messages.
+
+---

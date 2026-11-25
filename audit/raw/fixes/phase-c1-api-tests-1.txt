@@ -1,0 +1,56 @@
+=== AUTH ===
+login admin 200 user 200 other 200 | response keys ["user","token","message"] | user keys ["firstName","lastName","email","_id","role"]
+JWT payload (user): {"_id":"6b06e87891015ada0cce15c7","email":"user@audit.test","role":"user","iat":1795614844,"exp":1795618444}
+login uppercase email: 200
+wrong password -> 401 {"error":{"code":"UNAUTHENTICATED","message":"Invalid credentials."}} 57ms | nonexistent user -> 401 {"error":{"code":"UNAUTHENTICATED","message":"Invalid credentials."}} 57ms
+=== NOSQL INJECTION (login) ===
+{email:{$ne:null},password:{$ne:null}} -> 400 {"details":[{"location":"body","path":"email","message":"Please provide both email and password."},{"location":"body","path":"password","message":"Please provide both email and password."}],"error":{"code":"VALIDATION_ER
+{email:{$ne:null},password:<admin pw>} -> 400 {"details":[{"location":"body","path":"email","message":"Please provide both email and password."}],"error":{"code":"VALIDATION_ERROR","message":"Please provide both email and password."}} (200 means the operator reached MongoDB and the first matching user was returned)
+{email:{$regex:"^adm"},password:"x"} -> 400 {"details":[{"location":"body","path":"email","message":"Please provide both email and password."}],"error":{"code":"VALIDATION_ERROR","message":"Please provide both email and password."}} 2ms
+{email:{$regex:"^zzz"},password:"x"} -> 400 {"details":[{"location":"body","path":"email","message":"Please provide both email and password."}],"error":{"code":"VALIDATION_ERROR","message":"Please provide both email and password."}} 2ms (timing gap = blind regex enumeration of emails)
+=== REGISTER ===
+register with role:"admin" -> 400 role in response = 
+register with problemsSolved -> 400 {"details":[{"location":"body","path":"","message":"Invalid properties provided in the request."}],"error":{"code":"VALIDATION_ERROR","message":"Invalid properties provided in the request."}}
+register duplicate email -> 400 {"error":{"code":"BAD_REQUEST","message":"Email is already registered."}} (enumeration)
+register weak password -> 400 {"details":[{"location":"body","path":"password","message":"Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character."}],"error":{"code":"VALIDATI
+register empty -> 400 {"details":[{"location":"body","path":"firstName","message":"First name must be text."},{"location":"body","path":"email","message":"Email is required."},{"location":"body","path":"password","message":"Password must be a
+register firstName 51 chars -> 400 {"details":[{"location":"body","path":"firstName","message":"First name must be between 1 and 50 characters long."}],"error":{"code":"VALIDATION_ERROR","message":"First name must be between 1 and 50 characters long."}}
+register 200KB password -> 413 {"error":{"code":"PAYLOAD_TOO_LARGE","message":"Request body is too large."}} 3ms
+login with different password sharing first 72 bytes -> 401 {"error":{"code":"UNAUTHENTICATED","message":"Invalid credentials."}} (200 = bcrypt 72-byte truncation)
+register mixed-case email -> 201 stored email = mixed.case@audit.test
+register HTML in firstName -> 201 stored firstName = <img src=x onerror=alert(1)>
+malformed JSON body -> 400 {"error":{"code":"INVALID_JSON","message":"Malformed JSON in request body."}}
+=== AUTHORIZATION: normal user -> admin endpoints ===
+GET /admin/dashboard: user -> 403 {"error":{"code":"FORBIDDEN","message":"Access denied. Admin privileges required."}} | anon -> 401
+POST /problem/: user -> 403 {"error":{"code":"FORBIDDEN","message":"Access denied. Admin privileges required."}} | anon -> 401
+PUT /problem/6b06e87891015ada0cce15c9: user -> 403 {"error":{"code":"FORBIDDEN","message":"Access denied. Admin privileges required."}} | anon -> 401
+DELETE /problem/6b06e87891015ada0cce15c9: user -> 403 {"error":{"code":"FORBIDDEN","message":"Access denied. Admin privileges required."}} | anon -> 401
+POST /user/admin/register: user -> 403 {"error":{"code":"FORBIDDEN","message":"Access denied. Admin privileges required."}} | anon -> 401
+=== DATA EXPOSURE ===
+GET /problem/ (anon, no paging) -> 200 count 12 limit 12 leaks markers? false cache-control public, max-age=30, stale-while-revalidate=60
+GET /problem/:id (user) -> 200 keys ["_id","title","topics","description","difficulty","codeSnippets","constraints","visibleTestCase","examples","number"] leaks markers? false cache-control public, max-age=120, stale-while-revalidate=300
+GET /problem/:id (anon) -> 401
+GET /problem/:id/solution (user, unsolved) -> 403 {"isLocked":true,"error":{"code":"FORBIDDEN","message":"You must solve this problem before viewing the official solution."}}
+GET /problem/:id/solution (admin) -> 200 has reference marker true
+GET /user/profile (user) -> 200 leaks? false
+GET /user/check -> 200 {"user":{"firstName":"Audit","lastName":"User","email":"user@audit.test","_id":"6b06e87891015ada0cce15c7","role":"user","isDemo":false,"expiresAt":null},"message":"valid user session."}
+GET /problem/solved -> {"solvedProblems":[]}
+GET /admin/dashboard (admin) -> {"metrics":{"totalProblems":12,"totalUsers":5,"totalSubmissions":0},"acceptanceRate":0,"difficulty":{"easy":4,"medium":4,"hard":4},"demographics":{"standard":4,"admin":1}}
+=== INPUT VALIDATION / ERROR LEAKS ===
+GET /problem/?search=a&search=b -> 400 {"details":[{"location":"query","path":"search","message":"Search must be text."}],"error":{"code":"VALIDATION_ERROR","message":"Search must be text."}}
+GET /problem/?difficulty[$ne]=x -> 200 {"allProblems":[{"_id":"6b06e87891015ada0cce15c9","title":"Double It","topics":["String"],"difficulty":"Medium","number":1},{"_id":"6b06e87891015ada0cce15d0","title":"Audit Problem 2","topics":["Math"],"difficulty":"Hard
+GET /problem/?search=(a+)+$ -> 200 count 0 (escaped)
+GET /problem/?page=-5&limit=100000 -> 400 limit  page 
+GET /problem/submissions/not-an-id -> 400 {"details":[{"location":"params","path":"id","message":"Invalid id."}],"error":{"code":"VALIDATION_ERROR","message":"Invalid id."}}
+POST /submission/submit/not-an-id -> 400 {"details":[{"location":"params","path":"id","message":"Invalid id."}],"error":{"code":"VALIDATION_ERROR","message":"Invalid id."}}
+POST submit language as object -> 400 {"details":[{"location":"body","path":"language","message":"Language must be one of: cpp, java."}],"error":{"code":"VALIDATION_ERROR","message":"Language must be one of: cpp, java."}}
+GET /submission/health (anon) -> 401 {"error":{"code":"UNAUTHENTICATED","message":"Authentication required"}}
+=== HEADERS / CORS ===
+x-powered-by: Express | ACAO for evil origin: http://localhost:5174 | x-frame-options: null | strict-transport-security: null | x-content-type-options: null
+ACAO for allowed origin: http://localhost:5174 credentials: true
+unknown route -> 404 {"error":{"code":"NOT_FOUND","message":"Route not found."}}
+=== TOKEN HANDLING ===
+tampered token (role:admin) /user/check -> 401
+alg:none token -> 401
+logout other -> 200 | reuse after logout -> 401 {"error":{"code":"UNAUTHENTICATED","message":"Session expired. Please log in again."}}
+__TOKENS__{"tA":"<redacted>","tU":"<redacted>","pid":"6b06e87891015ada0cce15c9"}
