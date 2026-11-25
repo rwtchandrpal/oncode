@@ -1,4 +1,4 @@
-const { createSubmission, getSubmission, getLanguageId, getstatusById } = require('../utils/judge0Utility');
+const { createSubmission, getSubmission, newDeadline, getLanguageId, getstatusById } = require('../utils/judge0Utility');
 const Problem = require('../models/problem');
 const User = require('../models/user');
 const mongoose = require('mongoose');
@@ -59,9 +59,10 @@ const validateAndTestProblem = async (problemData) => {
     }));
 
     try {
-        const submitResult = await createSubmission(submissionPayload);
+        const deadline = newDeadline();
+        const submitResult = await createSubmission(submissionPayload, deadline);
         const resultTokens = submitResult.map((elem) => (elem.token));
-        const testResult = await getSubmission(resultTokens);
+        const testResult = await getSubmission(resultTokens, deadline);
 
         for (const test of testResult) {
             if (test.status_id !== 3) { // 3 is "Accepted"

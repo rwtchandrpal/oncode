@@ -2,7 +2,25 @@ const axios = require('axios');
 const { AppError, Judge0UnavailableError } = require('./AppError');
 
 const JUDGE0_BASE_URL = process.env.JUDGE0_BASE_URL;
-const JUDGE0_TIMEOUT_MS = parseInt(process.env.JUDGE0_TIMEOUT_MS) || 10000;
+// Per-HTTP-request timeout (a stopped EC2 drops packets, so each call would otherwise hang).
+const JUDGE0_TIMEOUT_MS = parseInt(process.env.JUDGE0_TIMEOUT_MS) || 5000;
+// Overall budget for one execution (batch create + all polls), BUG-18.
+const JUDGE0_DEADLINE_MS = parseInt(process.env.JUDGE0_DEADLINE_MS) || 30000;
+const POLL_INTERVAL_MS = 2000;
+
+// Absolute time by which an execution must finish. Pass the same value to createSubmission and
+// getSubmission so the budget covers both.
+const newDeadline = () => Date.now() + JUDGE0_DEADLINE_MS;
+
+const remainingMs = (deadline) => deadline - Date.now();
+
+const requestTimeout = (deadline) => {
+  const left = remainingMs(deadline);
+  if (left <= 0) {
+    throw new Judge0UnavailableError(new Error(`Judge0 deadline of ${JUDGE0_DEADLINE_MS} ms exceeded`));
+  }
+  return Math.min(JUDGE0_TIMEOUT_MS, left);
+};
 
 // Health Check Utility
 const checkJudge0Health = async () => {
@@ -30,7 +48,7 @@ const checkJudge0Health = async () => {
 
 // utility function for problem route
 // Batched submission to judge0
-const createSubmission = async (submissionPayload) => {
+const createSubmission = async (submissionPayload, deadline = newDeadline()) => {
   const options = {
     method: 'POST',
     url: `${JUDGE0_BASE_URL}/submissions/batch`,
@@ -44,7 +62,7 @@ const createSubmission = async (submissionPayload) => {
     data: {
       submissions: submissionPayload
     },
-    timeout: JUDGE0_TIMEOUT_MS
+    timeout: requestTimeout(deadline)
   };
 
   let response;
@@ -67,51 +85,47 @@ const waiting = async (ms) => {
 };
 
 // submit token which we get from batched submission to get the final result of submission for testcases
-const getSubmission = async (resultTokens) => {
-  const options = {
-    method: 'GET',
-    url: `${JUDGE0_BASE_URL}/submissions/batch`,
-    params: {
-      tokens: resultTokens.join(','),
-      base64_encoded: 'true',
-      fields: '*'
-    },
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Auth-Token': process.env.JUDGE0_AUTH_TOKEN 
-    },
-    timeout: JUDGE0_TIMEOUT_MS
-  };
-
-  async function fetchData() {
+const getSubmission = async (resultTokens, deadline = newDeadline()) => {
+  const fetchData = async () => {
     try {
-      const response = await axios.request(options);
+      const response = await axios.request({
+        method: 'GET',
+        url: `${JUDGE0_BASE_URL}/submissions/batch`,
+        params: {
+          tokens: resultTokens.join(','),
+          base64_encoded: 'true',
+          fields: '*'
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': process.env.JUDGE0_AUTH_TOKEN
+        },
+        timeout: requestTimeout(deadline)
+      });
       return response.data;
     } catch (error) {
+      if (error instanceof Judge0UnavailableError) throw error;
       throw new Judge0UnavailableError(error);
     }
-  }
+  };
 
-  const maxAttempts = 20;
-  let attempts = 0;
-
-  while (attempts < maxAttempts) {
+  // Poll until every test has a terminal status or the overall deadline passes (BUG-18).
+  for (;;) {
     const result = await fetchData();
 
-    if (!result || !result.submissions) {
+    if (!result || !Array.isArray(result.submissions)) {
       throw new Judge0UnavailableError(new Error("Judge0 returned no submissions"));
     }
-    const isResultObtained = result.submissions.every((r) => r.status_id > 2);
-
-    if (isResultObtained) {
+    if (result.submissions.every((r) => r.status_id > 2)) {
       return result.submissions;
     }
 
-    await waiting(2000);
-    attempts++;
+    const left = remainingMs(deadline);
+    if (left <= POLL_INTERVAL_MS) {
+      throw new Judge0UnavailableError(new Error(`Judge0 results not ready within ${JUDGE0_DEADLINE_MS} ms`));
+    }
+    await waiting(POLL_INTERVAL_MS);
   }
-
-  throw new Judge0UnavailableError(new Error("Judge0 did not return results after maximum retries"));
 }
 
 const getLanguageId = (language) => {
@@ -148,4 +162,4 @@ const getstatusById = (id) => {
   return statusIdMap[id] || "Unknown Execution Status";
 }
 
-module.exports = { createSubmission, getSubmission, getLanguageId, getstatusById, checkJudge0Health };
+module.exports = { createSubmission, getSubmission, newDeadline, getLanguageId, getstatusById, checkJudge0Health };

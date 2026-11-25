@@ -7,6 +7,7 @@
 //   MOCK_RE  -> 11 Runtime Error (NZEC), stderr echoes the stdin (simulates a hidden-input leak attempt)
 //   MOCK_TLE -> 5 Time Limit Exceeded
 //   MOCK_DOWN_ON_POLL -> batch create succeeds, polling returns 500
+//   MOCK_PROCESSING -> stays at status 2 (Processing) forever, to exercise the backend deadline
 //   otherwise -> 3 Accepted, stdout = expected_output
 //
 // Usage: node audit/harness/mock-judge0.mjs   then start the backend with
@@ -24,6 +25,7 @@ const verdict = (sub) => {
   const stdin = unb64(sub.stdin);
   const expected = unb64(sub.expected_output);
   const base = { time: '0.012', memory: 3456, stdout: null, stderr: null, compile_output: null };
+  if (src.includes('MOCK_PROCESSING')) return { ...base, status_id: 2 };
   if (src.includes('MOCK_CE')) return { ...base, status_id: 6, compile_output: b64('main.cpp:1: error: mock compile error') };
   if (src.includes('MOCK_RE')) return { ...base, status_id: 11, stderr: b64(`echo: ${stdin}`) };
   if (src.includes('MOCK_TLE')) return { ...base, status_id: 5 };

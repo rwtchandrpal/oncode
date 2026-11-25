@@ -2,7 +2,7 @@ const Problem = require('../models/problem');
 const User = require('../models/user');
 const Submission = require('../models/submission');
 const client = require('../config/redis');
-const { getLanguageId, getstatusById, createSubmission, getSubmission } = require('../utils/judge0Utility');
+const { getLanguageId, getstatusById, createSubmission, getSubmission, newDeadline } = require('../utils/judge0Utility');
 const { sendError } = require('../utils/AppError');
 
 const checkDemoExecutionLimit = async (user) => {
@@ -127,7 +127,8 @@ const submitCode = async (req, res) => {
         let submittedResult = null;
         let testResult;
         try {
-            const submitResult = await createSubmission(submissionPayload);
+            const deadline = newDeadline();
+            const submitResult = await createSubmission(submissionPayload, deadline);
             submittedResult = await Submission.create({
                 userId, problemId, code, language,
                 testCasesPassed: 0,
@@ -136,7 +137,7 @@ const submitCode = async (req, res) => {
                 isDemo: req.user.isDemo || false,
                 expiresAt: req.user.isDemo ? req.user.expiresAt : null
             });
-            testResult = await getSubmission(submitResult.map(elem => elem.token));
+            testResult = await getSubmission(submitResult.map(elem => elem.token), deadline);
         } catch (execErr) {
             await refundDemoExecution(demoQuotaKey);
             if (submittedResult) {
@@ -147,7 +148,8 @@ const submitCode = async (req, res) => {
             throw execErr;
         }
 
-        let totalRuntimeSeconds = 0;
+        // Reported runtime is the slowest test, not the sum of all tests (BUG-18)
+        let maxRuntimeSeconds = 0;
         let maxMemoryKb = 0;
         let statusId = 3; // Default to Accepted
         let testCasesPassed = 0;
@@ -181,7 +183,7 @@ const submitCode = async (req, res) => {
                 break; // Stop grading after the first failure
             }
 
-            totalRuntimeSeconds += parseFloat(test.time || 0);
+            maxRuntimeSeconds = Math.max(maxRuntimeSeconds, parseFloat(test.time || 0));
             maxMemoryKb = Math.max(maxMemoryKb, test.memory || 0);
             testCasesPassed++;
         }
@@ -191,7 +193,7 @@ const submitCode = async (req, res) => {
         submittedResult.errorMessage = errorMessage;
         submittedResult.errorDetail = errorDetail;
         submittedResult.failedTestCase = failedTestCase;
-        submittedResult.runtime = Math.round(totalRuntimeSeconds * 1000);
+        submittedResult.runtime = Math.round(maxRuntimeSeconds * 1000);
         submittedResult.memory = parseFloat((maxMemoryKb / 1024).toFixed(1));
 
         await submittedResult.save();
@@ -267,8 +269,9 @@ const runCode = async (req, res) => {
         
         let result;
         try {
-            const submitResult = await createSubmission(submissionPayload);
-            const testResult = await getSubmission([submitResult[0].token]);
+            const deadline = newDeadline();
+            const submitResult = await createSubmission(submissionPayload, deadline);
+            const testResult = await getSubmission([submitResult[0].token], deadline);
             result = testResult[0];
         } catch (execErr) {
             await refundDemoExecution(demoQuotaKey);
