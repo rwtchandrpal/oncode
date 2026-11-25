@@ -1,4 +1,5 @@
 # Fix progress (`fix/all-phases`)
+n**Status: stopped during Phase E2 (usage limit). A–E1 complete; E2 partial; E3, F, final reports pending.**
 
 Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] skipped
 
@@ -69,8 +70,8 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] E1 acceptance criteria verified
 
 ## Phase E2: UX/a11y
-- [ ] E2.1 Typography plugin (UX-01)
-- [ ] E2.2 Accessible AuthModal (UX-02)
+- [x] E2.1 Typography plugin (UX-01)
+- [~] E2.2 Accessible AuthModal (UX-02)
 - [ ] E2.3 Admin form labels (UX-03)
 - [ ] E2.4 Landmarks + 404 link (UX-04)
 - [ ] E2.5 Editor persistence + reset (UX-05)

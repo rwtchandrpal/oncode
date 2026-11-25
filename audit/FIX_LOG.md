@@ -318,3 +318,29 @@ schemas · `99d17c4` required-field messages.
 **Commits:** `e86122e` backend · `4c005a9` ProblemForm · `98643a3` workspace languages.
 
 ---
+## Phase E2: UX and accessibility (IN PROGRESS, stopped: usage limit reached)
+
+Done:
+- E2.1 `@tailwindcss/typography` + bordered tables, `whitespace-pre-wrap` removed (`b814f04`). PASS: styled h3,
+  disc bullets, bordered table (`screenshots/fixes/E2-problem-markdown-styled.png`); XSS probes still inert.
+- E2.2 AuthModal focus management + sr-only labels. PASS (browser): opening focuses `#auth-login-email`; Esc
+  closes and returns focus to "Get Started". The Tab-cycling check was a synthetic event only, so it is not
+  fully verified. Needs a manual Tab check.
+
+Not started: E2.3 (UserManagement labels; ProblemForm already done in E1), E2.4, E2.5, E2.6, E2 acceptance at
+desktop and 390 px.
+
+## Remaining work (not done in this run)
+- Phase E2: tasks 3–6 and acceptance.
+- Phase E3: all tasks (middleware merge, remove Login/Signup pages, shared utils, dead deps, delete root
+  `node_modules/` and empty `docs/`, judgeService, README rewrite). `backend/Dockerfile` and `.dockerignore`
+  exist **uncommitted** (built and used for the C2 SIGTERM test), intended for Phase F5.
+- Phase F: all tasks (tests, ESLint/Prettier, CI workflow, SEC-01 revert check).
+- Final: `audit/FINAL_REPORT.md`; complete `audit/OWNER_TODO.md` (currently a stub).
+- Phase G: skipped (Judge0 off).
+
+## Noticed but not fixed
+- Compile errors on hidden tests return compiler output, which can quote driver-code lines (allowed by plan A4).
+- Problems may have a language snippet without a reference solution; that driver stays unverified (E1.2).
+- `problemWorkspace` chunk is 2.98 MB (Monaco) and triggers Vite's size warning; it is lazy-loaded.
+- CSP `connect-src` allows any `https:` because the production API host is not in the repo; tighten it to the real host.
