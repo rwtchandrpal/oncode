@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 const Submission = require('../models/submission');
 
@@ -13,7 +14,7 @@ const cleanupExpiredDemoSessions = async () => {
     // 1. Find all expired demo users
     const expiredUsers = await User.find({
       isDemo: true,
-      expiresAt: { $lt: now }
+      expiresAt: mongoose.trusted({ $lt: now })
     }).select('_id');
 
     const userIds = expiredUsers.map((u) => u._id);
@@ -22,17 +23,17 @@ const cleanupExpiredDemoSessions = async () => {
     let deletedUsersCount = 0;
 
     if (userIds.length > 0) {
-      const subResult = await Submission.deleteMany({ userId: { $in: userIds } });
+      const subResult = await Submission.deleteMany({ userId: mongoose.trusted({ $in: userIds }) });
       deletedSubmissionsCount += subResult.deletedCount || 0;
 
-      const userResult = await User.deleteMany({ _id: { $in: userIds } });
+      const userResult = await User.deleteMany({ _id: mongoose.trusted({ $in: userIds }) });
       deletedUsersCount += userResult.deletedCount || 0;
     }
 
     // 2. Also sweep any orphaned demo submissions whose expiresAt has passed
     const orphanedSubResult = await Submission.deleteMany({
       isDemo: true,
-      expiresAt: { $lt: now }
+      expiresAt: mongoose.trusted({ $lt: now })
     });
     deletedSubmissionsCount += orphanedSubResult.deletedCount || 0;
 

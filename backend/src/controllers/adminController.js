@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 const Problem = require('../models/problem');
 const Submission = require('../models/submission');
@@ -18,9 +19,9 @@ const getDashboardStats = async (req, res) => {
             ]),
 
             // Pipeline C: Submission metrics (persistent submissions)
-            Submission.countDocuments({ isDemo: { $ne: true } }),
+            Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }) }),
             
-            Submission.countDocuments({ isDemo: { $ne: true }, status: "Accepted" }) 
+            Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }), status: "Accepted" }) 
         ]);
 
         // --- Data Formatting & Transformation ---

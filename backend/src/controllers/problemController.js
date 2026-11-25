@@ -261,7 +261,7 @@ const getAllProblems = async (req, res) => {
         // Keyword / Title Search (Regex escaped against ReDoS)
         if (req.query.search && req.query.search.trim()) {
             const sanitized = escapeRegex(req.query.search.trim());
-            query.title = { $regex: sanitized, $options: 'i' };
+            query.title = mongoose.trusted({ $regex: sanitized, $options: 'i' });
         }
 
         // Difficulty Filter
@@ -271,7 +271,7 @@ const getAllProblems = async (req, res) => {
 
         // Topic Filter
         if (req.query.topic && req.query.topic.toLowerCase() !== 'all') {
-            query.topics = { $in: [new RegExp(`^${escapeRegex(req.query.topic)}$`, 'i')] };
+            query.topics = mongoose.trusted({ $in: [new RegExp(`^${escapeRegex(req.query.topic)}$`, 'i')] });
         }
 
         // Solved Status Filter (requires user)
@@ -279,9 +279,9 @@ const getAllProblems = async (req, res) => {
             const userDoc = await User.findById(req.user._id).select('problemsSolved').lean();
             const solvedIds = (userDoc?.problemsSolved || []).filter(Boolean);
             if (req.query.status.toLowerCase() === 'solved') {
-                query._id = { $in: solvedIds };
+                query._id = mongoose.trusted({ $in: solvedIds });
             } else if (req.query.status.toLowerCase() === 'unsolved') {
-                query._id = { $nin: solvedIds };
+                query._id = mongoose.trusted({ $nin: solvedIds });
             }
         }
 

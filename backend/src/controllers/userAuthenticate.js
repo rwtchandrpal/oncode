@@ -102,24 +102,28 @@ const register = async (req, res) => {
   }
 };
 
+// bcrypt hash of a random throwaway value. Compared against when the email is unknown so that
+// "no such user" and "wrong password" take the same time (SEC-10).
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync(crypto.randomBytes(16).toString("hex"), 10);
+
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
-    if (!email || !password) {
+    // Only plain strings are accepted. Objects such as {"$ne": null} would otherwise reach the
+    // MongoDB filter as query operators (SEC-01).
+    if (typeof email !== "string" || typeof password !== "string" || !email.trim() || !password) {
       return res
         .status(400)
         .json({ message: "Please provide both email and password." });
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail }).select("+password");
 
-    if (!user) {
-      return res.status(401).json({ message: "Invalid credentials." });
-    }
-
-    const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched) {
+    // Always run bcrypt, even for unknown emails, to avoid a timing side channel.
+    const isMatched = await bcrypt.compare(password, user ? user.password : DUMMY_PASSWORD_HASH);
+    if (!user || !isMatched) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
@@ -143,7 +147,8 @@ const login = async (req, res) => {
       message: "Logged in successfully",
     });
   } catch (err) {
-    res.status(500).json({ message: "Login failed: " + err.message });
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Login failed. Please try again." });
   }
 };
 
