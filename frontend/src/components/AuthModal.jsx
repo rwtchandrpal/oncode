@@ -295,7 +295,7 @@ const AuthModal = () => {
               <div className="flex-1">
                 <input
                   type="text"
-                  placeholder="Last Name"
+                  placeholder="Last Name (optional)"
                   className={`input w-full bg-base-200 border ${
                     signupErrors.lastName ? 'border-error' : 'border-base-content/20 focus:border-primary'
                   } text-base-content placeholder-base-content/50 focus:outline-none`}
