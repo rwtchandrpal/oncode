@@ -43,6 +43,20 @@ const truncateString = (str, maxLength = 2000) => {
     return str.substring(0, maxLength) + "\n... [Output truncated due to length]";
 };
 
+// The only submission fields a user ever sees for a graded (hidden-test) submission.
+const toPublicSubmission = (s) => ({
+    _id: s._id,
+    problemId: s.problemId,
+    language: s.language,
+    status: s.status,
+    testCasesPassed: s.testCasesPassed,
+    testCasesTotal: s.testCasesTotal,
+    runtime: s.runtime,
+    memory: s.memory,
+    errorMessage: s.errorMessage || null,
+    createdAt: s.createdAt
+});
+
 // ==========================================
 // SUBMIT CODE (Grades all hidden test cases)
 // ==========================================
@@ -109,7 +123,10 @@ const submitCode = async (req, res) => {
         let maxMemoryKb = 0;
         let statusId = 3; // Default to Accepted
         let testCasesPassed = 0;
+        // User-safe message (compile output, or a generic line for runtime errors)
         let errorMessage = null;
+        // Full diagnostics, stored for admins only (never returned to the user)
+        let errorDetail = null;
         let failedTestCase = null;
 
         for (let i = 0; i < testResult.length; i++) {
@@ -117,16 +134,21 @@ const submitCode = async (req, res) => {
 
             if (test.status_id !== 3) {
                 statusId = test.status_id;
-                
-                if (test.status_id === 4) { // Wrong Answer
-                    failedTestCase = {
-                        input: truncateString(testCases[i].input),
-                        expectedOutput: truncateString(testCases[i].expectedOutput),
-                        actualOutput: truncateString(decodeBase64(test.stdout))
-                    };
-                } else { // Compilation or Runtime Errors
-                    const rawError = decodeBase64(test.compile_output) || decodeBase64(test.stderr) || "Execution failed without error message.";
-                    errorMessage = truncateString(rawError);
+
+                failedTestCase = {
+                    input: truncateString(testCases[i].input),
+                    expectedOutput: truncateString(testCases[i].expectedOutput),
+                    actualOutput: truncateString(decodeBase64(test.stdout))
+                };
+
+                if (test.status_id === 6) {
+                    // Compilation errors do not depend on test input, so the compiler output is safe to show.
+                    errorMessage = truncateString(decodeBase64(test.compile_output) || "Compilation failed.");
+                    errorDetail = errorMessage;
+                } else if (test.status_id !== 4) {
+                    // Runtime errors / TLE on a hidden test: stderr could echo the hidden input (SEC-03).
+                    errorDetail = truncateString(decodeBase64(test.stderr) || decodeBase64(test.compile_output) || "");
+                    errorMessage = test.status_id === 5 ? null : `${getstatusById(test.status_id)} on hidden test case ${i + 1}.`;
                 }
                 break; // Stop grading after the first failure
             }
@@ -139,6 +161,7 @@ const submitCode = async (req, res) => {
         submittedResult.status = getstatusById(statusId);
         submittedResult.testCasesPassed = testCasesPassed;
         submittedResult.errorMessage = errorMessage;
+        submittedResult.errorDetail = errorDetail;
         submittedResult.failedTestCase = failedTestCase;
         submittedResult.runtime = Math.round(totalRuntimeSeconds * 1000);
         submittedResult.memory = parseFloat((maxMemoryKb / 1024).toFixed(1));
@@ -147,13 +170,14 @@ const submitCode = async (req, res) => {
 
         if(statusId === 3){
             await User.findByIdAndUpdate(userId, {
-                $addToSet: { problemsSolved: problemId } 
+                $addToSet: { problemsSolved: problemId }
             });
         }
 
+        // Whitelisted response: no hidden input/expected output, no stderr, no driver code (SEC-03).
         res.status(201).json({
             message: "Submission completed.",
-            submissionResult: submittedResult
+            submissionResult: toPublicSubmission(submittedResult)
         });
     } catch(err) {
         // Judge0 failures arrive as Judge0UnavailableError (503, generic message); anything else is a 500.

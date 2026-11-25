@@ -17,7 +17,8 @@ export REDIS_PORT=6380
 export REDIS_PASS=auditpass
 export JWT_KEY="local-audit-only-key-not-a-secret-0123456789abcdef"
 # Judge0 is intentionally offline: point at a closed local port (fast ECONNREFUSED)
-export JUDGE0_BASE_URL="http://127.0.0.1:2359"
+# Override with JUDGE0_BASE_URL=http://127.0.0.1:2358 to use audit/harness/mock-judge0.mjs (local only).
+export JUDGE0_BASE_URL="${JUDGE0_BASE_URL:-http://127.0.0.1:2359}"
 export JUDGE0_AUTH_TOKEN="local-dummy"
 export CLIENT_URL="http://localhost:5174"
 # GEMINI_API_KEY is deliberately NOT overridden (comes from backend/.env) so the AI tutor can be smoke-tested.

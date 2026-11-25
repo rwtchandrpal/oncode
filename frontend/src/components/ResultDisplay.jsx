@@ -128,33 +128,12 @@ const SubmitResult = ({ result }) => {
         </div>
       )}
 
-      {/* Failed Test Case Output (Wrong Answer) */}
-      {!isAccepted && result.failedTestCase && (
-        <div className="space-y-6 max-w-3xl mt-6 border-t border-base-content/10 pt-6">
-          <h3 className="text-lg font-semibold text-base-content/80 mb-4">Failing Test Case</h3>
-          
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Input</label>
-            <div className="bg-base-200 border border-base-content/20 rounded-lg p-3">
-              <pre className="font-mono text-sm text-base-content/80 whitespace-pre-wrap break-all">{result.failedTestCase.input}</pre>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Actual Output</label>
-            <div className="bg-base-200 border border-error/40 rounded-lg p-3">
-              <pre className="font-mono text-sm text-error whitespace-pre-wrap break-all">
-                {result.failedTestCase.actualOutput || 'No output'}
-              </pre>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Expected Output</label>
-            <div className="bg-base-200 border border-success/40 rounded-lg p-3">
-              <pre className="font-mono text-sm text-success whitespace-pre-wrap break-all">{result.failedTestCase.expectedOutput}</pre>
-            </div>
-          </div>
+      {/* Hidden test failures: the failing input/expected output is never sent to the client (SEC-03) */}
+      {!isAccepted && !result.errorMessage && (
+        <div className="max-w-3xl mt-2 bg-base-200 border border-base-content/10 rounded-lg p-4 text-sm text-base-content/70">
+          {result.status === "Wrong Answer"
+            ? `Your output did not match the expected output on hidden test case ${(result.testCasesPassed ?? 0) + 1}. Hidden test inputs are not shown; try the sample test with Run and think about edge cases.`
+            : "Your solution did not pass all hidden test cases."}
         </div>
       )}
     </div>

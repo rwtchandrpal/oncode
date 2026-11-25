@@ -45,10 +45,19 @@ const submissionSchema = new Schema(
             type: Number,
             default: 0
         },
+        // Hidden-test diagnostics. Admin/debug use only: never selected by default and never sent to
+        // the submitting user (SEC-03). `errorMessage` above holds only the user-safe text.
         failedTestCase: {
-            input: { type: String },
-            expectedOutput: { type: String },
-            actualOutput: { type: String }
+            type: new Schema({
+                input: { type: String },
+                expectedOutput: { type: String },
+                actualOutput: { type: String }
+            }, { _id: false }),
+            select: false
+        },
+        errorDetail: {
+            type: String,
+            select: false
         },
         isDemo: {
             type: Boolean,
