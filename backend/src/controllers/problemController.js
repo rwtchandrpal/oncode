@@ -139,7 +139,7 @@ const updateProblem = async (req, res) => {
             return res.status(validation.status || 400).json({ message: validation.error });
         }
 
-        const updatedProblem = await Problem.findByIdAndUpdate(id, { $set: req.body }, { runValidators: true, new: true });
+        const updatedProblem = await Problem.findByIdAndUpdate(id, { $set: req.body }, { runValidators: true, returnDocument: 'after' });
         await invalidateTopics();
 
         res.status(200).json({

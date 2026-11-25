@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const { nextSequence } = require('./counter');
 
 const problemSchema = new Schema({
   title: {
@@ -73,10 +74,14 @@ const problemSchema = new Schema({
   }
 }, { timestamps: true });
 
+// Atomic numbering (BUG-16): reading max(number)+1 raced under concurrent creates (E11000).
 problemSchema.pre('save', async function() {
     if (this.isNew && this.number == null) {
-        const lastProblem = await this.constructor.findOne({}, 'number').sort('-number');
-        this.number = lastProblem && lastProblem.number ? lastProblem.number + 1 : 1;
+        const Problem = this.constructor;
+        this.number = await nextSequence('problemNumber', async () => {
+            const last = await Problem.findOne({}, 'number').sort('-number').lean();
+            return last?.number || 0;
+        });
     }
 });
 

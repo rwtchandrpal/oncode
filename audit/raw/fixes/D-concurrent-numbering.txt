@@ -1,0 +1,4 @@
+max number before: 12
+Promise.all of 2 saves -> 13, 14
+then 10 concurrent saves: 10 ok, 0 failed ()
+all 12 numbers consecutive from before+1: true (13..24)

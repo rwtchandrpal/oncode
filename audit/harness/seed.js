@@ -53,7 +53,7 @@ const diffs = ['Easy', 'Medium', 'Hard'];
 
 (async () => {
   await mongoose.connect(MONGO_URI);
-  await Promise.all([User.deleteMany({}), Problem.deleteMany({}), mongoose.model('Submission').deleteMany({})]);
+  await Promise.all([User.deleteMany({}), Problem.deleteMany({}), mongoose.model('Submission').deleteMany({}), mongoose.connection.db.collection('counters').deleteMany({})]);
   let admin;
   for (const a of ACCOUNTS) {
     const u = await User.create({ ...a, password: await bcrypt.hash(a.password, 10) });
