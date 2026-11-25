@@ -5,11 +5,15 @@ import './index.css';
 import App from './App.jsx';
 import {Provider} from 'react-redux';
 import {store} from './store/store.js';
+import { setupInterceptors } from './utils/axiosClient.js';
+import { sessionCleared, openAuthModal } from './features/auth/authSlice.js';
+
+setupInterceptors(store, { sessionCleared, openAuthModal });
 
 createRoot(document.getElementById('root')).render(
 <StrictMode>
 <Provider store={store}>
-<BrowserRouter> 
+<BrowserRouter>
 <App/>
 </BrowserRouter>
 </Provider>

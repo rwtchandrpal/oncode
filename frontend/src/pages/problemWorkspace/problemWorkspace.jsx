@@ -243,7 +243,7 @@ const ProblemWorkSpace = () => {
       console.error("Failed to execute code:", error);
       setRunResult({
         status: "System Error",
-        errorMessage: error.response?.data?.message || "Failed to connect to the execution server.",
+        errorMessage: error.response?.data?.message || error.userMessage || "Failed to connect to the execution server.",
         input: "",
         expectedOutput: "",
         actualOutput: "",
@@ -281,7 +281,7 @@ const ProblemWorkSpace = () => {
       console.error("Failed to submit code:", error);
       setSubmitResult({
         status: "System Error",
-        errorMessage: error.response?.data?.message || "Failed to connect to the evaluation server.",
+        errorMessage: error.response?.data?.message || error.userMessage || "Failed to connect to the evaluation server.",
         testCasesPassed: 0,
         testCasesTotal: 0,
         runtime: 0,
