@@ -66,7 +66,7 @@ const demoLogin = async (req, res) => {
 const register = async (req, res) => {
   try {
     // req.body was validated and normalized by validate({ body: registerBody | adminRegisterBody })
-    const { firstName, email, password } = req.body;
+    const { password } = req.body;
 
     req.body.password = await bcrypt.hash(password, 10);
     // make this route is only for user role
@@ -183,12 +183,12 @@ const adminRegister = async (req, res) => {
   // this is route through which admin can register new admin or user
   try {
     // req.body was validated and normalized by validate({ body: registerBody | adminRegisterBody })
-    const { firstName, email, password, role} = req.body;
+    const { password, role } = req.body;
 
     req.body.password = await bcrypt.hash(password, 10);
     req.body.role = role || "user";
     
-    const user = await User.create(req.body);
+    await User.create(req.body);
     res.status(201).json({ message: "Registered successfully." });
   } catch (err) {
     if (err.code === 11000) {

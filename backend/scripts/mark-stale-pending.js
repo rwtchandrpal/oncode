@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
  * One-off cleanup for BUG-01: marks submissions stuck in 'Pending' (left behind by Judge0 outages
  * before the fix) as 'System Error', so they stop showing as "Pending" in history. Stats already
