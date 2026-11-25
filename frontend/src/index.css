@@ -2,3 +2,5 @@
 @plugin "daisyui" {
   themes: dark --default;
 };
+/* Styles headings, lists, tables and code in rendered markdown (problem statements, AI replies) (UX-01) */
+@plugin "@tailwindcss/typography";

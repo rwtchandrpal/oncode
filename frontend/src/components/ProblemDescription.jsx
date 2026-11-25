@@ -41,7 +41,8 @@ const ProblemDescription = memo(({ problem }) => {
       </div>
 
       {/* --- 2. MAIN DESCRIPTION --- */}
-      <div className="prose prose-invert max-w-none text-base-content/80 leading-relaxed text-lg whitespace-pre-wrap">
+      {/* No whitespace-pre-wrap: markdown handles line breaks itself (UX-01) */}
+      <div className="prose prose-invert max-w-none text-base-content/80 leading-relaxed text-lg prose-table:border-collapse prose-th:border prose-td:border prose-th:border-base-content/20 prose-td:border-base-content/20 prose-th:px-3 prose-td:px-3 prose-th:bg-base-200">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {problem.description}
         </ReactMarkdown>
