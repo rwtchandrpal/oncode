@@ -1,15 +1,13 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation, Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { checkAuth } from "./features/auth/authSlice";
+import { checkAuth, openAuthModal } from "./features/auth/authSlice";
 
 // Loaded on first open, so react-hook-form + zod stay out of the initial bundle (PERF-03)
 const AuthModal = lazy(() => import("./components/AuthModal"));
 
 // Route-level code splitting
 const Home = lazy(() => import("./pages/Home"));
-const Login = lazy(() => import("./pages/authentication/Login"));
-const Signup = lazy(() => import("./pages/authentication/Signup"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const ProblemWorkSpace = lazy(() => import("./pages/problemWorkspace/problemWorkspace"));
 
@@ -37,13 +35,22 @@ const ProtectedRoute = ({ isAuthenticated, children }) => {
 };
 
 const AdminRoute = ({ user, isAuthenticated, children }) => {
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  const location = useLocation();
+  if (!isAuthenticated) {
+    return <Navigate to="/" state={{ openAuthModal: true, from: location.pathname }} replace />;
+  }
   if (user?.role !== "admin") return <Navigate to="/" replace />;
   return children;
 };
 
-const PublicOnlyRoute = ({ isAuthenticated, children }) => {
-  return isAuthenticated ? <Navigate to="/" replace /> : children;
+// /login and /signup used to be standalone pages duplicating AuthModal (CQ-03). They now open the
+// modal in the matching mode on the problem list.
+const AuthEntryRedirect = ({ mode, isAuthenticated }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!isAuthenticated) dispatch(openAuthModal({ mode, redirectPath: "/" }));
+  }, [dispatch, mode, isAuthenticated]);
+  return <Navigate to="/" replace />;
 };
 
 const App = () => {
@@ -69,14 +76,8 @@ const App = () => {
       )}
       <Suspense fallback={<PageLoader />}>
         <Routes>
-        <Route 
-          path="/login" 
-          element={<PublicOnlyRoute isAuthenticated={isAuthenticated}><Login /></PublicOnlyRoute>} 
-        />
-        <Route 
-          path="/signup" 
-          element={<PublicOnlyRoute isAuthenticated={isAuthenticated}><Signup /></PublicOnlyRoute>} 
-        />
+        <Route path="/login" element={<AuthEntryRedirect mode="login" isAuthenticated={isAuthenticated} />} />
+        <Route path="/signup" element={<AuthEntryRedirect mode="signup" isAuthenticated={isAuthenticated} />} />
 
         <Route 
           path="/" 
