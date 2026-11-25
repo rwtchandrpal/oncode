@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,9 @@ import {
 } from '../features/auth/authSlice';
 import { signupSchema } from '../validations/authSchemas';
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const srLabel = 'sr-only';
+
 const AuthModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,6 +25,11 @@ const AuthModal = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Focus management (UX-02): move focus into the dialog, keep Tab inside it, and give focus back
+  // to whatever opened it (e.g. "Get Started") when it closes.
+  const dialogRef = useRef(null);
+  const returnFocusRef = useRef(null);
 
   // Sign-in form
   const {
@@ -50,16 +58,50 @@ const AuthModal = () => {
     setShowConfirmPassword(false);
   }, [dispatch, resetLoginForm, resetSignupForm]);
 
-  // Handle Escape key to close modal
+  // Escape closes; Tab / Shift+Tab cycle within the dialog
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
         handleClose();
+        return;
+      }
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusable = Array.from(dialogRef.current.querySelectorAll(FOCUSABLE)).filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const inside = dialogRef.current.contains(document.activeElement);
+        if (e.shiftKey && (document.activeElement === first || !inside)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (document.activeElement === last || !inside)) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, handleClose]);
+
+  // Remember the opener, and restore focus to it when the dialog goes away
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const opener = document.activeElement;
+    returnFocusRef.current = opener instanceof HTMLElement && opener !== document.body ? opener : null;
+    return () => {
+      const target = returnFocusRef.current;
+      if (target && document.contains(target)) target.focus();
+    };
+  }, [isOpen]);
+
+  // Autofocus the first field whenever the dialog opens or switches mode
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return;
+    const firstField = dialogRef.current.querySelector('input, [data-autofocus]');
+    (firstField || dialogRef.current.querySelector(FOCUSABLE))?.focus();
+  }, [isOpen, mode]);
 
   const handleModeChange = (newMode) => {
     dispatch(setAuthModalMode(newMode));
@@ -110,6 +152,7 @@ const AuthModal = () => {
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
@@ -195,7 +238,9 @@ const AuthModal = () => {
         {mode === 'login' && (
           <form onSubmit={handleLoginSubmit(onLoginSubmit)} className="space-y-4">
             <div>
+              <label htmlFor="auth-login-email" className={srLabel}>Email address</label>
               <input
+                id="auth-login-email"
                 type="email"
                 placeholder="Email Address"
                 autoComplete="email"
@@ -217,7 +262,9 @@ const AuthModal = () => {
 
             <div>
               <div className="relative">
+                <label htmlFor="auth-login-password" className={srLabel}>Password</label>
                 <input
+                  id="auth-login-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   autoComplete="current-password"
@@ -280,7 +327,9 @@ const AuthModal = () => {
           <form onSubmit={handleSignupSubmit(onSignupSubmit)} className="space-y-3">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
+                <label htmlFor="auth-signup-first-name" className={srLabel}>First name</label>
                 <input
+                  id="auth-signup-first-name"
                   type="text"
                   placeholder="First Name"
                   className={`input w-full bg-base-200 border ${
@@ -293,7 +342,9 @@ const AuthModal = () => {
                 )}
               </div>
               <div className="flex-1">
+                <label htmlFor="auth-signup-last-name" className={srLabel}>Last name (optional)</label>
                 <input
+                  id="auth-signup-last-name"
                   type="text"
                   placeholder="Last Name (optional)"
                   className={`input w-full bg-base-200 border ${
@@ -308,7 +359,9 @@ const AuthModal = () => {
             </div>
 
             <div>
+              <label htmlFor="auth-signup-email" className={srLabel}>Email address</label>
               <input
+                id="auth-signup-email"
                 type="email"
                 placeholder="Email Address"
                 autoComplete="email"
@@ -324,7 +377,9 @@ const AuthModal = () => {
 
             <div>
               <div className="relative">
+                <label htmlFor="auth-signup-password" className={srLabel}>Password</label>
                 <input
+                  id="auth-signup-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   autoComplete="new-password"
@@ -352,7 +407,9 @@ const AuthModal = () => {
 
             <div>
               <div className="relative">
+                <label htmlFor="auth-signup-confirm-password" className={srLabel}>Confirm password</label>
                 <input
+                  id="auth-signup-confirm-password"
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm Password"
                   autoComplete="new-password"
