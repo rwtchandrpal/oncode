@@ -62,11 +62,11 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] D acceptance criteria verified
 
 ## Phase E1: admin authoring
-- [ ] E1.1 Update skips Judge0 for metadata (BUG-09)
-- [ ] E1.2 Validate every reference solution (BUG-10)
-- [ ] E1.3 Shared ProblemForm + GET /problem/:id/admin
-- [ ] E1.4 Workspace languages from snippets (BUG-10)
-- [ ] E1 acceptance criteria verified
+- [x] E1.1 Update skips Judge0 for metadata (BUG-09)
+- [x] E1.2 Validate every reference solution (BUG-10)
+- [x] E1.3 Shared ProblemForm + GET /problem/:id/admin
+- [x] E1.4 Workspace languages from snippets (BUG-10)
+- [x] E1 acceptance criteria verified
 
 ## Phase E2: UX/a11y
 - [ ] E2.1 Typography plugin (UX-01)

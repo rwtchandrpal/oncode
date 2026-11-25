@@ -286,3 +286,35 @@ schemas · `99d17c4` required-field messages.
 `f82b22f` lazy AuthModal + Monaco chunk fix.
 
 ---
+## Phase E1: admin problem authoring (BUG-09, BUG-10)
+
+**What changed**
+- E1.1 `updateProblem` compares `hiddenTestCases`, `visibleTestCase`, `codeSnippets` and `referenceSolutions`
+  by content (subdocument `_id`s ignored) and runs `validateAndTestProblem` only if one of them changed.
+- E1.2 `validateAndTestProblem` runs **every** reference solution against its own language's driver code (one
+  Judge0 batch per language, each with its own deadline), and rejects duplicate languages or a solution without a
+  snippet. Deviation: my first version also required a reference solution for every snippet language. The seed
+  (and possibly older data) has C++ + Java snippets with only a C++ solution, so that rule would have blocked
+  editing existing problems. Relaxed to the plan's wording ("one snippet per declared language"); see "Noticed
+  but not fixed".
+- E1.3 `GET /problem/:id/admin` behind `adminMiddleware` (full problem, `no-store`).
+  `components/admin/ProblemForm.jsx` is shared by `CreateProblem` and `UpdateProblem`. Per-language toggles
+  (C++/Java), each with starter snippet, driver code and reference solution. The form schema and the
+  API↔form mapping live in `validations/problemSchema.js`. In edit mode a language may lack a reference solution
+  (older data), marked "recommended"; in create mode it is required. Inputs have `id` + `<label htmlFor>` (UX-03
+  for these two pages). `UpdateProblem` prefills from the admin endpoint.
+- E1.4 workspace: `languages` come from `problem.codeSnippets`; the default is the first available.
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| Judge0 off: editing only the title → 200 and the new title shows in the user list | PASS | API: `PUT {title}` 200, `GET /problem/` shows "Double It (edited)"; UI: renamed "Audit Problem 3 (renamed in UI)" via the new form, back on Manage Problems with the new title (`raw/fixes/E1-admin-authoring.txt`) |
+| Editing a hidden test case → 503 | PASS | API 503 `EXECUTION_UNAVAILABLE`; UI shows "Update Failed: Code execution is temporarily unavailable" (`screenshots/fixes/E1-edit-hidden-test-503.jpg`) |
+| A C++-only problem shows only C++ in the workspace dropdown | PASS | options `["C++"]`; a two-language problem shows `["C++","Java"]` |
+| `GET /problem/:id/admin` → 403 for a normal user | PASS | user 403, anon 401, admin 200 with the hidden/driver/reference markers |
+| Every reference solution validated (mock Judge0) | PASS | C++ ok + Java `MOCK_WA` → 400 "Reference Solution Error (java): Wrong Answer"; both ok → 201; Java solution without Java snippet → 400. UI create with both languages → saved as #14 |
+| Full-form save with unchanged judge fields skips Judge0 | PASS | 200 with Judge0 off |
+
+**Commits:** `e86122e` backend · `4c005a9` ProblemForm · `98643a3` workspace languages.
+
+---
