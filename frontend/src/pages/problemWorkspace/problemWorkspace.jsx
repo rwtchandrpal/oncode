@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router";
 import { Maximize2, Minimize2, Play, Send } from "lucide-react";
 import axiosClient from "../../utils/axiosClient";
+import { loadDraft, saveDraft, clearDraft } from "../../utils/editorStorage";
 
 import GlobalNavbar from "../../components/GlobalNavbar";
 
@@ -32,8 +33,10 @@ const ProblemWorkSpace = () => {
   const [reloadKey, setReloadKey] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(PLACEHOLDER_CODE);
-  // Starter snippet per language, used as each Monaco model's initial value
+  // Starter snippet per language (what "Reset" restores)
   const [starterCodes, setStarterCodes] = useState({});
+  // Initial value of each language's Monaco model: the saved draft if any, else the starter (UX-05)
+  const [initialCodes, setInitialCodes] = useState({});
   
   // Changed loading to a string to track which button is spinning ('run' | 'submit' | null)
   const [loadingAction, setLoadingAction] = useState(null);
@@ -80,6 +83,14 @@ const ProblemWorkSpace = () => {
   const userCodesRef = useRef({});
   // Read by the editor change handler, so it never writes into the wrong language (BUG-05)
   const selectedLanguageRef = useRef("cpp");
+  // Pending debounced draft saves, per language
+  const saveTimersRef = useRef({});
+
+  // Flush nothing on unmount, just cancel timers (the last keystrokes within 500 ms may be lost)
+  useEffect(() => {
+    const timers = saveTimersRef.current;
+    return () => Object.values(timers).forEach(clearTimeout);
+  }, []);
 
   const leftTabs = ["Description", "Solution", "Submissions", "ChatAI"];
   const rightTabs = ["Code", "Testcase", "Result"];
@@ -99,15 +110,19 @@ const ProblemWorkSpace = () => {
         if (!isMounted) return;
         setProblem(data.problem);
         if (data.problem && data.problem.codeSnippets) {
-          const initialCodes = {};
+          const starters = {};
+          const initial = {};
           data.problem.codeSnippets.forEach(snippet => {
-            initialCodes[snippet.language.toLowerCase()] = snippet.userSnippet;
+            const lang = snippet.language.toLowerCase();
+            starters[lang] = snippet.userSnippet;
+            initial[lang] = loadDraft(problemId, lang) ?? snippet.userSnippet;
           });
-          userCodesRef.current = { ...initialCodes };
-          setStarterCodes(initialCodes);
+          userCodesRef.current = { ...initial };
+          setStarterCodes(starters);
+          setInitialCodes(initial);
           // Default to the first language the problem supports
           const firstLanguage = data.problem.codeSnippets[0]?.language?.toLowerCase() || "cpp";
-          const starterCode = initialCodes[firstLanguage] || PLACEHOLDER_CODE;
+          const starterCode = initial[firstLanguage] || PLACEHOLDER_CODE;
           codeRef.current = starterCode;
           setCode(starterCode);
           selectedLanguageRef.current = firstLanguage;
@@ -128,13 +143,28 @@ const ProblemWorkSpace = () => {
 
   // Keep code buffer in ref without triggering parent re-render on every keystroke
   const handleCodeChange = (newCode) => {
+    const lang = selectedLanguageRef.current;
     codeRef.current = newCode || "";
-    userCodesRef.current[selectedLanguageRef.current] = newCode || "";
+    userCodesRef.current[lang] = newCode || "";
+    // Save the draft 500 ms after the last keystroke (UX-05)
+    clearTimeout(saveTimersRef.current[lang]);
+    saveTimersRef.current[lang] = setTimeout(() => saveDraft(problemId, lang, newCode || ""), 500);
+  };
+
+  const handleResetCode = () => {
+    const lang = selectedLanguageRef.current;
+    const starter = starterCodes[lang] ?? PLACEHOLDER_CODE;
+    if (!window.confirm("Reset your code to the starter template? Your current code for this language will be lost.")) return;
+    if (editorRef.current) editorRef.current.setValue(starter);
+    clearTimeout(saveTimersRef.current[lang]);
+    clearDraft(problemId, lang);
+    userCodesRef.current[lang] = starter;
+    codeRef.current = starter;
   };
 
   const handleLanguageChange = (lang) => {
     // The editor swaps to the other language's model (see the path prop); nothing is overwritten.
-    const nextCode = userCodesRef.current[lang] ?? starterCodes[lang] ?? PLACEHOLDER_CODE;
+    const nextCode = userCodesRef.current[lang] ?? initialCodes[lang] ?? PLACEHOLDER_CODE;
     selectedLanguageRef.current = lang;
     codeRef.current = nextCode;
     setSelectedLanguage(lang);
@@ -542,7 +572,8 @@ const ProblemWorkSpace = () => {
               <ProblemCodeEditor
                 key={problemId}
                 path={`${problemId}-${selectedLanguage}`}
-                defaultValue={starterCodes[selectedLanguage] ?? PLACEHOLDER_CODE}
+                defaultValue={initialCodes[selectedLanguage] ?? PLACEHOLDER_CODE}
+                onReset={handleResetCode}
                 onCodeChange={handleCodeChange}
                 selectedLanguage={selectedLanguage}
                 setSelectedLanguage={handleLanguageChange}

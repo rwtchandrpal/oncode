@@ -2,12 +2,13 @@ import React, { memo } from "react";
 import Editor from "@monaco-editor/react";
 // Bundled Monaco instead of the jsDelivr CDN (SEC-07); must run before the first <Editor> mounts.
 import "../utils/monacoSetup";
-import { Settings } from "lucide-react";
+import { Settings, RotateCcw } from "lucide-react";
 
 const ProblemCodeEditor = memo(({
   path,
   defaultValue,
   onCodeChange,
+  onReset,
   selectedLanguage,
   setSelectedLanguage,
   fontSize,
@@ -46,6 +47,18 @@ const ProblemCodeEditor = memo(({
         </select>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {onReset && (
+            <button
+              type="button"
+              onClick={onReset}
+              className="btn btn-ghost btn-xs gap-1 text-base-content/70"
+              title="Reset to starter code"
+              aria-label="Reset to starter code"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
+          )}
           <Settings className="w-4 h-4 text-base-content/50" />
           <span className="text-xs text-base-content/60 font-medium hidden sm:inline">Font Size:</span>
           <select
