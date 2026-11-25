@@ -3,7 +3,8 @@ import Editor from "@monaco-editor/react";
 import { Settings } from "lucide-react";
 
 const ProblemCodeEditor = memo(({
-  code,
+  path,
+  defaultValue,
   onCodeChange,
   selectedLanguage,
   setSelectedLanguage,
@@ -66,7 +67,10 @@ const ProblemCodeEditor = memo(({
           language={selectedLanguage === "cpp" ? "cpp" : selectedLanguage}
           theme="daisyui-dark"
           beforeMount={handleEditorWillMount}
-          value={code}
+          // One Monaco model per path (problem + language): switching language swaps models
+          // instead of overwriting text, so each language keeps its own code and undo history (BUG-05).
+          path={path}
+          defaultValue={defaultValue}
           onChange={onCodeChange}
           onMount={handleEditorDidMount}
           options={{

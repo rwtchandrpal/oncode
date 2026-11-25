@@ -19,6 +19,7 @@ import ProblemResult from "../../components/ProblemResult";
 const DEFAULT_SPLIT_RATIO = 40;
 const MIN_SPLIT_RATIO = 20;
 const MAX_SPLIT_RATIO = 80;
+const PLACEHOLDER_CODE = "// Write your code here...";
 
 const ProblemWorkSpace = () => {
   let { problemId } = useParams();
@@ -26,7 +27,9 @@ const ProblemWorkSpace = () => {
   // --- Core State ---
   const [problem, setProblem] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
-  const [code, setCode] = useState("// Write your code here...");
+  const [code, setCode] = useState(PLACEHOLDER_CODE);
+  // Starter snippet per language, used as each Monaco model's initial value
+  const [starterCodes, setStarterCodes] = useState({});
   
   // Changed loading to a string to track which button is spinning ('run' | 'submit' | null)
   const [loadingAction, setLoadingAction] = useState(null);
@@ -69,8 +72,10 @@ const ProblemWorkSpace = () => {
   const splitRatioRef = useRef(splitRatio);
 
   const editorRef = useRef(null);
-  const codeRef = useRef("// Write your code here...");
+  const codeRef = useRef(PLACEHOLDER_CODE);
   const userCodesRef = useRef({});
+  // Read by the editor change handler, so it never writes into the wrong language (BUG-05)
+  const selectedLanguageRef = useRef("cpp");
 
   const leftTabs = ["Description", "Solution", "Submissions", "ChatAI"];
   const rightTabs = ["Code", "Testcase", "Result"];
@@ -90,14 +95,13 @@ const ProblemWorkSpace = () => {
           data.problem.codeSnippets.forEach(snippet => {
             initialCodes[snippet.language] = snippet.userSnippet;
           });
-          userCodesRef.current = initialCodes;
-          const starterCode = initialCodes["cpp"] || "// Write your code here...";
+          userCodesRef.current = { ...initialCodes };
+          setStarterCodes(initialCodes);
+          const starterCode = initialCodes["cpp"] || PLACEHOLDER_CODE;
           codeRef.current = starterCode;
           setCode(starterCode);
+          selectedLanguageRef.current = "cpp";
           setSelectedLanguage("cpp");
-          if (editorRef.current) {
-            editorRef.current.setValue(starterCode);
-          }
         }
       } catch (err) {
         console.error("Failed to fetch problem", err);
@@ -112,24 +116,16 @@ const ProblemWorkSpace = () => {
   // Keep code buffer in ref without triggering parent re-render on every keystroke
   const handleCodeChange = (newCode) => {
     codeRef.current = newCode || "";
-    if (userCodesRef.current) {
-      userCodesRef.current[selectedLanguage] = newCode || "";
-    }
+    userCodesRef.current[selectedLanguageRef.current] = newCode || "";
   };
 
   const handleLanguageChange = (lang) => {
-    // Save current editor content for the previous language
-    const currentEditorContent = editorRef.current ? editorRef.current.getValue() : codeRef.current;
-    userCodesRef.current[selectedLanguage] = currentEditorContent;
-
-    const nextCode = userCodesRef.current[lang] || "// Write your code here...";
+    // The editor swaps to the other language's model (see the path prop); nothing is overwritten.
+    const nextCode = userCodesRef.current[lang] ?? starterCodes[lang] ?? PLACEHOLDER_CODE;
+    selectedLanguageRef.current = lang;
     codeRef.current = nextCode;
     setSelectedLanguage(lang);
     setCode(nextCode);
-
-    if (editorRef.current) {
-      editorRef.current.setValue(nextCode);
-    }
   };
 
   const handleEditorDidMount = (editor) => {
@@ -506,7 +502,8 @@ const ProblemWorkSpace = () => {
             <div className={`flex-1 flex flex-col min-h-0 min-w-0 ${activeRightTab === "Code" ? "flex" : "hidden"}`}>
               <ProblemCodeEditor
                 key={problemId}
-                code={code}
+                path={`${problemId}-${selectedLanguage}`}
+                defaultValue={starterCodes[selectedLanguage] ?? PLACEHOLDER_CODE}
                 onCodeChange={handleCodeChange}
                 selectedLanguage={selectedLanguage}
                 setSelectedLanguage={handleLanguageChange}
