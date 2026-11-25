@@ -111,6 +111,18 @@ cd frontend && npm run dev     # SPA on :5173
 ```
 Frontend checks: `npm run lint`, `npm run build`, `npm run preview` (serves the build with the same CSP as Vercel).
 
+### Tests and CI
+```bash
+cd backend && npm test            # vitest + supertest against MongoDB/Redis (see below), mock Judge0
+cd backend && npm run test:coverage
+cd frontend && npm test           # vitest + Testing Library (jsdom)
+```
+Backend tests need a MongoDB replica set and a Redis, by default the `audit/harness` Docker containers
+(`127.0.0.1:27018` and `:6380`). Point them elsewhere with `TEST_MONGO_URI`, `TEST_REDIS_HOST/PORT/PASS`; the database
+name must contain "test" and the tests wipe it. Judge0 is always an in-process mock.
+`.github/workflows/ci.yml` runs, for each app: `npm ci`, lint, tests, `npm audit --omit=dev --audit-level=high`, and the
+frontend build / backend Docker image build.
+
 ---
 
 ## Operations

@@ -1,0 +1,9 @@
+== frontend: npm run lint
+exit 0
+== frontend: npm test
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+== frontend: npm audit --omit=dev --audit-level=high
+found 0 vulnerabilities
+== frontend: npm run build
+✓ built in 1.98s
