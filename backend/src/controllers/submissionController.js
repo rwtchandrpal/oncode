@@ -5,6 +5,7 @@ const client = require('../config/redis');
 const { getLanguageId, getstatusById, createSubmission, getSubmission, newDeadline } = require('../utils/judge0Utility');
 const { sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
+const { encodeBase64, decodeBase64 } = require('../utils/base64');
 
 const checkDemoExecutionLimit = async (user) => {
     if (!user || !user.isDemo) return { allowed: true };
@@ -35,16 +36,6 @@ const refundDemoExecution = async (key) => {
     } catch (err) {
         logger.warn({ err }, "Redis error refunding demo execution");
     }
-};
-
-const encodeBase64 = (str) => {
-    if (!str) return "";
-    return Buffer.from(String(str), 'utf8').toString('base64');
-};
-
-const decodeBase64 = (str) => {
-    if (!str) return "";
-    return Buffer.from(String(str), 'base64').toString('utf8');
 };
 
 // Largest accepted source file (SEC-08). Checked before any DB write.

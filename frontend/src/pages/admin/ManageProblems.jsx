@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router'; 
 import { Edit, Trash2, AlertCircle, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
+import { getDifficultyColor } from '../../utils/difficulty';
 
 const PAGE_SIZE = 20;
 
@@ -53,16 +54,6 @@ const ManageProblemsTable = () => {
       setError("Failed to delete the problem. Please check your connection or server logs.");
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  // Helper to color-code difficulty badges
-  const getDifficultyBadge = (difficulty) => {
-    switch (difficulty?.toLowerCase()) {
-      case 'easy': return 'bg-success/10 text-success border border-success/20';
-      case 'medium': return 'bg-warning/10 text-warning border border-warning/20';
-      case 'hard': return 'bg-error/10 text-error border border-error/20';
-      default: return 'bg-base-300 text-base-content/60';
     }
   };
 
@@ -125,7 +116,7 @@ const ManageProblemsTable = () => {
                     
                     {/* Difficulty */}
                     <td className="bg-transparent">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getDifficultyBadge(problem.difficulty)}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${getDifficultyColor(problem.difficulty)}`}>
                         {problem.difficulty || 'Unknown'}
                       </span>
                     </td>

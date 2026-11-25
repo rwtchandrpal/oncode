@@ -5,12 +5,8 @@ const mongoose = require('mongoose');
 const Submission = require('../models/submission');
 const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
+const { encodeBase64 } = require('../utils/base64');
 const { getAllTopics, invalidateTopics } = require('../utils/topicsCache');
-
-const encodeBase64 = (str) => {
-    if (!str) return "";
-    return Buffer.from(String(str), 'utf8').toString('base64');
-};
 
 // ==========================================
 // HELPER FUNCTION: Validation & Judge0 Testing
