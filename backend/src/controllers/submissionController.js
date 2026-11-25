@@ -2,10 +2,11 @@ const Problem = require('../models/problem');
 const User = require('../models/user');
 const Submission = require('../models/submission');
 const client = require('../config/redis');
-const { getLanguageId, getstatusById, createSubmission, getSubmission, newDeadline } = require('../utils/judge0Utility');
+const { getLanguageId, getstatusById } = require('../utils/judge0Utility');
+const judgeService = require('../services/judgeService');
 const { sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
-const { encodeBase64, decodeBase64 } = require('../utils/base64');
+const { decodeBase64 } = require('../utils/base64');
 
 const checkDemoExecutionLimit = async (user) => {
     if (!user || !user.isDemo) return { allowed: true };
@@ -89,7 +90,7 @@ const submitCode = async (req, res) => {
         if (!snippet) {
             return res.status(400).json({ message: `Language '${language}' is not supported for this problem.` });
         }
-        const langId = getLanguageId(language.toLowerCase());
+        getLanguageId(language.toLowerCase()); // throws a 400 AppError for unsupported languages
         const testCases = problem.hiddenTestCases || [];
 
         // Demo quota is charged only for valid requests (BUG-14)
@@ -102,25 +103,12 @@ const submitCode = async (req, res) => {
             demoQuotaKey = limitCheck.key;
         }
 
-        const fullCodeToRun = snippet.driverCode.replaceAll("{{USER_CODE}}", () => code);
-        
-        const compilerOptions = langId === 54 ? "-Wall -Werror=return-type" : "";
-        
-        const submissionPayload = testCases.map(testCase => ({
-            language_id: langId,
-            source_code: encodeBase64(fullCodeToRun),
-            stdin: encodeBase64(testCase.input),
-            expected_output: encodeBase64(testCase.expectedOutput),
-            compiler_options: compilerOptions
-        }));
-
         // The submission record is created only once Judge0 has accepted the batch, and is marked
         // 'System Error' if polling then fails, so an outage never leaves a 'Pending' record (BUG-01).
         let submittedResult = null;
         let testResult;
         try {
-            const deadline = newDeadline();
-            const submitResult = await createSubmission(submissionPayload, deadline);
+            const batch = await judgeService.startBatch({ language, driverCode: snippet.driverCode, code, testCases });
             submittedResult = await Submission.create({
                 userId, problemId, code, language,
                 testCasesPassed: 0,
@@ -129,7 +117,7 @@ const submitCode = async (req, res) => {
                 isDemo: req.user.isDemo || false,
                 expiresAt: req.user.isDemo ? req.user.expiresAt : null
             });
-            testResult = await getSubmission(submitResult.map(elem => elem.token), deadline);
+            testResult = await judgeService.awaitBatch(batch);
         } catch (execErr) {
             await refundDemoExecution(demoQuotaKey);
             if (submittedResult) {
@@ -235,7 +223,7 @@ const runCode = async (req, res) => {
         }
         
         const testCase = problem.visibleTestCase;
-        const langId = getLanguageId(language.toLowerCase());
+        getLanguageId(language.toLowerCase()); // throws a 400 AppError for unsupported languages
 
         // Demo quota is charged only for valid requests (BUG-14)
         let demoQuotaKey = null;
@@ -247,24 +235,10 @@ const runCode = async (req, res) => {
             demoQuotaKey = limitCheck.key;
         }
         
-        const fullCodeToRun = snippet.driverCode.replaceAll("{{USER_CODE}}", () => code);
-        
-        const compilerOptions = langId === 54 ? "-Wall -Werror=return-type" : "";
-
-        const submissionPayload = [{
-            language_id: langId,
-            source_code: encodeBase64(fullCodeToRun),
-            stdin: encodeBase64(testCase.input),
-            expected_output: encodeBase64(testCase.expectedOutput),
-            compiler_options: compilerOptions
-        }];
-        
         let result;
         try {
-            const deadline = newDeadline();
-            const submitResult = await createSubmission(submissionPayload, deadline);
-            const testResult = await getSubmission([submitResult[0].token], deadline);
-            result = testResult[0];
+            const [first] = await judgeService.runBatch({ language, driverCode: snippet.driverCode, code, testCases: [testCase] });
+            result = first;
         } catch (execErr) {
             await refundDemoExecution(demoQuotaKey);
             throw execErr;

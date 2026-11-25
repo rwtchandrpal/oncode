@@ -1,11 +1,11 @@
-const { createSubmission, getSubmission, newDeadline, getLanguageId, getstatusById } = require('../utils/judge0Utility');
+const { getLanguageId, getstatusById } = require('../utils/judge0Utility');
+const judgeService = require('../services/judgeService');
 const Problem = require('../models/problem');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const Submission = require('../models/submission');
 const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
-const { encodeBase64 } = require('../utils/base64');
 const { getAllTopics, invalidateTopics } = require('../utils/topicsCache');
 
 // ==========================================
@@ -47,26 +47,15 @@ const validateAndTestProblem = async (problemData) => {
 
     for (const solution of referenceSolutions) {
         const language = lower(solution.language);
-        let langId;
         try {
-            langId = getLanguageId(language);
+            getLanguageId(language);
         } catch {
             return { isValid: false, error: "Unsupported reference solution language." };
         }
         const snippet = codeSnippets.find((s) => lower(s.language) === language);
-        const fullCodeToTest = snippet.driverCode.replaceAll("{{USER_CODE}}", () => solution.code);
-
-        const submissionPayload = testCases.map(testCase => ({
-            language_id: langId,
-            source_code: encodeBase64(fullCodeToTest),
-            stdin: encodeBase64(testCase.input),
-            expected_output: encodeBase64(testCase.expectedOutput)
-        }));
-
         try {
-            const deadline = newDeadline();
-            const submitResult = await createSubmission(submissionPayload, deadline);
-            const testResult = await getSubmission(submitResult.map((elem) => elem.token), deadline);
+            // Same compile settings as user submissions, via the shared judge service (CQ-07)
+            const testResult = await judgeService.runBatch({ language, driverCode: snippet.driverCode, code: solution.code, testCases });
 
             const failed = testResult.find((test) => test.status_id !== 3); // 3 is "Accepted"
             if (failed) {
