@@ -5,6 +5,8 @@ const authRouter = express.Router();
 const userMiddleware = require('../middlewares/userMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const rateLimit = require('express-rate-limit');
+const validate = require('../middlewares/validate');
+const { registerBody, adminRegisterBody, loginBody } = require('../validation/auth');
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -23,11 +25,11 @@ const demoLimiter = rateLimit({
 });
 
 // different user routes 
-authRouter.post("/register", authLimiter, register);
-authRouter.post("/login", authLimiter, login);
+authRouter.post("/register", authLimiter, validate({ body: registerBody }), register);
+authRouter.post("/login", authLimiter, validate({ body: loginBody }), login);
 authRouter.post("/demo", demoLimiter, demoLogin);
 authRouter.post("/logout", userMiddleware, logout);
-authRouter.post("/admin/register", adminMiddleware, adminRegister);
+authRouter.post("/admin/register", adminMiddleware, validate({ body: adminRegisterBody }), adminRegister);
 
 authRouter.get("/profile", userMiddleware, getUserStats);
 authRouter.delete("/profile",userMiddleware, deleteProfile);

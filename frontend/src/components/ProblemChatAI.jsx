@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, memo } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import axiosClient from '../utils/axiosClient';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const INITIAL_MESSAGE = {
   role: 'ai',
@@ -51,10 +52,12 @@ const ChatAI = ({ problem, getCode, code, language, isVisible }) => {
       const { data } = await axiosClient.post('/chatAI/doubt', payload);
 
       setMessages(prev => [...prev, { role: 'ai', content: data.reply }]);
-    } catch {
+    } catch (error) {
       setMessages(prev => [...prev, { 
         role: 'ai', 
-        content: "Sorry, I encountered an error connecting to the server. Please check your connection and try again." 
+        content: error.response
+          ? getApiErrorMessage(error, "Sorry, something went wrong. Please try again.")
+          : "Sorry, I encountered an error connecting to the server. Please check your connection and try again." 
       }]);
     } finally {
       setIsLoading(false);
@@ -112,6 +115,7 @@ const ChatAI = ({ problem, getCode, code, language, isVisible }) => {
         >
           <input
             type="text"
+            maxLength={1000}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask any doubt?"

@@ -6,6 +6,9 @@ const adminMiddleware = require('../middlewares/adminMiddleware');
 const {submitCode, runCode} = require('../controllers/submissionController');
 const {checkJudge0Health} = require('../utils/judge0Utility');
 const rateLimit = require('express-rate-limit');
+const validate = require('../middlewares/validate');
+const { idParams } = require('../validation/common');
+const { executeBody } = require('../validation/submission');
 
 const submitLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -22,8 +25,8 @@ submitRouter.get("/health", adminMiddleware, async (req, res) => {
   res.status(statusCode).json(health);
 });
 
-submitRouter.post("/submit/:id", userMiddleware, submitLimiter, submitCode);
-submitRouter.post("/run/:id", userMiddleware, submitLimiter, runCode);
+submitRouter.post("/submit/:id", userMiddleware, validate({ params: idParams, body: executeBody }), submitLimiter, submitCode);
+submitRouter.post("/run/:id", userMiddleware, validate({ params: idParams, body: executeBody }), submitLimiter, runCode);
 
 
 module.exports = submitRouter;

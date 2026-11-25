@@ -3,6 +3,8 @@ const rateLimit = require('express-rate-limit');
 const chatAIRouter = express.Router();
 const userMiddleware = require('../middlewares/userMiddleware');
 const chatWithAI = require('../controllers/chatWithAI');
+const validate = require('../middlewares/validate');
+const { doubtBody } = require('../validation/ai');
 
 const aiRateLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
@@ -20,6 +22,6 @@ const aiRateLimiter = rateLimit({
   }
 });
 
-chatAIRouter.post('/doubt', userMiddleware, aiRateLimiter, chatWithAI);
+chatAIRouter.post('/doubt', userMiddleware, validate({ body: doubtBody }), aiRateLimiter, chatWithAI);
 
 module.exports = chatAIRouter;

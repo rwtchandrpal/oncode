@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const Submission = require("../models/submission");
 const { UNGRADED_STATUSES } = Submission;
 const Problem = require("../models/problem");
-const validate = require("../utils/validate");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const client = require("../config/redis");
@@ -67,8 +66,7 @@ const demoLogin = async (req, res) => {
 // handler for authentication register, login, logout
 const register = async (req, res) => {
   try {
-    // validate data
-    validate(req.body);
+    // req.body was validated and normalized by validate({ body: registerBody | adminRegisterBody })
     const { firstName, email, password } = req.body;
 
     req.body.password = await bcrypt.hash(password, 10);
@@ -185,8 +183,7 @@ const logout = async (req, res) => {
 const adminRegister = async (req, res) => {
   // this is route through which admin can register new admin or user
   try {
-    // validate data
-    validate(req.body);
+    // req.body was validated and normalized by validate({ body: registerBody | adminRegisterBody })
     const { firstName, email, password, role} = req.body;
 
     req.body.password = await bcrypt.hash(password, 10);
