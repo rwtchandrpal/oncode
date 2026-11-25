@@ -208,7 +208,8 @@ const Home = () => {
       
       <GlobalNavbar /> 
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="sr-only">Problems</h1>
         
         {/* Controls Section: Search Bar & Filters */}
         <div className="space-y-4 mb-8">
@@ -393,7 +394,7 @@ const Home = () => {
           </div>
         )}
 
-      </div>
+      </main>
     </div>
   );
 };

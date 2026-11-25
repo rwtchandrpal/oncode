@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router"; 
+import { Routes, Route, Navigate, useLocation, Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "./features/auth/authSlice";
 
@@ -105,10 +105,11 @@ const App = () => {
         <Route 
           path="*" 
           element={
-            <div className="flex h-screen w-full flex-col items-center justify-center text-base-content bg-base-300">
+            <main className="flex h-screen w-full flex-col items-center justify-center text-base-content bg-base-300 px-4 text-center">
               <h1 className="text-4xl font-bold">404 - Not Found</h1>
               <p className="mt-2 text-base-content/60">The page you are looking for does not exist.</p>
-            </div>
+              <Link to="/" className="btn btn-primary btn-sm mt-6">Back to problems</Link>
+            </main>
           } 
         />
       </Routes>

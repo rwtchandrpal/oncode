@@ -26,9 +26,9 @@ const GlobalNavbar = () => {
   };
       
   return (
-    <div className="navbar bg-base-100 border-b border-base-content/10 px-4 sm:px-8 top-0 sticky z-50">
+    <nav aria-label="Main" className="navbar bg-base-100 border-b border-base-content/10 px-4 sm:px-8 top-0 sticky z-50">
       <div className="flex-1">
-        <Link to="/" className="text-2xl font-bold text-base-content tracking-wide">
+        <Link to="/" aria-label="Oncode home" className="text-2xl font-bold text-base-content tracking-wide">
           On<span className="text-primary">code</span>
         </Link>
       </div>
@@ -82,7 +82,7 @@ const GlobalNavbar = () => {
           </button>
         )}
       </div>
-    </div>
+    </nav>
   );
 };
 
