@@ -5,7 +5,7 @@ const optionalUserMiddleware = require('../middlewares/optionalUserMiddleware');
 const validate = require('../middlewares/validate');
 const { idParams } = require('../validation/common');
 const { createProblemBody, updateProblemBody, listProblemsQuery, listSubmissionsQuery } = require('../validation/problem');
-const {createProblem, updateProblem,deleteProblem, getAllProblems, getSolvedProblems, getProblem, getProblemSolution, getAllSubmissions} = require('../controllers/problemController');
+const {createProblem, updateProblem,deleteProblem, getAllProblems, getSolvedProblems, getProblem, getProblemForAdmin, getProblemSolution, getAllSubmissions} = require('../controllers/problemController');
 
 
 const problemRouter = express.Router();
@@ -21,6 +21,8 @@ problemRouter.delete("/:id", adminMiddleware, validate({ params: idParams }), de
 problemRouter.get("/", optionalUserMiddleware, validate({ query: listProblemsQuery }), getAllProblems);
 problemRouter.get("/solved", userMiddleware, getSolvedProblems);
 problemRouter.get("/:id", userMiddleware, validate({ params: idParams }), getProblem);
+// Admin only: includes hidden test cases, driver code and reference solutions (edit form prefill)
+problemRouter.get("/:id/admin", adminMiddleware, validate({ params: idParams }), getProblemForAdmin);
 problemRouter.get("/:id/solution", userMiddleware, validate({ params: idParams }), getProblemSolution);
 problemRouter.get("/submissions/:id", userMiddleware, validate({ params: idParams, query: listSubmissionsQuery }), getAllSubmissions);
 

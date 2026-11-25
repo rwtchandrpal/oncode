@@ -15,10 +15,14 @@ const encodeBase64 = (str) => {
 // ==========================================
 // HELPER FUNCTION: Validation & Judge0 Testing
 // ==========================================
+const lower = (v) => String(v || "").toLowerCase();
+
+// Structural checks plus a Judge0 run of EVERY reference solution against its own language's driver
+// code (BUG-10). Every language that has a reference solution needs exactly one snippet. (A snippet
+// without a reference solution is still allowed, as in existing data; that driver is then unverified.)
 const validateAndTestProblem = async (problemData) => {
     const { title, description, referenceSolutions, hiddenTestCases, codeSnippets } = problemData;
 
-    // Check basic required fields
     if (!title || !description || !referenceSolutions || referenceSolutions.length === 0) {
         return { isValid: false, error: "Missing required data or reference solutions." };
     }
@@ -32,58 +36,71 @@ const validateAndTestProblem = async (problemData) => {
         return { isValid: false, error: "At least one code snippet (with driver code) is required." };
     }
 
-    // Prepare the code for Judge0
-    const solution = referenceSolutions[0];
-    let langId;
-    try {
-        langId = getLanguageId(String(solution.language).toLowerCase());
-    } catch {
-        return { isValid: false, error: "Unsupported reference solution language." };
+    const snippetLangs = codeSnippets.map((s) => lower(s.language));
+    const solutionLangs = referenceSolutions.map((s) => lower(s.language));
+    if (new Set(snippetLangs).size !== snippetLangs.length) {
+        return { isValid: false, error: "Each language can have only one code snippet." };
+    }
+    if (new Set(solutionLangs).size !== solutionLangs.length) {
+        return { isValid: false, error: "Each language can have only one reference solution." };
+    }
+    const missingSnippet = solutionLangs.find((l) => !snippetLangs.includes(l));
+    if (missingSnippet) {
+        return { isValid: false, error: `Missing driver code snippet for language: ${missingSnippet}` };
     }
 
-    // Find the matching driver code so we can run the test cases
-    const matchingSnippet = codeSnippets.find(
-        snippet => snippet.language.toLowerCase() === solution.language.toLowerCase()
-    );
+    for (const solution of referenceSolutions) {
+        const language = lower(solution.language);
+        let langId;
+        try {
+            langId = getLanguageId(language);
+        } catch {
+            return { isValid: false, error: "Unsupported reference solution language." };
+        }
+        const snippet = codeSnippets.find((s) => lower(s.language) === language);
+        const fullCodeToTest = snippet.driverCode.replaceAll("{{USER_CODE}}", () => solution.code);
 
-    if (!matchingSnippet) {
-        return { isValid: false, error: `Missing driver code snippet for language: ${solution.language}` };
-    }
+        const submissionPayload = testCases.map(testCase => ({
+            language_id: langId,
+            source_code: encodeBase64(fullCodeToTest),
+            stdin: encodeBase64(testCase.input),
+            expected_output: encodeBase64(testCase.expectedOutput)
+        }));
 
-    const fullCodeToTest = matchingSnippet.driverCode.replaceAll("{{USER_CODE}}", () => solution.code);
+        try {
+            const deadline = newDeadline();
+            const submitResult = await createSubmission(submissionPayload, deadline);
+            const testResult = await getSubmission(submitResult.map((elem) => elem.token), deadline);
 
-    // Send to Judge0
-    const submissionPayload = testCases.map(testCase => ({
-        language_id: langId,
-        source_code: encodeBase64(fullCodeToTest),
-        stdin: encodeBase64(testCase.input),
-        expected_output: encodeBase64(testCase.expectedOutput)
-    }));
-
-    try {
-        const deadline = newDeadline();
-        const submitResult = await createSubmission(submissionPayload, deadline);
-        const resultTokens = submitResult.map((elem) => (elem.token));
-        const testResult = await getSubmission(resultTokens, deadline);
-
-        for (const test of testResult) {
-            if (test.status_id !== 3) { // 3 is "Accepted"
-                return { isValid: false, error: "Reference Solution Error: " + getstatusById(test.status_id) };
+            const failed = testResult.find((test) => test.status_id !== 3); // 3 is "Accepted"
+            if (failed) {
+                return { isValid: false, error: `Reference Solution Error (${language}): ${getstatusById(failed.status_id)}` };
             }
+        } catch (err) {
+            if (err instanceof Judge0UnavailableError) {
+                logger.error({ err: err.cause || err }, "Judge0 unavailable during problem validation");
+                return { isValid: false, status: 503, error: EXECUTION_UNAVAILABLE_MESSAGE };
+            }
+            logger.error({ err }, "Problem validation error");
+            return { isValid: false, status: 500, error: "Problem validation failed. Please try again." };
         }
-    } catch (err) {
-        if (err instanceof Judge0UnavailableError) {
-            logger.error({ err: err.cause || err }, "Judge0 unavailable during problem validation");
-            return { isValid: false, status: 503, error: EXECUTION_UNAVAILABLE_MESSAGE };
-        }
-        logger.error({ err }, "Problem validation error");
-        return { isValid: false, status: 500, error: "Problem validation failed. Please try again." };
     }
 
-    // If we make it here, the problem is solvable and ready to save!
     return { isValid: true };
 };
 
+// Fields whose change can alter what Judge0 must verify (BUG-09). Compared by content only
+// (subdocument _ids and key order ignored).
+const JUDGE_FIELDS = {
+    hiddenTestCases: (v) => (v || []).map((t) => [t.input, t.expectedOutput]),
+    visibleTestCase: (v) => (v ? [v.input, v.expectedOutput] : null),
+    codeSnippets: (v) => (v || []).map((s) => [lower(s.language), s.userSnippet, s.driverCode]),
+    referenceSolutions: (v) => (v || []).map((s) => [lower(s.language), s.code]),
+};
+const changedJudgeFields = (existing, update) =>
+    Object.keys(JUDGE_FIELDS).filter(
+        (field) => field in update && JSON.stringify(JUDGE_FIELDS[field](update[field])) !== JSON.stringify(JUDGE_FIELDS[field](existing[field]))
+    );
 
 // ==========================================
 // ADMIN CONTROLLERS (Create / Update / Delete)
@@ -129,14 +146,14 @@ const updateProblem = async (req, res) => {
             return res.status(404).json({ message: "Problem not found." });
         }
 
-        const mergedProblem = {
-            ...existingProblem.toObject(),
-            ...req.body
-        };
-
-        const validation = await validateAndTestProblem(mergedProblem);
-        if (!validation.isValid) {
-            return res.status(validation.status || 400).json({ message: validation.error });
+        // Metadata-only edits (title, statement, topics...) do not need Judge0 (BUG-09)
+        const existing = existingProblem.toObject();
+        const judgeChanges = changedJudgeFields(existing, req.body);
+        if (judgeChanges.length > 0) {
+            const validation = await validateAndTestProblem({ ...existing, ...req.body });
+            if (!validation.isValid) {
+                return res.status(validation.status || 400).json({ message: validation.error });
+            }
         }
 
         const updatedProblem = await Problem.findByIdAndUpdate(id, { $set: req.body }, { runValidators: true, returnDocument: 'after' });
@@ -226,6 +243,23 @@ const getProblem = async (req, res) => {
             'Vary': 'Accept-Encoding, Authorization'
         });
         res.status(200).json({ problem: fetchedProblem });
+    } catch (err) {
+        sendError(res, err, "Failed to fetch problem.");
+    }
+};
+
+// Admin only (route uses adminMiddleware): the full problem including hidden test cases, driver code and
+// reference solutions, used to prefill the edit form.
+const getProblemForAdmin = async (req, res) => {
+    try {
+        const problem = await Problem.findById(req.params.id)
+            .select('_id number title difficulty topics description constraints examples visibleTestCase hiddenTestCases codeSnippets referenceSolutions')
+            .lean();
+        if (!problem) {
+            return res.status(404).json({ message: "Problem not found." });
+        }
+        res.set({ 'Cache-Control': 'no-store, private' });
+        res.status(200).json({ problem });
     } catch (err) {
         sendError(res, err, "Failed to fetch problem.");
     }
@@ -409,4 +443,4 @@ const getAllSubmissions = async (req, res) => {
     }
 };
 
-module.exports = { createProblem, updateProblem, deleteProblem, getAllProblems, getSolvedProblems, getProblem, getProblemSolution, getAllSubmissions };
+module.exports = { createProblem, updateProblem, deleteProblem, getAllProblems, getSolvedProblems, getProblem, getProblemForAdmin, getProblemSolution, getAllSubmissions };
