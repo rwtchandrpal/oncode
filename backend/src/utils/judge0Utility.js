@@ -1,6 +1,5 @@
 const axios = require('axios');
-
-// Replace this with your actual AWS Elastic IP
+const { AppError, Judge0UnavailableError } = require('./AppError');
 
 const JUDGE0_BASE_URL = process.env.JUDGE0_BASE_URL;
 const JUDGE0_TIMEOUT_MS = parseInt(process.env.JUDGE0_TIMEOUT_MS) || 10000;
@@ -20,9 +19,10 @@ const checkJudge0Health = async () => {
       status: response.status
     };
   } catch (error) {
+    // Never return error.message: it contains the Judge0 host and port (SEC-05).
+    console.warn('Judge0 health check failed:', error.code || error.message);
     return {
       isOnline: false,
-      error: error.message,
       code: error.code || 'UNREACHABLE'
     };
   }
@@ -47,14 +47,17 @@ const createSubmission = async (submissionPayload) => {
     timeout: JUDGE0_TIMEOUT_MS
   };
 
+  let response;
   try {
-    const response = await axios.request(options);
-    return response.data;
+    response = await axios.request(options);
   } catch (error) {
-    const serverMessage = error.response?.data?.message || error.response?.data?.error;
-    const detail = serverMessage ? `: ${JSON.stringify(serverMessage)}` : ` (${error.message})`;
-    throw new Error("Failed to submit Batch to judge0" + detail);
+    // Internal detail stays in `cause` (logged server-side only).
+    throw new Judge0UnavailableError(error);
   }
+  if (!Array.isArray(response.data) || response.data.some((r) => !r || !r.token)) {
+    throw new Judge0UnavailableError(new Error("Judge0 batch create returned no tokens"));
+  }
+  return response.data;
 }
 
 const waiting = async (ms) => {
@@ -85,7 +88,7 @@ const getSubmission = async (resultTokens) => {
       const response = await axios.request(options);
       return response.data;
     } catch (error) {
-      throw new Error("Failed to submit Tokens to judge0: " + (error.response?.data?.error || error.message));
+      throw new Judge0UnavailableError(error);
     }
   }
 
@@ -96,7 +99,7 @@ const getSubmission = async (resultTokens) => {
     const result = await fetchData();
 
     if (!result || !result.submissions) {
-      throw new Error("Failed to fetch submission result from judge0");
+      throw new Judge0UnavailableError(new Error("Judge0 returned no submissions"));
     }
     const isResultObtained = result.submissions.every((r) => r.status_id > 2);
 
@@ -108,7 +111,7 @@ const getSubmission = async (resultTokens) => {
     attempts++;
   }
 
-  throw new Error("judge0 did not return results after maximum retries");
+  throw new Judge0UnavailableError(new Error("Judge0 did not return results after maximum retries"));
 }
 
 const getLanguageId = (language) => {
@@ -119,7 +122,7 @@ const getLanguageId = (language) => {
   };
   const id = languageIdMap[language];
   if (!id) {
-    throw new Error('Unsupported programming language: ' + language);
+    throw new AppError(400, 'Unsupported programming language.', 'UNSUPPORTED_LANGUAGE');
   }
   return id;
 }

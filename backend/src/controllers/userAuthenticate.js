@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const client = require("../config/redis");
 const crypto = require("crypto");
+const { AppError, sendError } = require("../utils/AppError");
 
 // handler for temporary isolated demo session
 const demoLogin = async (req, res) => {
@@ -54,7 +55,7 @@ const demoLogin = async (req, res) => {
       token
     });
   } catch (err) {
-    res.status(500).json({ message: "Failed to initialize demo session: " + err.message });
+    sendError(res, err, "Failed to start a demo session. Please try again.");
   }
 };
 
@@ -97,8 +98,12 @@ const register = async (req, res) => {
     if (err.code === 11000) {
       return res.status(400).json({ message: "Email is already registered." });
     }
-
-    res.status(400).json({ message: "Registration failed: " + err.message });
+    if (err instanceof AppError) return sendError(res, err);
+    if (err.name === "ValidationError") {
+      console.warn("Register rejected:", err);
+      return res.status(400).json({ message: "Invalid registration data." });
+    }
+    sendError(res, err, "Registration failed. Please try again.");
   }
 };
 
@@ -170,7 +175,7 @@ const logout = async (req, res) => {
 
     res.status(200).json({ message: "Logged out successfully." });
   } catch (err) {
-    res.status(503).json({ message: "Logout failed: " + err.message });
+    sendError(res, err, "Logout failed. Please try again.", 503);
   }
 };
 
@@ -190,8 +195,12 @@ const adminRegister = async (req, res) => {
     if (err.code === 11000) {
       return res.status(400).json({ message: "Email is already registered." });
     }
-
-    res.status(400).json({ message: "Registration failed." + err.message });
+    if (err instanceof AppError) return sendError(res, err);
+    if (err.name === "ValidationError") {
+      console.warn("Admin register rejected:", err);
+      return res.status(400).json({ message: "Invalid registration data." });
+    }
+    sendError(res, err, "Registration failed. Please try again.");
   }
 };
 
@@ -211,7 +220,7 @@ const deleteProfile = async (req, res) => {
 
     res.status(200).json({ message: "Profile deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete profile." });
+    sendError(res, err, "Failed to delete profile.");
   }
 };
 
@@ -323,10 +332,7 @@ const getUserStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching user stats:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch user statistics: " + error.message });
+    sendError(res, error, "Failed to fetch user statistics.");
   }
 };
 

@@ -2,7 +2,8 @@ const Problem = require('../models/problem');
 const User = require('../models/user');
 const Submission = require('../models/submission');
 const client = require('../config/redis');
-const { getLanguageId, getstatusById, createSubmission, getSubmission } = require('../utils/judge0Utility'); 
+const { getLanguageId, getstatusById, createSubmission, getSubmission } = require('../utils/judge0Utility');
+const { sendError } = require('../utils/AppError');
 
 const checkDemoExecutionLimit = async (user) => {
     if (!user || !user.isDemo) return { allowed: true };
@@ -155,7 +156,8 @@ const submitCode = async (req, res) => {
             submissionResult: submittedResult
         });
     } catch(err) {
-        res.status(500).json({ message: "Failed to submit code: " + err.message });
+        // Judge0 failures arrive as Judge0UnavailableError (503, generic message); anything else is a 500.
+        sendError(res, err, "Failed to submit code. Please try again.");
     }
 };
 
@@ -222,7 +224,7 @@ const runCode = async (req, res) => {
         });
 
     } catch(error) {
-        res.status(500).json({ message: "Failed to run code: " + error.message });
+        sendError(res, error, "Failed to run code. Please try again.");
     }
 };
 

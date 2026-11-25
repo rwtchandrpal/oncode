@@ -3,6 +3,7 @@ const Problem = require('../models/problem');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const Submission = require('../models/submission');
+const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 
 const encodeBase64 = (str) => {
     if (!str) return "";
@@ -33,9 +34,9 @@ const validateAndTestProblem = async (problemData) => {
     const solution = referenceSolutions[0];
     let langId;
     try {
-        langId = getLanguageId(solution.language.toLowerCase());
-    } catch (err) {
-        return { isValid: false, error: err.message };
+        langId = getLanguageId(String(solution.language).toLowerCase());
+    } catch {
+        return { isValid: false, error: "Unsupported reference solution language." };
     }
 
     // Find the matching driver code so we can run the test cases
@@ -68,7 +69,12 @@ const validateAndTestProblem = async (problemData) => {
             }
         }
     } catch (err) {
-        return { isValid: false, error: "Judge0 validation failed: " + err.message };
+        if (err instanceof Judge0UnavailableError) {
+            console.error("Judge0 unavailable during problem validation:", err.cause || err);
+            return { isValid: false, status: 503, error: EXECUTION_UNAVAILABLE_MESSAGE };
+        }
+        console.error("Problem validation error:", err);
+        return { isValid: false, status: 500, error: "Problem validation failed. Please try again." };
     }
 
     // If we make it here, the problem is solvable and ready to save!
@@ -84,7 +90,7 @@ const createProblem = async (req, res) => {
         const validation = await validateAndTestProblem(req.body);
         
         if (!validation.isValid) {
-            return res.status(400).json({ message: validation.error });
+            return res.status(validation.status || 400).json({ message: validation.error });
         }
 
         const newProblem = await Problem.create({
@@ -97,7 +103,11 @@ const createProblem = async (req, res) => {
             problem: newProblem
         });
     } catch (err) {
-        return res.status(500).json({ message: "Failed to create problem: " + err.message });
+        if (err.name === 'ValidationError' || err.code === 11000) {
+            console.warn("Create problem rejected:", err);
+            return res.status(400).json({ message: err.code === 11000 ? "A problem with this title already exists." : "Invalid problem data." });
+        }
+        return sendError(res, err, "Failed to create problem.");
     }
 };
 
@@ -122,7 +132,7 @@ const updateProblem = async (req, res) => {
 
         const validation = await validateAndTestProblem(mergedProblem);
         if (!validation.isValid) {
-            return res.status(400).json({ message: validation.error });
+            return res.status(validation.status || 400).json({ message: validation.error });
         }
 
         const updatedProblem = await Problem.findByIdAndUpdate(id, { $set: req.body }, { runValidators: true, new: true });
@@ -132,7 +142,11 @@ const updateProblem = async (req, res) => {
             problem: updatedProblem
         });
     } catch (err) {
-        res.status(500).json({ message: "Failed to update problem: " + err.message });
+        if (err.name === 'ValidationError' || err.name === 'CastError' || err.code === 11000) {
+            console.warn("Update problem rejected:", err);
+            return res.status(400).json({ message: err.code === 11000 ? "A problem with this title already exists." : "Invalid problem data." });
+        }
+        sendError(res, err, "Failed to update problem.");
     }
 };
 
@@ -177,7 +191,7 @@ const deleteProblem = async (req, res) => {
 
         res.status(200).json({ message: "Problem and associated data deleted successfully." });
     } catch (err) {
-        res.status(500).json({ message: "Failed to delete problem: " + err.message });
+        sendError(res, err, "Failed to delete problem.");
     }
 };
 
@@ -206,7 +220,7 @@ const getProblem = async (req, res) => {
         });
         res.status(200).json({ problem: fetchedProblem });
     } catch (err) {
-        res.status(500).json({ message: "Failed to fetch problem: " + err.message });
+        sendError(res, err, "Failed to fetch problem.");
     }
 };
 
@@ -248,7 +262,7 @@ const getProblemSolution = async (req, res) => {
             referenceSolutions: problem.referenceSolutions || []
         });
     } catch (err) {
-        res.status(500).json({ message: "Failed to fetch solution: " + err.message });
+        sendError(res, err, "Failed to fetch solution.");
     }
 };
 
@@ -333,7 +347,7 @@ const getAllProblems = async (req, res) => {
             allTopics
         });
     } catch (err) {
-        res.status(500).json({ message: "Failed to fetch problems: " + err.message });
+        sendError(res, err, "Failed to fetch problems.");
     }
 };
 
@@ -358,7 +372,7 @@ const getSolvedProblems = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ message: "Failed to fetch solved problems: " + err.message });
+        sendError(res, err, "Failed to fetch solved problems.");
     }
 };
 
@@ -380,7 +394,7 @@ const getAllSubmissions = async (req, res) => {
             submissions: allSubmissions
         });
     } catch (err) {
-        res.status(500).json({ message: "Failed to get past submissions: " + err.message });
+        sendError(res, err, "Failed to get past submissions.");
     }
 };
 

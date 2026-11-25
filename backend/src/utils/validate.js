@@ -1,4 +1,5 @@
 const validator = require("validator");
+const { AppError } = require("./AppError");
 
 const validate = (data) => {
   const allowedFields = ["firstName", "lastName", "email", "password", "role"];
@@ -9,8 +10,7 @@ const validate = (data) => {
     (field) => !allowedFields.includes(field),
   );
   if (hasUnknownFields) {
-    const err = new Error("Invalid properties provided in the request.");
-    throw err;
+    throw new AppError(400, "Invalid properties provided in the request.", "VALIDATION_ERROR");
   }
 
   // Check Missing Fields
@@ -19,39 +19,32 @@ const validate = (data) => {
     (field) => !receivedFields.includes(field),
   );
   if (isMissingMandatory) {
-    const err = new Error("Missing required fields: firstName, email, password.");
-    throw err;
+    throw new AppError(400, "Missing required fields: firstName, email, password.", "VALIDATION_ERROR");
   }
 
   // Type Checking & Cleaning (The Fixes!)
   // Check if it's a string first
   if (typeof data.firstName !== 'string') {
-    const err = new Error("First name must be text.");
-    throw err;
+    throw new AppError(400, "First name must be text.", "VALIDATION_ERROR");
   }
   
  
   data.firstName = validator.trim(data.firstName);
   if (!validator.isLength(data.firstName, { min: 1, max: 50 })) {
-    const err = new Error("First name must be between 1 and 50 characters long.");
-    throw err;
+    throw new AppError(400, "First name must be between 1 and 50 characters long.", "VALIDATION_ERROR");
   }
 
   if (typeof data.email !== 'string') {
-     const err = new Error("Email must be text.");
-     throw err;
+     throw new AppError(400, "Email must be text.", "VALIDATION_ERROR");
   }
   data.email = validator.trim(data.email);
   if (!validator.isEmail(data.email)) {
-    const err = new Error("Please provide a valid email address.");
-    throw err;
+    throw new AppError(400, "Please provide a valid email address.", "VALIDATION_ERROR");
   }
 
   // Validate Password 
   if (typeof data.password !== 'string') {
-      const err = new Error("Password must be text.");
-      err.statusCode = 400;
-      throw err;
+      throw new AppError(400, "Password must be text.", "VALIDATION_ERROR");
   }
   const isStrong = validator.isStrongPassword(data.password, {
     minLength: 8,
@@ -62,21 +55,17 @@ const validate = (data) => {
   });
 
   if (!isStrong) {
-    const err = new Error("Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character.");
-    err.statusCode = 400;
-    throw err;
+    throw new AppError(400, "Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character.", "VALIDATION_ERROR");
   }
 
   // Validate lastName if it was provided
   if (data.lastName) {
     if (typeof data.lastName !== 'string') {
-        const err = new Error("Last name must be text.");
-        throw err;
+        throw new AppError(400, "Last name must be text.", "VALIDATION_ERROR");
     }
     data.lastName = validator.trim(data.lastName);
     if (!validator.isLength(data.lastName, { min: 1, max: 50 })) {
-      const err = new Error("Last name must be between 1 and 50 characters long.");
-      throw err;
+      throw new AppError(400, "Last name must be between 1 and 50 characters long.", "VALIDATION_ERROR");
     }
   }
 };

@@ -85,10 +85,7 @@ const getDashboardStats = async (req, res) => {
 
     } catch (error) {
         console.error("Dashboard Stats Error:", error);
-        return res.status(500).json({ 
-            message: "Failed to fetch dashboard statistics", 
-            error: error.message 
-        });
+        return res.status(500).json({ message: "Failed to fetch dashboard statistics." });
     }
 };
 
