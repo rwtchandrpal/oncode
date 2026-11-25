@@ -1,0 +1,7 @@
+6 wrong logins for user@:  401 401 401 401 401 429
+correct password for user@ now: {"error":{"code":"RATE_LIMITED","message":"Too many failed sign-in attempts for this account. Please try again in 15 min
+other@ from same IP: 200
+redis keys: rl:login-ip:::/56 rl:login-email:::/56|other@audit.test rl:login-email:::/56|user@audit.test 
+after backend restart, user@ correct password: 429  (still limited = counters survived restart)
+REDIS DOWN: login other@ 200 | GET /problem/ 200
+redis back, process alive: 200

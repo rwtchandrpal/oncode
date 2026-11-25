@@ -5,18 +5,11 @@ const userMiddleware = require('../middlewares/userMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const {submitCode, runCode} = require('../controllers/submissionController');
 const {checkJudge0Health} = require('../utils/judge0Utility');
-const rateLimit = require('express-rate-limit');
+const { submitLimiter } = require('../middlewares/rateLimits');
 const validate = require('../middlewares/validate');
 const { idParams } = require('../validation/common');
 const { executeBody } = require('../validation/submission');
 
-const submitLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 50, // Limit each IP to 50 code submissions per window
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: { message: 'Too many submissions. Please wait a few minutes before trying again.' }
-});
 
 // Judge0 diagnostic: admin-only, and the payload carries no host/port details (SEC-05)
 submitRouter.get("/health", adminMiddleware, async (req, res) => {
