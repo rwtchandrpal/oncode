@@ -220,9 +220,10 @@ const getProblem = async (req, res) => {
             return res.status(404).json({ message: "Problem not found" });
         }
 
+        // Authenticated response: browser-only cache, short lifetime (SEC-13)
         res.set({
-            'Cache-Control': 'public, max-age=120, stale-while-revalidate=300',
-            'Vary': 'Accept-Encoding'
+            'Cache-Control': 'private, max-age=60',
+            'Vary': 'Accept-Encoding, Authorization'
         });
         res.status(200).json({ problem: fetchedProblem });
     } catch (err) {
