@@ -988,5 +988,610 @@
     "notes": [],
     "ok": true,
     "verifiedAt": "2026-11-25T19:26:07.399Z"
+  },
+  "search-in-rotated-sorted-array": {
+    "slug": "search-in-rotated-sorted-array",
+    "title": "Search In Rotated Sorted Array",
+    "hash": "ba3ce55080d027a67a3756299baf668909c731c7d2047acb89fc529bb4ff1f5f",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 28,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 147,
+        "maxMemoryKb": 36864,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-plain-binary.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:31:50.201Z"
+  },
+  "coin-change": {
+    "slug": "coin-change",
+    "title": "Coin Change",
+    "hash": "256e484d1fc6bdb7d453b2ee47588c8e598c54dddfde94b2717d581925e87b94",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 14,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 141,
+        "maxMemoryKb": 34688,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Time Limit Exceeded x3",
+        "ok": true
+      },
+      {
+        "label": "wrong-greedy.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:32:43.769Z"
+  },
+  "maximum-product-subarray": {
+    "slug": "maximum-product-subarray",
+    "title": "Maximum Product Subarray",
+    "hash": "e43dfc491ec0850dada0f2342794aba7f33e4b67105bd7ff5e6cf1733c708ebe",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 14,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 178,
+        "maxMemoryKb": 36992,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "wrong-max-only.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:33:23.449Z"
+  },
+  "longest-increasing-subsequence": {
+    "slug": "longest-increasing-subsequence",
+    "title": "Longest Increasing Subsequence",
+    "hash": "91d85f1e6c19ea8f9b15f1ada73933d10117f2145be6778916d5026145d1f8bb",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 22,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 214,
+        "maxMemoryKb": 35456,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-non-strict.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:33:59.773Z"
+  },
+  "unique-paths": {
+    "slug": "unique-paths",
+    "title": "Unique Paths",
+    "hash": "2c98880f6cf4836e55a1c32ad1d530e59ff694e52df03953ddb44fa590652774",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 14,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 118,
+        "maxMemoryKb": 33920,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Time Limit Exceeded x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:34:44.381Z"
+  },
+  "longest-common-subsequence": {
+    "slug": "longest-common-subsequence",
+    "title": "Longest Common Subsequence",
+    "hash": "0ed918b4a1b6c9ffbecd4ed4e837f600233ca8f2ea024ec7cb1b9f40294ea8fb",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 35,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 150,
+        "maxMemoryKb": 38016,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Time Limit Exceeded x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:35:35.278Z"
+  },
+  "decode-ways": {
+    "slug": "decode-ways",
+    "title": "Decode Ways",
+    "hash": "5b0ca1d18b4a89441d448f7201ad8fa50303480218396a53d622fbdb962ef5c6",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 20,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 125,
+        "maxMemoryKb": 33792,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Time Limit Exceeded x2",
+        "ok": true
+      },
+      {
+        "label": "wrong-leading-zero.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:41:56.248Z"
+  },
+  "palindromic-substrings": {
+    "slug": "palindromic-substrings",
+    "title": "Palindromic Substrings",
+    "hash": "0d5f7cb45233861a2b0baa29b5b30eaf7d182e5ea42509a7d1f33226159d1b90",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 13,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 157,
+        "maxMemoryKb": 36240,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-odd-only.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:39:02.054Z"
+  },
+  "longest-palindromic-substring": {
+    "slug": "longest-palindromic-substring",
+    "title": "Longest Palindromic Substring",
+    "hash": "a92c6952723d24b39efc54432e09c7990ed9949ab9da73af4894bc8eba2e8adc",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 10,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 133,
+        "maxMemoryKb": 35328,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-odd-only.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:39:36.141Z"
+  },
+  "word-break": {
+    "slug": "word-break",
+    "title": "Word Break",
+    "hash": "0224b4c223b96bd25efcbfb7230c64f05200895d3f03e21a0800b58a965f43eb",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 9,
+        "maxMemoryKb": 3200,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 177,
+        "maxMemoryKb": 36084,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Time Limit Exceeded x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:40:23.242Z"
+  },
+  "longest-substring-without-repeating-characters": {
+    "slug": "longest-substring-without-repeating-characters",
+    "title": "Longest Substring Without Repeating Characters",
+    "hash": "6913d30590772020e2a35c027b96fb5051470c4b2bacd68c77a9ce0c7c6a07b2",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 21,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 231,
+        "maxMemoryKb": 38700,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-abba.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:42:34.074Z"
+  },
+  "longest-repeating-character-replacement": {
+    "slug": "longest-repeating-character-replacement",
+    "title": "Longest Repeating Character Replacement",
+    "hash": "115db32a6ae63aa72a0c9f5085edda7a4d6e113e50737bf91cf3aaedcfd95e32",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 20,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 178,
+        "maxMemoryKb": 34816,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:43:02.875Z"
+  },
+  "minimum-window-substring": {
+    "slug": "minimum-window-substring",
+    "title": "Minimum Window Substring",
+    "hash": "a50b177e831de240831b8f422fcfe2cd3ae80e901b840ff4daa1ec9d3d5b0585",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 17,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 580,
+        "maxMemoryKb": 38144,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      },
+      {
+        "label": "wrong-ignore-counts.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Wrong Answer x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:43:39.934Z"
   }
 }

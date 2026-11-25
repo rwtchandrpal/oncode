@@ -1,0 +1,190 @@
+{
+  "slug": "palindromic-substrings",
+  "title": "Palindromic Substrings",
+  "difficulty": "Medium",
+  "topics": [
+    "1-D Dynamic Programming"
+  ],
+  "description": "Given a string `s`, count how many of its **substrings** are palindromes (read the same forwards and backwards).\n\nA substring is a contiguous, non-empty block of characters. Substrings at different positions are counted separately even if they contain the same letters, so every single character counts once.",
+  "constraints": [
+    "1 <= s.length <= 1000",
+    "s consists of lowercase English letters only"
+  ],
+  "examples": [
+    {
+      "input": "s = \"abba\"",
+      "output": "6",
+      "explanation": "The four single letters, \"bb\" and \"abba\": 6 in total."
+    },
+    {
+      "input": "s = \"xyz\"",
+      "output": "3",
+      "explanation": "Only the three single letters."
+    },
+    {
+      "input": "s = \"aaa\"",
+      "output": "6",
+      "explanation": "\"a\" three times, \"aa\" twice and \"aaa\" once."
+    }
+  ],
+  "visibleTestCase": {
+    "input": "\"abba\"",
+    "expectedOutput": "6"
+  },
+  "hiddenTestCases": [
+    {
+      "input": "\"abba\"",
+      "expectedOutput": "6"
+    },
+    {
+      "input": "\"xyz\"",
+      "expectedOutput": "3"
+    },
+    {
+      "input": "\"aaa\"",
+      "expectedOutput": "6"
+    },
+    {
+      "input": "\"q\"",
+      "expectedOutput": "1"
+    },
+    {
+      "input": "\"ab\"",
+      "expectedOutput": "2"
+    },
+    {
+      "input": "\"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\"",
+      "expectedOutput": "500500"
+    },
+    {
+      "input": "\"bbbbababbabbbbbabbbabbbbabababbbababaaaababaabbababaaabbbaaaabaabbbabaabbbaabbbbaababbbaaaabaaaabbbbbbabaabbbabbbabbaaabababbbbbbaaaaaabbaabaaabaababbbaabbbbbababaaaaaaabaabaaaaababaabaaaabbbaaabbbabbbbabaaabbbbbbbaaabababbaababbbbbaabaaaaaabbbbababaabbbbabbbbbbbbababababaabbaaabaaaabbabbbbbbaabbbaaaaaaaabbababbabbbbbbaababaabbababbabbabababbaaaaababbabbababbbbbaaabaaaaaaabaabbabbbbbabbaaababbabaabbbbabaabaabbbbababababbababaabbbbabababbabaaabbbbaabababababbbaabaaaabbbabbaaaaaaabbaaabaabaababaaabbabbbbbaabbbaaabbaaabaabaababbaaabbaababaababbaababaabaabababbbbbbbbbabbabbaaaabaabbbbbbaabbaaabbaababbbbbbbaaaaabaaabbaabbbbbaabaababaaabbbabbbaaabababababbbaabaaaaabaaabaabbabbababbbbabaabbbaaabbabbabbaaabbabaabaaabbabbaabaaabaabbbbaaababababbbabbbbbbaabaaaabbbbbbabbbbbabaaaaaaababaaababababbbbbabbbaaaababaaababbbaaababbaaaabbbabaabaabbbaabbaababaabaababaababbbaaabbaabaabbbaabbabaabaaababbaabbbbbabbaabababbbbbbbaaabbbaaabbbbaaabaaabaaababbbaaababbaaababbbaaabbbababaaaaabbabaababbbaaaababbabbb\"",
+      "expectedOutput": "2965"
+    },
+    {
+      "input": "\"thtuegituqtgverulnacbahfxgixbkqehszuixpsmsvoegqnnljwdttbanluvseqxgyvjnwedscquxageyccbacqipkoixmlgncrrswxfwmagpzpadgmnszqtokmxivlbbzaeumzgqatlqcpjeexagwcvgcgpbjjikjpgptjazddriljreenukprncjgfcaijonohoipzqsoxymupfiedjutgittvvxhlhokjelndlzncnguzsgtjwxiigjzfqgzomvoftansoumxfigtjeuivlejffcoxirruxvsrtosyfdvnjtqwtzdvquuejrdaybdzefqclxiukogprnufccfutdekyerhbooohnfgcbswqhseowycicrgnyqpmjzcqbqhpxffhorqjptygvxedwzcxqyfykjzqrdejdcizpjsyyuooahnnvqczpuedddlmirynmkmfnkulyobkmtgnolppjsjdcxkisyuyfnfxlvpkpsbgvbzxwjtdktmnqwssygqnezsqapcclodtfcfdygfthtrconrtgpfdjwofclcfoccjjcqrqzzyssneobsdobaciuilpmudcinwayilugeluslykumwjlxauzinkjqvafnhoyjzxtrxwopddhkvtsjhutbjijupboaurkshzmelvgamafzkxziunrleemwwhwfocstlqrwcxpgfjmthphwhgvdxmvygadinmrxsgvoqqykbuqklxbnuvwmhkhpiirmjjvyjptnzkjnxifvmqziirrmzrfgwrgvragkhlekuzkyxxtbczoicoclzthmmxtjmcknasmheviapjjsoskraxnxnekyhhwymsscedwrabjldmgplieogejdjvubsqmarywrcooqknajokaxlejtctlufllfomwvwhhjdzuzelauqwiuvqfnjnmjmwrjahfbjgnqqjcjqwdrpumvcahtfslwlriprytgbesauavtyhuafzhpbynbanunzr\"",
+      "expectedOutput": "1099"
+    },
+    {
+      "input": "\"abacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabagabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabahabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabagabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabaiabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabagabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabahabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacabagabacabadabacabaeabacabadabacabafabacabadabacabaeabacabadabacaba\"",
+      "expectedOutput": "2304"
+    },
+    {
+      "input": "\"aaacbaabbcccabcabcacccbbbaaccaaaaaacacccbacbccbabbbabbacbbcccbcbbbcbcbabbcbacaabacaaccbaabbbbcabcbabbcabcabaaaaaacabaccbbbcbccacbabbbbaaaabbcabbacbabccbacbabcbbbbcaccbcacabbbbabbcabacaccabccacaccbacabbbbaccaccbabacbaabbcabbabaccaabcccbaaacabababbcaabacbabbaaccacaaabcbcbbabbabbccabcabccaaabbacbcbcabccacabccaccacbaaaacbcbbbaabbbccaabcabbccbcbbbbbcbbacaaacccbaccabacbcbabbacbbbabcccbbaaccccccaabacbbabbbaacccbabbcccbaccbabbaabbcbcabaabacbabbbcbaabaabcbacccbbcabbaaaacbcabbacbcabbacbcabcbbcbcaabacbccbccabbccccaaabbbaababacabccccaacabcbabccbacbacaacaabcbacbaaacbacacbacaaacbbcaacccaababbbcaacbabcabbcaaababbbcbbcbcccbabacaabbccaccbaacaaaabaacbaaacababbccaabaaabbcbcbaccccbaaaaccbaaaaccbcbbbaaabbaaccabbcbacacaacbbaabbbcababbccbabbbbaaccacbcbbccccccbcbcaacbacacbcbbcbbbbbcbbabababbbccccabcbaaacbccacbcacbcbacbbaaabbccbaaccbcbbbcbabcaaaaccaaccbcbaccabcbbaacbbcccbcbaccaaabaccaccbabacccabbcabbacbccbcbcbcbbbbccaaccacbabccaacbaababbbaaaacacabcaacccaacacbcbbacacaacbbbbababccaaccacacaaaacacccbccababacbbbba\"",
+      "expectedOutput": "1976"
+    }
+  ],
+  "codeSnippets": [
+    {
+      "language": "cpp",
+      "userSnippet": "class Solution {\npublic:\n    int countSubstrings(string s) {\n        // Write your solution here\n        return 0;\n    }\n};",
+      "driverCode": "#include <bits/stdc++.h>\nusing namespace std;\n\n{{USER_CODE}}\n\n// ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n// Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\nnamespace oncode {\n\n// Nullable int, for level-order tree arrays such as [1,null,2].\nstruct Opt {\n    bool has = false;\n    int v = 0;\n};\n\nstruct Reader {\n    std::string s;\n    size_t p = 0;\n    Reader() {\n        std::ios::sync_with_stdio(false);\n        s.assign(std::istreambuf_iterator<char>(std::cin), std::istreambuf_iterator<char>());\n    }\n    [[noreturn]] void fail(const char* what) {\n        std::cerr << \"driver input error: \" << what << \" at byte \" << p << \"\\n\";\n        std::exit(3);\n    }\n    void ws() {\n        while (p < s.size() && std::isspace(static_cast<unsigned char>(s[p]))) p++;\n    }\n    bool peek(char c) {\n        ws();\n        return p < s.size() && s[p] == c;\n    }\n    void expect(char c) {\n        if (!peek(c)) fail(\"unexpected character\");\n        p++;\n    }\n    long long integer(long long lo, long long hi) {\n        ws();\n        bool neg = false;\n        if (p < s.size() && s[p] == '-') { neg = true; p++; }\n        size_t start = p;\n        long long v = 0;\n        while (p < s.size() && std::isdigit(static_cast<unsigned char>(s[p]))) {\n            if (p - start >= 18) fail(\"integer too long\");\n            v = v * 10 + (s[p++] - '0');\n        }\n        if (p == start) fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) fail(\"integer out of range\");\n        return v;\n    }\n    void read(int& x) { x = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    void read(long long& x) { x = integer(-999999999999999999LL, 999999999999999999LL); }\n    void read(bool& x) {\n        ws();\n        if (s.compare(p, 4, \"true\") == 0) { x = true; p += 4; }\n        else if (s.compare(p, 5, \"false\") == 0) { x = false; p += 5; }\n        else fail(\"expected true or false\");\n    }\n    void read(std::string& x) {\n        expect('\"');\n        x.clear();\n        while (p < s.size() && s[p] != '\"') {\n            if (s[p] == '\\\\') {\n                p++;\n                if (p >= s.size()) break;\n            }\n            x += s[p++];\n        }\n        if (p >= s.size()) fail(\"unterminated string\");\n        p++;\n    }\n    void read(Opt& o) {\n        ws();\n        if (s.compare(p, 4, \"null\") == 0) { o.has = false; p += 4; }\n        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    }\n    void read(char& x) {\n        std::string t;\n        read(t);\n        if (t.size() != 1) fail(\"expected one-character string\");\n        x = t[0];\n    }\n    template <class T> void read(std::vector<T>& v) {\n        v.clear();\n        expect('[');\n        if (peek(']')) { p++; return; }\n        for (;;) {\n            T e;\n            read(e);\n            v.push_back(std::move(e));\n            if (peek(',')) { p++; continue; }\n            expect(']');\n            return;\n        }\n    }\n    void end() {\n        ws();\n        if (p != s.size()) fail(\"unexpected trailing input\");\n    }\n};\n\nstruct Writer {\n    std::string out;\n    void write(int x) { out += std::to_string(x); }\n    void write(long long x) { out += std::to_string(x); }\n    void write(bool x) { out += x ? \"true\" : \"false\"; }\n    void write(const std::string& x) {\n        out += '\"';\n        for (char c : x) {\n            if (c == '\"' || c == '\\\\') out += '\\\\';\n            out += c;\n        }\n        out += '\"';\n    }\n    void write(char c) { write(std::string(1, c)); }\n    void write(const Opt& o) {\n        if (o.has) write(o.v);\n        else out += \"null\";\n    }\n    template <class T> void write(const std::vector<T>& v) {\n        out += '[';\n        for (size_t i = 0; i < v.size(); i++) {\n            if (i) out += ',';\n            write(v[i]);\n        }\n        out += ']';\n    }\n    void line() { out += '\\n'; }\n    void flush() {\n        std::fwrite(out.data(), 1, out.size(), stdout);\n        std::fflush(stdout);\n    }\n};\n\n}  // namespace oncode\n\nint main() {\n    oncode::Reader oc_in;\n    string s;\n    oc_in.read(s);\n    oc_in.end();\n    Solution oc_sol;\n    int oc_res = oc_sol.countSubstrings(s);\n    oncode::Writer oc_out;\n    oc_out.write(oc_res);\n    oc_out.line();\n    oc_out.flush();\n    return 0;\n}"
+    },
+    {
+      "language": "java",
+      "userSnippet": "class Solution {\n    public int countSubstrings(String s) {\n        // Write your solution here\n        return 0;\n    }\n}",
+      "driverCode": "import java.util.*;\nimport java.io.*;\n\n{{USER_CODE}}\n\npublic class Main {\n    // ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n    // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\n    static byte[] inBuf;\n    static int inPos;\n    static final StringBuilder OUT = new StringBuilder();\n\n    interface ElemReader<T> { T read(); }\n\n    static void initInput() throws IOException {\n        inBuf = System.in.readAllBytes();\n        inPos = 0;\n    }\n    static RuntimeException fail(String what) {\n        return new IllegalStateException(\"driver input error: \" + what + \" at byte \" + inPos);\n    }\n    static void ws() {\n        while (inPos < inBuf.length && (inBuf[inPos] == ' ' || inBuf[inPos] == '\\n' || inBuf[inPos] == '\\r' || inBuf[inPos] == '\\t')) inPos++;\n    }\n    static boolean peek(char c) {\n        ws();\n        return inPos < inBuf.length && inBuf[inPos] == c;\n    }\n    static void expect(char c) {\n        if (!peek(c)) throw fail(\"expected '\" + c + \"'\");\n        inPos++;\n    }\n    static long readInteger(long lo, long hi) {\n        ws();\n        boolean neg = false;\n        if (inPos < inBuf.length && inBuf[inPos] == '-') { neg = true; inPos++; }\n        int start = inPos;\n        long v = 0;\n        while (inPos < inBuf.length && inBuf[inPos] >= '0' && inBuf[inPos] <= '9') {\n            if (inPos - start >= 18) throw fail(\"integer too long\");\n            v = v * 10 + (inBuf[inPos++] - '0');\n        }\n        if (inPos == start) throw fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) throw fail(\"integer out of range\");\n        return v;\n    }\n    static int readInt() { return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE); }\n    static long readLong() { return readInteger(-999999999999999999L, 999999999999999999L); }\n    static boolean matchWord(String w) {\n        if (inPos + w.length() > inBuf.length) return false;\n        for (int i = 0; i < w.length(); i++) if (inBuf[inPos + i] != w.charAt(i)) return false;\n        inPos += w.length();\n        return true;\n    }\n    static boolean readBool() {\n        ws();\n        if (matchWord(\"true\")) return true;\n        if (matchWord(\"false\")) return false;\n        throw fail(\"expected true or false\");\n    }\n    static String readString() {\n        expect('\"');\n        StringBuilder sb = new StringBuilder();\n        while (inPos < inBuf.length && inBuf[inPos] != '\"') {\n            if (inBuf[inPos] == '\\\\') {\n                inPos++;\n                if (inPos >= inBuf.length) break;\n            }\n            sb.append((char) inBuf[inPos++]);\n        }\n        if (inPos >= inBuf.length) throw fail(\"unterminated string\");\n        inPos++;\n        return sb.toString();\n    }\n    static char readChar() {\n        String t = readString();\n        if (t.length() != 1) throw fail(\"expected one-character string\");\n        return t.charAt(0);\n    }\n    static <T> List<T> readList(ElemReader<T> r) {\n        List<T> list = new ArrayList<>();\n        expect('[');\n        if (peek(']')) { inPos++; return list; }\n        while (true) {\n            list.add(r.read());\n            if (peek(',')) { inPos++; continue; }\n            expect(']');\n            return list;\n        }\n    }\n    static List<Integer> readIntList() { return readList(Main::readInt); }\n    static List<Long> readLongList() { return readList(Main::readLong); }\n    static List<String> readStringList() { return readList(Main::readString); }\n    static List<List<Integer>> readIntListList() { return readList(Main::readIntList); }\n    static List<List<String>> readStringListList() { return readList(Main::readStringList); }\n    static int[] readIntArray() {\n        List<Integer> l = readIntList();\n        int[] a = new int[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static long[] readLongArray() {\n        List<Long> l = readLongList();\n        long[] a = new long[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static String[] readStringArray() { return readStringList().toArray(new String[0]); }\n    static int[][] readIntMatrix() { return readList(Main::readIntArray).toArray(new int[0][]); }\n    static char[] readCharArray() {\n        List<Character> l = readList(Main::readChar);\n        char[] a = new char[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }\n    static Integer readNullableInt() {\n        ws();\n        if (matchWord(\"null\")) return null;\n        return readInt();\n    }\n    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }\n\n    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.\n    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {\n        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n            int c = a.get(i).compareTo(b.get(i));\n            if (c != 0) return c;\n        }\n        return Integer.compare(a.size(), b.size());\n    }\n    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {\n        List<List<T>> r = new ArrayList<>();\n        for (List<T> v : x) {\n            List<T> c = new ArrayList<>(v);\n            if (sortInner) Collections.sort(c);\n            r.add(c);\n        }\n        r.sort(Main::compareLists);\n        return r;\n    }\n    static <T extends Comparable<T>> List<T> sortList(List<T> x) {\n        List<T> r = new ArrayList<>(x);\n        Collections.sort(r);\n        return r;\n    }\n    static int[][] sortRows(int[][] x) {\n        int[][] r = x.clone();\n        Arrays.sort(r, (a, b) -> {\n            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);\n            return Integer.compare(a.length, b.length);\n        });\n        return r;\n    }\n    static void endInput() {\n        ws();\n        if (inPos != inBuf.length) throw fail(\"unexpected trailing input\");\n    }\n\n    static void writeString(String s) {\n        OUT.append('\"');\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '\"' || c == '\\\\') OUT.append('\\\\');\n            OUT.append(c);\n        }\n        OUT.append('\"');\n    }\n    static void write(Object o) {\n        if (o == null) { OUT.append(\"null\"); return; }\n        if (o instanceof Boolean || o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte) { OUT.append(o); return; }\n        if (o instanceof String) { writeString((String) o); return; }\n        if (o instanceof Character) { writeString(String.valueOf(o)); return; }\n        OUT.append('[');\n        if (o instanceof int[]) {\n            int[] a = (int[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof long[]) {\n            long[] a = (long[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof boolean[]) {\n            boolean[] a = (boolean[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof char[]) {\n            char[] a = (char[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); writeString(String.valueOf(a[i])); }\n        } else if (o instanceof Object[]) {\n            Object[] a = (Object[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); write(a[i]); }\n        } else if (o instanceof Iterable) {\n            boolean first = true;\n            for (Object e : (Iterable<?>) o) { if (!first) OUT.append(','); write(e); first = false; }\n        } else {\n            throw new IllegalStateException(\"driver cannot print \" + o.getClass().getName());\n        }\n        OUT.append(']');\n    }\n    static void flushOutput() {\n        System.out.print(OUT);\n        System.out.flush();\n    }\n\n    public static void main(String[] oc_args) throws IOException {\n        initInput();\n        String s = readString();\n        endInput();\n        int oc_res = new Solution().countSubstrings(s);\n        write(oc_res);\n        OUT.append('\\n');\n        flushOutput();\n    }\n}"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "language": "cpp",
+      "code": "class Solution {\npublic:\n    int countSubstrings(string s) {\n        int n = (int)s.size(), count = 0;\n        for (int center = 0; center < 2 * n - 1; center++) {  // n letter centres + n-1 gaps\n            int l = center / 2, r = l + center % 2;\n            while (l >= 0 && r < n && s[l] == s[r]) {\n                count++;\n                l--;\n                r++;\n            }\n        }\n        return count;\n    }\n};"
+    },
+    {
+      "language": "java",
+      "code": "class Solution {\n    public int countSubstrings(String s) {\n        int n = s.length(), count = 0;\n        boolean[][] pal = new boolean[n][n]; // pal[i][j]: s[i..j] is a palindrome\n        for (int i = n - 1; i >= 0; i--) {\n            for (int j = i; j < n; j++) {\n                pal[i][j] = s.charAt(i) == s.charAt(j) && (j - i < 2 || pal[i + 1][j - 1]);\n                if (pal[i][j]) count++;\n            }\n        }\n        return count;\n    }\n}"
+    }
+  ],
+  "seedMeta": {
+    "order": 53,
+    "neetcodeSlug": "palindromic-substrings",
+    "limits": {
+      "timeLimitMs": 5000,
+      "memoryLimitMb": 256
+    },
+    "signature": {
+      "method": "countSubstrings",
+      "params": [
+        {
+          "name": "s",
+          "type": "string"
+        }
+      ],
+      "returns": "int"
+    },
+    "expectedOutputsFrom": "reference/palindromic-substrings/solution.cpp on Judge0",
+    "tests": [
+      {
+        "n": 1,
+        "kind": "sample",
+        "note": "example 1",
+        "inputBytes": 6,
+        "outputBytes": 1
+      },
+      {
+        "n": 2,
+        "kind": "sample",
+        "note": "example 2",
+        "inputBytes": 5,
+        "outputBytes": 1
+      },
+      {
+        "n": 3,
+        "kind": "sample",
+        "note": "example 3",
+        "inputBytes": 5,
+        "outputBytes": 1
+      },
+      {
+        "n": 4,
+        "kind": "hidden",
+        "note": "single letter",
+        "inputBytes": 3,
+        "outputBytes": 1
+      },
+      {
+        "n": 5,
+        "kind": "hidden",
+        "note": "two different letters",
+        "inputBytes": 4,
+        "outputBytes": 1
+      },
+      {
+        "n": 6,
+        "kind": "hidden",
+        "note": "n=1000 all the same letter",
+        "inputBytes": 1002,
+        "outputBytes": 6
+      },
+      {
+        "n": 7,
+        "kind": "hidden",
+        "note": "n=1000 alphabet ab",
+        "inputBytes": 1002,
+        "outputBytes": 4
+      },
+      {
+        "n": 8,
+        "kind": "hidden",
+        "note": "n=1000 full alphabet",
+        "inputBytes": 1002,
+        "outputBytes": 4
+      },
+      {
+        "n": 9,
+        "kind": "hidden",
+        "note": "nested palindrome pattern (511)",
+        "inputBytes": 513,
+        "outputBytes": 4
+      },
+      {
+        "n": 10,
+        "kind": "hidden",
+        "note": "n=999 alphabet abc",
+        "inputBytes": 1001,
+        "outputBytes": 4
+      }
+    ],
+    "notes": ""
+  }
+}

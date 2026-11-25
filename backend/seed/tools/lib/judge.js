@@ -25,8 +25,26 @@ const canon = (text) =>
     .join("\n")
     .replace(/\n+$/, "");
 
+// Judge0 infrastructure failures (not verdicts about the code): an overloaded local Judge0 reports
+// "Compilation time limit exceeded" for compiles starved of CPU, or Internal Error.
+const isInfraFailure = (r) => r.statusId === 13 || (r.statusId === 6 && /Compilation time limit exceeded/i.test(r.compileOutput || ""));
+const INFRA_RETRIES = 3;
+
 // testCases: [{ input, expectedOutput }]. expectedOutput may be "" when only stdout is wanted.
-const run = async ({ language, driverCode, code, testCases }) => {
+// The returned array has a `retries` property: how many times infrastructure failures forced a re-run.
+const run = async (args) => {
+  let results = await runOnce(args);
+  let retries = 0;
+  while (results.some(isInfraFailure) && retries < INFRA_RETRIES) {
+    retries++;
+    await new Promise((r) => setTimeout(r, 5000 * retries));
+    results = await runOnce(args);
+  }
+  results.retries = retries;
+  return results;
+};
+
+const runOnce = async ({ language, driverCode, code, testCases }) => {
   const results = [];
   for (let i = 0; i < testCases.length; i += MAX_BATCH) {
     const chunk = testCases.slice(i, i + MAX_BATCH);
@@ -55,4 +73,4 @@ const ensureJudge0 = async () => {
   return health;
 };
 
-module.exports = { run, canon, ensureJudge0, BACKEND };
+module.exports = { run, canon, ensureJudge0, isInfraFailure, BACKEND };

@@ -1,0 +1,192 @@
+{
+  "slug": "spiral-matrix",
+  "title": "Spiral Matrix",
+  "difficulty": "Medium",
+  "topics": [
+    "Math & Geometry"
+  ],
+  "description": "Given an `m x n` matrix, return all of its elements in **spiral order**: start at the top-left corner, go right along the top row, down the right column, left along the bottom row, up the left column, and keep circling inwards until every element has been visited once.",
+  "constraints": [
+    "m == matrix.length",
+    "n == matrix[i].length",
+    "1 <= m, n <= 10",
+    "-100 <= matrix[i][j] <= 100"
+  ],
+  "examples": [
+    {
+      "input": "matrix = [[1,2,3,4],[5,6,7,8]]",
+      "output": "[1,2,3,4,8,7,6,5]",
+      "explanation": "Right along the top row, down to 8, then left along the bottom row."
+    },
+    {
+      "input": "matrix = [[7]]",
+      "output": "[7]",
+      "explanation": "A 1 x 1 matrix."
+    },
+    {
+      "input": "matrix = [[1],[2],[3]]",
+      "output": "[1,2,3]",
+      "explanation": "A single column is read top to bottom."
+    }
+  ],
+  "visibleTestCase": {
+    "input": "[[1,2,3,4],[5,6,7,8]]",
+    "expectedOutput": "[1,2,3,4,8,7,6,5]"
+  },
+  "hiddenTestCases": [
+    {
+      "input": "[[1,2,3,4],[5,6,7,8]]",
+      "expectedOutput": "[1,2,3,4,8,7,6,5]"
+    },
+    {
+      "input": "[[7]]",
+      "expectedOutput": "[7]"
+    },
+    {
+      "input": "[[1],[2],[3]]",
+      "expectedOutput": "[1,2,3]"
+    },
+    {
+      "input": "[[-65,-30,-32,53,-10,-92,-95,67,94,36]]",
+      "expectedOutput": "[-65,-30,-32,53,-10,-92,-95,67,94,36]"
+    },
+    {
+      "input": "[[37],[41],[-86],[36],[69],[-29],[36],[58],[-66],[-33]]",
+      "expectedOutput": "[37,41,-86,36,69,-29,36,58,-66,-33]"
+    },
+    {
+      "input": "[[1,2],[3,4]]",
+      "expectedOutput": "[1,2,4,3]"
+    },
+    {
+      "input": "[[1,2,3],[4,5,6],[7,8,9]]",
+      "expectedOutput": "[1,2,3,6,9,8,7,4,5]"
+    },
+    {
+      "input": "[[1,2,3,4,5,6,7],[8,9,10,11,12,13,14],[15,16,17,18,19,20,21],[22,23,24,25,26,27,28]]",
+      "expectedOutput": "[1,2,3,4,5,6,7,14,21,28,27,26,25,24,23,22,15,8,9,10,11,12,13,20,19,18,17,16]"
+    },
+    {
+      "input": "[[-39,-83,98,-64,93,-14,-19,40,62],[7,-47,-45,-18,-68,-57,60,31,-63],[-87,-100,76,-18,23,38,81,-54,53],[-29,90,-11,15,57,34,48,36,-71],[-50,100,15,0,-47,80,-94,-59,31],[47,-51,-35,-61,87,-53,12,5,60],[35,25,83,31,-79,50,-14,-63,-71],[-51,38,82,-52,-10,52,-9,53,-23],[21,-88,-88,-98,-24,41,58,80,-37],[-58,-2,52,90,-10,-75,95,34,-73]]",
+      "expectedOutput": "[-39,-83,98,-64,93,-14,-19,40,62,-63,53,-71,31,60,-71,-23,-37,-73,34,95,-75,-10,90,52,-2,-58,21,-51,35,47,-50,-29,-87,7,-47,-45,-18,-68,-57,60,31,-54,36,-59,5,-63,53,80,58,41,-24,-98,-88,-88,38,25,-51,100,90,-100,76,-18,23,38,81,48,-94,12,-14,-9,52,-10,-52,82,83,-35,15,-11,15,57,34,80,-53,50,-79,31,-61,0,-47,87]"
+    },
+    {
+      "input": "[[-1,-90,-86,57,57,40,-3,-74,-73,-44],[42,39,-98,-8,38,16,72,68,-77,63],[95,78,53,23,3,49,9,18,4,41],[26,-35,20,-55,-61,-70,43,-14,15,96],[8,38,-62,-70,-89,-65,67,-52,-65,-49],[-77,-78,66,8,92,0,99,1,-93,41],[19,-88,-85,47,60,-94,-9,-44,11,8],[30,5,-60,-31,37,-95,28,26,40,62],[29,-33,-67,24,-28,-80,16,19,-41,-81],[-8,68,26,65,43,-89,-7,100,-45,-25]]",
+      "expectedOutput": "[-1,-90,-86,57,57,40,-3,-74,-73,-44,63,41,96,-49,41,8,62,-81,-25,-45,100,-7,-89,43,65,26,68,-8,29,30,19,-77,8,26,95,42,39,-98,-8,38,16,72,68,-77,4,15,-65,-93,11,40,-41,19,16,-80,-28,24,-67,-33,5,-88,-78,38,-35,78,53,23,3,49,9,18,-14,-52,1,-44,26,28,-95,37,-31,-60,-85,66,-62,20,-55,-61,-70,43,67,99,-9,-94,60,47,8,-70,-89,-65,0,92]"
+    }
+  ],
+  "codeSnippets": [
+    {
+      "language": "cpp",
+      "userSnippet": "class Solution {\npublic:\n    vector<int> spiralOrder(vector<vector<int>>& matrix) {\n        // Write your solution here\n        return {};\n    }\n};",
+      "driverCode": "#include <bits/stdc++.h>\nusing namespace std;\n\n{{USER_CODE}}\n\n// ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n// Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\nnamespace oncode {\n\n// Nullable int, for level-order tree arrays such as [1,null,2].\nstruct Opt {\n    bool has = false;\n    int v = 0;\n};\n\nstruct Reader {\n    std::string s;\n    size_t p = 0;\n    Reader() {\n        std::ios::sync_with_stdio(false);\n        s.assign(std::istreambuf_iterator<char>(std::cin), std::istreambuf_iterator<char>());\n    }\n    [[noreturn]] void fail(const char* what) {\n        std::cerr << \"driver input error: \" << what << \" at byte \" << p << \"\\n\";\n        std::exit(3);\n    }\n    void ws() {\n        while (p < s.size() && std::isspace(static_cast<unsigned char>(s[p]))) p++;\n    }\n    bool peek(char c) {\n        ws();\n        return p < s.size() && s[p] == c;\n    }\n    void expect(char c) {\n        if (!peek(c)) fail(\"unexpected character\");\n        p++;\n    }\n    long long integer(long long lo, long long hi) {\n        ws();\n        bool neg = false;\n        if (p < s.size() && s[p] == '-') { neg = true; p++; }\n        size_t start = p;\n        long long v = 0;\n        while (p < s.size() && std::isdigit(static_cast<unsigned char>(s[p]))) {\n            if (p - start >= 18) fail(\"integer too long\");\n            v = v * 10 + (s[p++] - '0');\n        }\n        if (p == start) fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) fail(\"integer out of range\");\n        return v;\n    }\n    void read(int& x) { x = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    void read(long long& x) { x = integer(-999999999999999999LL, 999999999999999999LL); }\n    void read(bool& x) {\n        ws();\n        if (s.compare(p, 4, \"true\") == 0) { x = true; p += 4; }\n        else if (s.compare(p, 5, \"false\") == 0) { x = false; p += 5; }\n        else fail(\"expected true or false\");\n    }\n    void read(std::string& x) {\n        expect('\"');\n        x.clear();\n        while (p < s.size() && s[p] != '\"') {\n            if (s[p] == '\\\\') {\n                p++;\n                if (p >= s.size()) break;\n            }\n            x += s[p++];\n        }\n        if (p >= s.size()) fail(\"unterminated string\");\n        p++;\n    }\n    void read(Opt& o) {\n        ws();\n        if (s.compare(p, 4, \"null\") == 0) { o.has = false; p += 4; }\n        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    }\n    void read(char& x) {\n        std::string t;\n        read(t);\n        if (t.size() != 1) fail(\"expected one-character string\");\n        x = t[0];\n    }\n    template <class T> void read(std::vector<T>& v) {\n        v.clear();\n        expect('[');\n        if (peek(']')) { p++; return; }\n        for (;;) {\n            T e;\n            read(e);\n            v.push_back(std::move(e));\n            if (peek(',')) { p++; continue; }\n            expect(']');\n            return;\n        }\n    }\n    void end() {\n        ws();\n        if (p != s.size()) fail(\"unexpected trailing input\");\n    }\n};\n\nstruct Writer {\n    std::string out;\n    void write(int x) { out += std::to_string(x); }\n    void write(long long x) { out += std::to_string(x); }\n    void write(bool x) { out += x ? \"true\" : \"false\"; }\n    void write(const std::string& x) {\n        out += '\"';\n        for (char c : x) {\n            if (c == '\"' || c == '\\\\') out += '\\\\';\n            out += c;\n        }\n        out += '\"';\n    }\n    void write(char c) { write(std::string(1, c)); }\n    void write(const Opt& o) {\n        if (o.has) write(o.v);\n        else out += \"null\";\n    }\n    template <class T> void write(const std::vector<T>& v) {\n        out += '[';\n        for (size_t i = 0; i < v.size(); i++) {\n            if (i) out += ',';\n            write(v[i]);\n        }\n        out += ']';\n    }\n    void line() { out += '\\n'; }\n    void flush() {\n        std::fwrite(out.data(), 1, out.size(), stdout);\n        std::fflush(stdout);\n    }\n};\n\n}  // namespace oncode\n\nint main() {\n    oncode::Reader oc_in;\n    vector<vector<int>> matrix;\n    oc_in.read(matrix);\n    oc_in.end();\n    Solution oc_sol;\n    vector<int> oc_res = oc_sol.spiralOrder(matrix);\n    oncode::Writer oc_out;\n    oc_out.write(oc_res);\n    oc_out.line();\n    oc_out.flush();\n    return 0;\n}"
+    },
+    {
+      "language": "java",
+      "userSnippet": "class Solution {\n    public List<Integer> spiralOrder(int[][] matrix) {\n        // Write your solution here\n        return new ArrayList<>();\n    }\n}",
+      "driverCode": "import java.util.*;\nimport java.io.*;\n\n{{USER_CODE}}\n\npublic class Main {\n    // ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n    // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\n    static byte[] inBuf;\n    static int inPos;\n    static final StringBuilder OUT = new StringBuilder();\n\n    interface ElemReader<T> { T read(); }\n\n    static void initInput() throws IOException {\n        inBuf = System.in.readAllBytes();\n        inPos = 0;\n    }\n    static RuntimeException fail(String what) {\n        return new IllegalStateException(\"driver input error: \" + what + \" at byte \" + inPos);\n    }\n    static void ws() {\n        while (inPos < inBuf.length && (inBuf[inPos] == ' ' || inBuf[inPos] == '\\n' || inBuf[inPos] == '\\r' || inBuf[inPos] == '\\t')) inPos++;\n    }\n    static boolean peek(char c) {\n        ws();\n        return inPos < inBuf.length && inBuf[inPos] == c;\n    }\n    static void expect(char c) {\n        if (!peek(c)) throw fail(\"expected '\" + c + \"'\");\n        inPos++;\n    }\n    static long readInteger(long lo, long hi) {\n        ws();\n        boolean neg = false;\n        if (inPos < inBuf.length && inBuf[inPos] == '-') { neg = true; inPos++; }\n        int start = inPos;\n        long v = 0;\n        while (inPos < inBuf.length && inBuf[inPos] >= '0' && inBuf[inPos] <= '9') {\n            if (inPos - start >= 18) throw fail(\"integer too long\");\n            v = v * 10 + (inBuf[inPos++] - '0');\n        }\n        if (inPos == start) throw fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) throw fail(\"integer out of range\");\n        return v;\n    }\n    static int readInt() { return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE); }\n    static long readLong() { return readInteger(-999999999999999999L, 999999999999999999L); }\n    static boolean matchWord(String w) {\n        if (inPos + w.length() > inBuf.length) return false;\n        for (int i = 0; i < w.length(); i++) if (inBuf[inPos + i] != w.charAt(i)) return false;\n        inPos += w.length();\n        return true;\n    }\n    static boolean readBool() {\n        ws();\n        if (matchWord(\"true\")) return true;\n        if (matchWord(\"false\")) return false;\n        throw fail(\"expected true or false\");\n    }\n    static String readString() {\n        expect('\"');\n        StringBuilder sb = new StringBuilder();\n        while (inPos < inBuf.length && inBuf[inPos] != '\"') {\n            if (inBuf[inPos] == '\\\\') {\n                inPos++;\n                if (inPos >= inBuf.length) break;\n            }\n            sb.append((char) inBuf[inPos++]);\n        }\n        if (inPos >= inBuf.length) throw fail(\"unterminated string\");\n        inPos++;\n        return sb.toString();\n    }\n    static char readChar() {\n        String t = readString();\n        if (t.length() != 1) throw fail(\"expected one-character string\");\n        return t.charAt(0);\n    }\n    static <T> List<T> readList(ElemReader<T> r) {\n        List<T> list = new ArrayList<>();\n        expect('[');\n        if (peek(']')) { inPos++; return list; }\n        while (true) {\n            list.add(r.read());\n            if (peek(',')) { inPos++; continue; }\n            expect(']');\n            return list;\n        }\n    }\n    static List<Integer> readIntList() { return readList(Main::readInt); }\n    static List<Long> readLongList() { return readList(Main::readLong); }\n    static List<String> readStringList() { return readList(Main::readString); }\n    static List<List<Integer>> readIntListList() { return readList(Main::readIntList); }\n    static List<List<String>> readStringListList() { return readList(Main::readStringList); }\n    static int[] readIntArray() {\n        List<Integer> l = readIntList();\n        int[] a = new int[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static long[] readLongArray() {\n        List<Long> l = readLongList();\n        long[] a = new long[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static String[] readStringArray() { return readStringList().toArray(new String[0]); }\n    static int[][] readIntMatrix() { return readList(Main::readIntArray).toArray(new int[0][]); }\n    static char[] readCharArray() {\n        List<Character> l = readList(Main::readChar);\n        char[] a = new char[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }\n    static Integer readNullableInt() {\n        ws();\n        if (matchWord(\"null\")) return null;\n        return readInt();\n    }\n    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }\n\n    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.\n    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {\n        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n            int c = a.get(i).compareTo(b.get(i));\n            if (c != 0) return c;\n        }\n        return Integer.compare(a.size(), b.size());\n    }\n    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {\n        List<List<T>> r = new ArrayList<>();\n        for (List<T> v : x) {\n            List<T> c = new ArrayList<>(v);\n            if (sortInner) Collections.sort(c);\n            r.add(c);\n        }\n        r.sort(Main::compareLists);\n        return r;\n    }\n    static <T extends Comparable<T>> List<T> sortList(List<T> x) {\n        List<T> r = new ArrayList<>(x);\n        Collections.sort(r);\n        return r;\n    }\n    static int[][] sortRows(int[][] x) {\n        int[][] r = x.clone();\n        Arrays.sort(r, (a, b) -> {\n            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);\n            return Integer.compare(a.length, b.length);\n        });\n        return r;\n    }\n    static void endInput() {\n        ws();\n        if (inPos != inBuf.length) throw fail(\"unexpected trailing input\");\n    }\n\n    static void writeString(String s) {\n        OUT.append('\"');\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '\"' || c == '\\\\') OUT.append('\\\\');\n            OUT.append(c);\n        }\n        OUT.append('\"');\n    }\n    static void write(Object o) {\n        if (o == null) { OUT.append(\"null\"); return; }\n        if (o instanceof Boolean || o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte) { OUT.append(o); return; }\n        if (o instanceof String) { writeString((String) o); return; }\n        if (o instanceof Character) { writeString(String.valueOf(o)); return; }\n        OUT.append('[');\n        if (o instanceof int[]) {\n            int[] a = (int[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof long[]) {\n            long[] a = (long[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof boolean[]) {\n            boolean[] a = (boolean[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof char[]) {\n            char[] a = (char[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); writeString(String.valueOf(a[i])); }\n        } else if (o instanceof Object[]) {\n            Object[] a = (Object[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); write(a[i]); }\n        } else if (o instanceof Iterable) {\n            boolean first = true;\n            for (Object e : (Iterable<?>) o) { if (!first) OUT.append(','); write(e); first = false; }\n        } else {\n            throw new IllegalStateException(\"driver cannot print \" + o.getClass().getName());\n        }\n        OUT.append(']');\n    }\n    static void flushOutput() {\n        System.out.print(OUT);\n        System.out.flush();\n    }\n\n    public static void main(String[] oc_args) throws IOException {\n        initInput();\n        int[][] matrix = readIntMatrix();\n        endInput();\n        List<Integer> oc_res = new Solution().spiralOrder(matrix);\n        write(oc_res);\n        OUT.append('\\n');\n        flushOutput();\n    }\n}"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "language": "cpp",
+      "code": "class Solution {\npublic:\n    vector<int> spiralOrder(vector<vector<int>>& matrix) {\n        vector<int> out;\n        int top = 0, bottom = (int)matrix.size() - 1, left = 0, right = (int)matrix[0].size() - 1;\n        while (top <= bottom && left <= right) {\n            for (int c = left; c <= right; c++) out.push_back(matrix[top][c]);\n            top++;\n            for (int r = top; r <= bottom; r++) out.push_back(matrix[r][right]);\n            right--;\n            if (top <= bottom) {\n                for (int c = right; c >= left; c--) out.push_back(matrix[bottom][c]);\n                bottom--;\n            }\n            if (left <= right) {\n                for (int r = bottom; r >= top; r--) out.push_back(matrix[r][left]);\n                left++;\n            }\n        }\n        return out;\n    }\n};"
+    },
+    {
+      "language": "java",
+      "code": "class Solution {\n    public List<Integer> spiralOrder(int[][] matrix) {\n        // Walk with a direction vector, turning right whenever the next cell is outside or visited.\n        int m = matrix.length, n = matrix[0].length;\n        boolean[][] seen = new boolean[m][n];\n        int[] dr = {0, 1, 0, -1}, dc = {1, 0, -1, 0};\n        List<Integer> out = new ArrayList<>();\n        int r = 0, c = 0, d = 0;\n        for (int k = 0; k < m * n; k++) {\n            out.add(matrix[r][c]);\n            seen[r][c] = true;\n            int nr = r + dr[d], nc = c + dc[d];\n            if (nr < 0 || nr >= m || nc < 0 || nc >= n || seen[nr][nc]) {\n                d = (d + 1) % 4;\n                nr = r + dr[d];\n                nc = c + dc[d];\n            }\n            r = nr;\n            c = nc;\n        }\n        return out;\n    }\n}"
+    }
+  ],
+  "seedMeta": {
+    "order": 74,
+    "neetcodeSlug": "spiral-matrix",
+    "limits": {
+      "timeLimitMs": 5000,
+      "memoryLimitMb": 256
+    },
+    "signature": {
+      "method": "spiralOrder",
+      "params": [
+        {
+          "name": "matrix",
+          "type": "int[][]"
+        }
+      ],
+      "returns": "List<int>"
+    },
+    "expectedOutputsFrom": "reference/spiral-matrix/solution.cpp on Judge0",
+    "tests": [
+      {
+        "n": 1,
+        "kind": "sample",
+        "note": "example 1",
+        "inputBytes": 21,
+        "outputBytes": 17
+      },
+      {
+        "n": 2,
+        "kind": "sample",
+        "note": "example 2",
+        "inputBytes": 5,
+        "outputBytes": 3
+      },
+      {
+        "n": 3,
+        "kind": "sample",
+        "note": "example 3",
+        "inputBytes": 13,
+        "outputBytes": 7
+      },
+      {
+        "n": 4,
+        "kind": "hidden",
+        "note": "1 x 10",
+        "inputBytes": 39,
+        "outputBytes": 37
+      },
+      {
+        "n": 5,
+        "kind": "hidden",
+        "note": "10 x 1",
+        "inputBytes": 55,
+        "outputBytes": 35
+      },
+      {
+        "n": 6,
+        "kind": "hidden",
+        "note": "2 x 2",
+        "inputBytes": 13,
+        "outputBytes": 9
+      },
+      {
+        "n": 7,
+        "kind": "hidden",
+        "note": "3 x 3",
+        "inputBytes": 25,
+        "outputBytes": 19
+      },
+      {
+        "n": 8,
+        "kind": "hidden",
+        "note": "4 x 7",
+        "inputBytes": 84,
+        "outputBytes": 76
+      },
+      {
+        "n": 9,
+        "kind": "hidden",
+        "note": "10 x 9 random",
+        "inputBytes": 333,
+        "outputBytes": 313
+      },
+      {
+        "n": 10,
+        "kind": "hidden",
+        "note": "10 x 10 random",
+        "inputBytes": 351,
+        "outputBytes": 331
+      }
+    ],
+    "notes": ""
+  }
+}

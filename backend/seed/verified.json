@@ -78,5 +78,57 @@
   "find-minimum-in-rotated-sorted-array": {
     "sha256": "798093d48c107dc46022a04f51ead399da2fa0578449f391cd0236b308792b61",
     "verifiedAt": "2026-11-25T19:26:07.399Z"
+  },
+  "search-in-rotated-sorted-array": {
+    "sha256": "ba3ce55080d027a67a3756299baf668909c731c7d2047acb89fc529bb4ff1f5f",
+    "verifiedAt": "2026-11-25T19:31:50.201Z"
+  },
+  "coin-change": {
+    "sha256": "256e484d1fc6bdb7d453b2ee47588c8e598c54dddfde94b2717d581925e87b94",
+    "verifiedAt": "2026-11-25T19:32:43.769Z"
+  },
+  "maximum-product-subarray": {
+    "sha256": "e43dfc491ec0850dada0f2342794aba7f33e4b67105bd7ff5e6cf1733c708ebe",
+    "verifiedAt": "2026-11-25T19:33:23.449Z"
+  },
+  "longest-increasing-subsequence": {
+    "sha256": "91d85f1e6c19ea8f9b15f1ada73933d10117f2145be6778916d5026145d1f8bb",
+    "verifiedAt": "2026-11-25T19:33:59.773Z"
+  },
+  "unique-paths": {
+    "sha256": "2c98880f6cf4836e55a1c32ad1d530e59ff694e52df03953ddb44fa590652774",
+    "verifiedAt": "2026-11-25T19:34:44.381Z"
+  },
+  "longest-common-subsequence": {
+    "sha256": "0ed918b4a1b6c9ffbecd4ed4e837f600233ca8f2ea024ec7cb1b9f40294ea8fb",
+    "verifiedAt": "2026-11-25T19:35:35.278Z"
+  },
+  "palindromic-substrings": {
+    "sha256": "0d5f7cb45233861a2b0baa29b5b30eaf7d182e5ea42509a7d1f33226159d1b90",
+    "verifiedAt": "2026-11-25T19:39:02.054Z"
+  },
+  "longest-palindromic-substring": {
+    "sha256": "a92c6952723d24b39efc54432e09c7990ed9949ab9da73af4894bc8eba2e8adc",
+    "verifiedAt": "2026-11-25T19:39:36.141Z"
+  },
+  "word-break": {
+    "sha256": "0224b4c223b96bd25efcbfb7230c64f05200895d3f03e21a0800b58a965f43eb",
+    "verifiedAt": "2026-11-25T19:40:23.242Z"
+  },
+  "decode-ways": {
+    "sha256": "5b0ca1d18b4a89441d448f7201ad8fa50303480218396a53d622fbdb962ef5c6",
+    "verifiedAt": "2026-11-25T19:41:56.248Z"
+  },
+  "longest-substring-without-repeating-characters": {
+    "sha256": "6913d30590772020e2a35c027b96fb5051470c4b2bacd68c77a9ce0c7c6a07b2",
+    "verifiedAt": "2026-11-25T19:42:34.074Z"
+  },
+  "longest-repeating-character-replacement": {
+    "sha256": "115db32a6ae63aa72a0c9f5085edda7a4d6e113e50737bf91cf3aaedcfd95e32",
+    "verifiedAt": "2026-11-25T19:43:02.875Z"
+  },
+  "minimum-window-substring": {
+    "sha256": "a50b177e831de240831b8f422fcfe2cd3ae80e901b840ff4daa1ec9d3d5b0585",
+    "verifiedAt": "2026-11-25T19:43:39.934Z"
   }
 }

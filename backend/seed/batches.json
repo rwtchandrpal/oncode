@@ -22,5 +22,30 @@
     "sum-of-two-integers",
     "reverse-bits",
     "find-minimum-in-rotated-sorted-array"
+  ],
+  "3": [
+    "search-in-rotated-sorted-array",
+    "coin-change",
+    "maximum-product-subarray",
+    "longest-increasing-subsequence",
+    "unique-paths",
+    "longest-common-subsequence",
+    "decode-ways",
+    "palindromic-substrings",
+    "longest-palindromic-substring",
+    "word-break"
+  ],
+  "4": [
+    "longest-substring-without-repeating-characters",
+    "longest-repeating-character-replacement",
+    "minimum-window-substring",
+    "meeting-rooms",
+    "meeting-rooms-ii",
+    "non-overlapping-intervals",
+    "merge-intervals",
+    "insert-interval",
+    "spiral-matrix",
+    "rotate-image",
+    "set-matrix-zeroes"
   ]
 }

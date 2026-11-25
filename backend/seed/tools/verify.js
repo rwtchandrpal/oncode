@@ -53,20 +53,13 @@ const summarize = (results) => {
   return Object.entries(counts).map(([s, n]) => `${s} x${n}`).join(", ");
 };
 
-// Judge0 infrastructure failures (not verdicts about the code): retried once after a pause.
-const isInfraFailure = (r) => r.statusId === 13 || (r.statusId === 6 && /Compilation time limit exceeded/i.test(r.compileOutput || ""));
-
 // One batch at a time: the same load as a single user's Submit. Running many batches in parallel
-// starves compiles on the local Judge0 ("Compilation time limit exceeded").
+// starves compiles on the local Judge0 ("Compilation time limit exceeded"); lib/judge.js retries
+// such infrastructure failures, and they are noted here.
 const runCode = async (problem, language, code, notes) => {
   const snip = problem.codeSnippets.find((s) => s.language === language);
-  const once = () => run({ language, driverCode: snip.driverCode, code, testCases: problem.hiddenTestCases });
-  let res = await once();
-  if (res.some(isInfraFailure)) {
-    notes.push(`${language}: Judge0 infrastructure failure, re-ran once`);
-    await new Promise((r) => setTimeout(r, 5000));
-    res = await once();
-  }
+  const res = await run({ language, driverCode: snip.driverCode, code, testCases: problem.hiddenTestCases });
+  if (res.retries) notes.push(`${language}: Judge0 infrastructure failure, re-ran ${res.retries}x`);
   return res;
 };
 
