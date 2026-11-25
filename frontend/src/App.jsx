@@ -2,7 +2,9 @@ import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router"; 
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "./features/auth/authSlice";
-import AuthModal from "./components/AuthModal";
+
+// Loaded on first open, so react-hook-form + zod stay out of the initial bundle (PERF-03)
+const AuthModal = lazy(() => import("./components/AuthModal"));
 
 // Route-level code splitting
 const Home = lazy(() => import("./pages/Home"));
@@ -45,7 +47,7 @@ const PublicOnlyRoute = ({ isAuthenticated, children }) => {
 };
 
 const App = () => {
-  const { user, isAuthenticated, isCheckingAuth } = useSelector((state) => state.auth);
+  const { user, isAuthenticated, isCheckingAuth, authModal } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,7 +62,11 @@ const App = () => {
 
   return (
     <>
-      <AuthModal />
+      {authModal.isOpen && (
+        <Suspense fallback={null}>
+          <AuthModal />
+        </Suspense>
+      )}
       <Suspense fallback={<PageLoader />}>
         <Routes>
         <Route 

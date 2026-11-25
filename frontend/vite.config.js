@@ -37,11 +37,9 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              // Self-hosted editor (~3 MB, lazy with the workspace route). Kept separate so app
-              // releases do not invalidate its cache.
-              if (id.includes('monaco-editor') || id.includes('@monaco-editor')) {
-                return 'vendor-monaco';
-              }
+              // Note: Monaco is deliberately NOT a manual chunk. Rolldown hoists shared helpers into
+              // the first manual chunk that needs them, which made every page preload the 2.8 MB
+              // editor. Left alone, Monaco lands in the lazy workspace chunk.
               if (id.includes('react/') || id.includes('react-dom') || id.includes('react-router')) {
                 return 'vendor-react';
               }
