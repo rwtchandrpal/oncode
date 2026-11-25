@@ -1,0 +1,7 @@
+anon no params: {"rows":20,"total":27,"pages":2,"page":1,"limit":20,"topics":7,"isSolvedAny":false}
+user page1 limit10: {"rows":10,"solved":["Double It"]}
+difficulty=hard: 4  difficulty=EASY: 19
+limit=all: {"details":[{"location":"query","path":"limit","message":"Limit must be an integer between 1 and 100."}],"error":{"code"
+limit=101: 400
+topics cached in redis: ["Array","Dynamic Programming","Extra","Greedy","Math","String","Two Pointers"]
+topics key after delete: ''

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const Submission = require('../models/submission');
 const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
+const { getAllTopics, invalidateTopics } = require('../utils/topicsCache');
 
 const encodeBase64 = (str) => {
     if (!str) return "";
@@ -99,6 +100,7 @@ const createProblem = async (req, res) => {
             ...req.body,
             problemCreator: req.user._id
         });
+        await invalidateTopics();
 
         res.status(201).json({
             message: "Problem created and validated successfully",
@@ -138,6 +140,7 @@ const updateProblem = async (req, res) => {
         }
 
         const updatedProblem = await Problem.findByIdAndUpdate(id, { $set: req.body }, { runValidators: true, new: true });
+        await invalidateTopics();
 
         res.status(200).json({
             message: "Problem updated successfully", 
@@ -191,6 +194,7 @@ const deleteProblem = async (req, res) => {
             throw opErr;
         }
 
+        await invalidateTopics();
         res.status(200).json({ message: "Problem and associated data deleted successfully." });
     } catch (err) {
         sendError(res, err, "Failed to delete problem.");
@@ -270,6 +274,10 @@ const getProblemSolution = async (req, res) => {
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 100;
+const CANONICAL_DIFFICULTY = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+
 const getAllProblems = async (req, res) => {
     try {
         const query = {};
@@ -280,9 +288,10 @@ const getAllProblems = async (req, res) => {
             query.title = mongoose.trusted({ $regex: sanitized, $options: 'i' });
         }
 
-        // Difficulty Filter
-        if (req.query.difficulty && req.query.difficulty.toLowerCase() !== 'all') {
-            query.difficulty = new RegExp(`^${escapeRegex(req.query.difficulty)}$`, 'i');
+        // Difficulty: exact match on the stored canonical value, so the index can be used (PERF-01)
+        const difficulty = CANONICAL_DIFFICULTY[req.query.difficulty];
+        if (difficulty) {
+            query.difficulty = difficulty;
         }
 
         // Topic Filter
@@ -290,51 +299,37 @@ const getAllProblems = async (req, res) => {
             query.topics = mongoose.trusted({ $in: [new RegExp(`^${escapeRegex(req.query.topic)}$`, 'i')] });
         }
 
-        // Solved Status Filter (requires user)
-        if (req.query.status && req.query.status.toLowerCase() !== 'all' && req.user) {
+        // The signed-in user's solved set: used for the status filter and the per-row isSolved flag (PERF-05)
+        let solvedIds = [];
+        if (req.user) {
             const userDoc = await User.findById(req.user._id).select('problemsSolved').lean();
-            const solvedIds = (userDoc?.problemsSolved || []).filter(Boolean);
-            if (req.query.status.toLowerCase() === 'solved') {
+            solvedIds = (userDoc?.problemsSolved || []).filter(Boolean);
+            if (req.query.status === 'solved') {
                 query._id = mongoose.trusted({ $in: solvedIds });
-            } else if (req.query.status.toLowerCase() === 'unsolved') {
+            } else if (req.query.status === 'unsolved') {
                 query._id = mongoose.trusted({ $nin: solvedIds });
             }
         }
 
-        // Pagination setup with backwards compatibility for unbounded requests
-        const isUnbounded = req.query.limit === 'all' || (!req.query.page && !req.query.limit);
-        const page = Math.max(1, parseInt(req.query.page) || 1);
-        const limit = isUnbounded ? 1000 : Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
-        const skip = isUnbounded ? 0 : (page - 1) * limit;
+        // Always paginated (PERF-01): default 20, max 100
+        const page = req.query.page || 1;
+        const limit = Math.min(MAX_PAGE_SIZE, req.query.limit || DEFAULT_PAGE_SIZE);
+        const skip = (page - 1) * limit;
 
-        const findQuery = Problem.find(query)
-            .select('_id number title difficulty topics')
-            .sort({ number: 1 });
-
-        if (!isUnbounded) {
-            findQuery.skip(skip).limit(limit);
-        }
-
-        const [allProblems, totalProblems, rawTopics] = await Promise.all([
-            findQuery.lean(),
+        const [rows, totalProblems, allTopics] = await Promise.all([
+            Problem.find(query)
+                .select('_id number title difficulty topics')
+                .sort({ number: 1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
             Problem.countDocuments(query),
-            Problem.distinct('topics')
+            getAllTopics()
         ]);
 
-        const totalPages = isUnbounded ? 1 : Math.ceil(totalProblems / limit) || 1;
-
-        // Distinct, normalized topics for filter dropdowns
-        const uniqueTopicsMap = new Map();
-        (rawTopics || []).forEach(t => {
-            if (typeof t === 'string' && t.trim()) {
-                const trimmed = t.trim();
-                const lower = trimmed.toLowerCase();
-                if (!uniqueTopicsMap.has(lower)) {
-                    uniqueTopicsMap.set(lower, trimmed.charAt(0).toUpperCase() + trimmed.slice(1));
-                }
-            }
-        });
-        const allTopics = Array.from(uniqueTopicsMap.values()).sort((a, b) => a.localeCompare(b));
+        const solvedSet = new Set(solvedIds.map(String));
+        const allProblems = rows.map((p) => ({ ...p, isSolved: solvedSet.has(String(p._id)) }));
+        const totalPages = Math.ceil(totalProblems / limit) || 1;
 
         res.set({
             'Cache-Control': req.user ? 'private, no-cache' : 'public, max-age=30, stale-while-revalidate=60',
@@ -344,8 +339,8 @@ const getAllProblems = async (req, res) => {
             allProblems,
             totalProblems,
             totalPages,
-            currentPage: isUnbounded ? 1 : page,
-            limit: isUnbounded ? totalProblems : limit,
+            currentPage: page,
+            limit,
             allTopics
         });
     } catch (err) {

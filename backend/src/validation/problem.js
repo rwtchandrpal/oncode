@@ -57,10 +57,8 @@ const listProblemsQuery = z.object({
   topic: text(60, "Topic"),
   status: lowerEnum(STATUSES, "Status must be all, solved or unsolved."),
   page: z.coerce.number({ error: "Page must be a positive integer." }).int("Page must be a positive integer.").min(1, "Page must be a positive integer.").max(100000, "Page is too large."),
-  limit: z.union(
-    [z.literal("all"), z.coerce.number().int().min(1).max(100)],
-    { error: "Limit must be an integer between 1 and 100." }
-  ),
+  // Always paginated (PERF-01): no "all" / unbounded mode
+  limit: z.coerce.number({ error: "Limit must be an integer between 1 and 100." }).int("Limit must be an integer between 1 and 100.").min(1, "Limit must be an integer between 1 and 100.").max(100, "Limit must be an integer between 1 and 100."),
 }).partial();
 
 module.exports = { createProblemBody, updateProblemBody, listProblemsQuery };

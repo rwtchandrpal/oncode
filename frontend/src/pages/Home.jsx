@@ -97,7 +97,6 @@ const Home = () => {
   };
   
   const [problems, setProblems] = useState([]);
-  const [solvedProblems, setSolvedProblems] = useState([]); 
   const [isLoading, setIsLoading] = useState(true); 
 
   // Search & Pagination State
@@ -144,10 +143,8 @@ const Home = () => {
           status: effectiveStatus
         };
 
-        const [problemRes, solvedRes] = await Promise.all([
-          axiosClient.get('/problem/', { params }),
-          user ? axiosClient.get('/problem/solved') : Promise.resolve({ data: { solvedProblems: [] } })
-        ]);
+        // One request per change: each row carries isSolved for the signed-in user (PERF-05)
+        const problemRes = await axiosClient.get('/problem/', { params });
 
         if (isMounted) {
           setProblems(problemRes.data.allProblems || []);
@@ -156,7 +153,6 @@ const Home = () => {
           if (problemRes.data.allTopics && problemRes.data.allTopics.length > 0) {
             setAllTopics(problemRes.data.allTopics);
           }
-          setSolvedProblems(solvedRes.data.solvedProblems || []);
         }
       } catch (error) {
         console.error("Error fetching data: ", getApiErrorMessage(error, error.message));
@@ -192,10 +188,6 @@ const Home = () => {
     });
     setCurrentPage(1);
   };
-
-  const solvedIdSet = useMemo(() => {
-    return new Set((solvedProblems || []).filter(Boolean).map(sp => sp._id));
-  }, [solvedProblems]);
 
   // Generate pagination page numbers
   const paginationRange = useMemo(() => {
@@ -310,7 +302,7 @@ const Home = () => {
               <ProblemCard
                 key={problem._id}
                 problem={problem}
-                isSolved={solvedIdSet.has(problem._id)}
+                isSolved={!!problem.isSolved}
                 onProblemClick={handleProblemClick}
               />
             ))

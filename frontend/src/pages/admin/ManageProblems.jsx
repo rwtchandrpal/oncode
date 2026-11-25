@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router'; 
-import { Edit, Trash2, AlertCircle, Plus } from 'lucide-react';
+import { Edit, Trash2, AlertCircle, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import axiosClient from '../../utils/axiosClient';
+
+const PAGE_SIZE = 20;
 
 const ManageProblemsTable = () => {
   const [problems, setProblems] = useState([]);
@@ -9,23 +11,32 @@ const ManageProblemsTable = () => {
   const [error, setError] = useState('');
   const [problemToDelete, setProblemToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  // The list endpoint is always paginated (PERF-01)
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProblems, setTotalProblems] = useState(0);
+  const [reloadKey, setReloadKey] = useState(0);
 
-  // Fetch all problems when the component mounts
   useEffect(() => {
+    let isMounted = true;
     const fetchProblems = async () => {
       try {
-        const { data } = await axiosClient.get('/problem/'); 
-        setProblems(data.allProblems || []); 
-        setIsLoading(false);
+        const { data } = await axiosClient.get('/problem/', { params: { page, limit: PAGE_SIZE } });
+        if (!isMounted) return;
+        setProblems(data.allProblems || []);
+        setTotalPages(data.totalPages || 1);
+        setTotalProblems(data.totalProblems || 0);
       } catch (err) {
         console.error("Error fetching problems:", err);
-        setError("Failed to load problems. Please try again later.");
-        setIsLoading(false);
+        if (isMounted) setError("Failed to load problems. Please try again later.");
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
 
     fetchProblems();
-  }, []);
+    return () => { isMounted = false; };
+  }, [page, reloadKey]);
 
   // Handle Problem Deletion via Modal
   const handleConfirmDelete = async () => {
@@ -33,8 +44,10 @@ const ManageProblemsTable = () => {
     setIsDeleting(true);
     try {
       await axiosClient.delete(`/problem/${problemToDelete.id}`);
-      setProblems(prev => prev.filter(p => p._id !== problemToDelete.id));
       setProblemToDelete(null);
+      // Refetch so the page stays full; step back if the last row of the last page was removed
+      if (problems.length === 1 && page > 1) setPage((p) => p - 1);
+      else setReloadKey((k) => k + 1);
     } catch (err) {
       console.error("Error deleting problem:", err);
       setError("Failed to delete the problem. Please check your connection or server logs.");
@@ -168,6 +181,34 @@ const ManageProblemsTable = () => {
           </table>
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-sm text-base-content/60">
+          <span>
+            Page {page} of {totalPages} · {totalProblems} problems
+          </span>
+          <div className="join">
+            <button
+              type="button"
+              className="join-item btn btn-sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className="join-item btn btn-sm"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+              aria-label="Next page"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Modal */}
       {problemToDelete && (
