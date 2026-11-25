@@ -28,6 +28,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
+    test: {
+      environment: 'jsdom',
+      include: ['src/**/*.test.{js,jsx}'],
+    },
     preview: {
       headers: previewHeaders,
     },
