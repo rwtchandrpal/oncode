@@ -42,8 +42,8 @@ const ChatAI = ({ problem, getCode, code, language, isVisible }) => {
     setIsLoading(true);
     try {
       const payload = {
-        problemTitle: problem.title,
-        problemDescription: problem.description, 
+        // The server loads the title and description itself (SEC-06)
+        problemId: problem._id,
         userLanguage: language,
         userCode: currentCode,
         userQuestion: userQuestion

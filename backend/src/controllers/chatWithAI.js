@@ -1,26 +1,59 @@
 const { GoogleGenAI } = require('@google/genai');
 const { errorBody } = require('../utils/AppError');
 const logger = require('../utils/logger');
+const Problem = require('../models/problem');
+const client = require('../config/redis');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const chatWithAI = async (req, res) => {
-    try {   
-        const { problemTitle, problemDescription, userLanguage, userCode, userQuestion } = req.body;
+// Demo sessions get a small daily AI budget (SEC-06). Fails open if Redis is unavailable.
+const DEMO_AI_DAILY_LIMIT = 3;
+const takeDemoAiQuota = async (user) => {
+    if (!user?.isDemo) return true;
+    const key = `demo_ai:${user._id}`;
+    try {
+        const count = await client.incr(key);
+        if (count === 1) await client.expire(key, 24 * 60 * 60);
+        return count <= DEMO_AI_DAILY_LIMIT;
+    } catch (err) {
+        logger.warn({ err }, "Redis error checking demo AI quota");
+        return true;
+    }
+};
 
-        if (!userQuestion || !userCode) {
-            return res.status(400).json(errorBody(400, "Missing required fields.", "VALIDATION_ERROR"));
+// Refund a demo AI question when Gemini fails, so outages do not burn the daily quota.
+const refundDemoAiQuota = async (user) => {
+    if (!user?.isDemo) return;
+    try {
+        await client.decr(`demo_ai:${user._id}`);
+    } catch (err) {
+        logger.warn({ err }, "Redis error refunding demo AI quota");
+    }
+};
+
+const chatWithAI = async (req, res) => {
+    let quotaTaken = false;
+    try {
+        // Validated by validation/ai.js
+        const { problemId, userLanguage, userCode, userQuestion } = req.body;
+
+        // Title and description come from the database, not the client (SEC-06)
+        const problem = await Problem.findById(problemId).select('title description').lean();
+        if (!problem) {
+            return res.status(404).json(errorBody(404, "Problem not found."));
         }
 
-        // Truncate inputs to protect your token limits and wallet
-        const safeQuestion = userQuestion.substring(0, 1000); // Max 1000 characters
-        const safeCode = userCode.substring(0, 5000);         // Max ~5000 characters
-        
-        //Provide fallbacks so we don't send "undefined" to the AI
-        const safeTitle = problemTitle || "Unknown Problem";
+        quotaTaken = await takeDemoAiQuota(req.user);
+        if (!quotaTaken) {
+            return res.status(429).json(errorBody(429, `Demo sessions can ask the AI tutor ${DEMO_AI_DAILY_LIMIT} questions per day. Create a free account to keep going.`));
+        }
+
+        // Keep the prompt small to protect token limits
+        const safeQuestion = userQuestion;
+        const safeCode = userCode.substring(0, 5000);
+        const safeTitle = problem.title;
         const safeLanguage = userLanguage || "code";
-        // Truncate description
-        const safeDescription = problemDescription ? problemDescription.substring(0, 2000) : "No description provided.";
+        const safeDescription = (problem.description || "No description provided.").substring(0, 2000);
 
         // The Data Plane: Combine the necessary world state safely
         const worldStateContext = `
@@ -58,6 +91,11 @@ const chatWithAI = async (req, res) => {
 
     } catch (error) {
         logger.error({ err: error }, "Error generating AI response");
+        if (quotaTaken) await refundDemoAiQuota(req.user);
+        // Upstream overload / rate limit is temporary: say so instead of a generic 500
+        if (error?.status === 503 || error?.status === 429) {
+            return res.status(503).json(errorBody(503, "The AI tutor is busy right now. Please try again in a moment."));
+        }
         res.status(500).json(errorBody(500, "Failed to generate AI response."));
     }
 };
