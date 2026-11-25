@@ -29,7 +29,11 @@ app.use(compression({
         return compression.filter(req, res);
     }
 }));
-app.use(express.json({limit: "5mb"}));
+// Body size caps (SEC-08): admin problem create/update carry test cases and code, so they get a
+// larger parser; everything else is limited to 100 KB. The /problem parser runs first, so the global
+// one skips those requests.
+app.use("/problem", express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
@@ -38,7 +42,14 @@ app.use("/admin", adminRouter);
 app.use("/chatAI", chatAIRouter);
 
 app.use((err, req, res, next) => {
-  console.error("Global Error:", err.message);
+  // body-parser errors carry a 4xx status (entity.too.large -> 413, entity.parse.failed -> 400)
+  if (err.type === "entity.too.large") {
+    return res.status(413).json({ message: "Request body is too large." });
+  }
+  if (err.type === "entity.parse.failed") {
+    return res.status(400).json({ message: "Malformed JSON in request body." });
+  }
+  console.error("Global Error:", err);
   res.status(500).json({
     success: false,
     message: "Something went wrong on the server."

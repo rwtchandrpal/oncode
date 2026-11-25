@@ -36,6 +36,10 @@ const decodeBase64 = (str) => {
     return Buffer.from(String(str), 'base64').toString('utf8');
 };
 
+// Largest accepted source file (SEC-08). Checked before any DB write.
+const MAX_CODE_LENGTH = 64000;
+const codeTooLarge = (code) => typeof code === "string" && code.length > MAX_CODE_LENGTH;
+
 // Helper to prevent giant strings from crashing the DB or UI
 const truncateString = (str, maxLength = 2000) => {
     if (!str) return "";
@@ -66,7 +70,10 @@ const submitCode = async (req, res) => {
         const problemId = req.params.id;
         const { code, language } = req.body;
 
-        if (!userId || !problemId || !code || !language) {
+        if (codeTooLarge(code)) {
+            return res.status(413).json({ message: "Code is too large (max 64,000 characters)." });
+        }
+        if (!userId || !problemId || typeof code !== "string" || !code || typeof language !== "string" || !language) {
             return res.status(400).json({ message: "Missing required field." });
         }
 
@@ -194,7 +201,10 @@ const runCode = async (req, res) => {
         const problemId = req.params.id;
         const { code, language } = req.body;
 
-        if (!userId || !problemId || !code || !language) {
+        if (codeTooLarge(code)) {
+            return res.status(413).json({ message: "Code is too large (max 64,000 characters)." });
+        }
+        if (!userId || !problemId || typeof code !== "string" || !code || typeof language !== "string" || !language) {
             return res.status(400).json({ message: "Some fields are missing" });
         }
 
