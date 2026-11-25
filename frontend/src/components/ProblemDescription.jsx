@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Link } from 'react-router';
 
 const ProblemDescription = memo(({ problem }) => {
   if (!problem) return null;
@@ -29,13 +30,15 @@ const ProblemDescription = memo(({ problem }) => {
           </span>
           
           {/* Topic Badges */}
+          {/* Badges link to the problem list filtered by that topic (UX-07) */}
           {problem.topics?.map((topic, index) => (
-            <span 
-              key={index} 
-              className="px-2.5 py-1 rounded-full text-xs font-medium bg-base-200 text-base-content/70 border border-base-content/20 capitalize cursor-pointer hover:bg-base-300 transition-colors"
+            <Link
+              key={index}
+              to={`/?topic=${encodeURIComponent(topic)}`}
+              className="px-2.5 py-1 rounded-full text-xs font-medium bg-base-200 text-base-content/70 border border-base-content/20 capitalize hover:bg-base-300 transition-colors"
             >
               {topic}
-            </span>
+            </Link>
           ))}
         </div>
       </div>

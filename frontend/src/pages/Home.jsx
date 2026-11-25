@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, memo } from 'react';
-import { useNavigate, useLocation } from 'react-router'; 
+import { useNavigate, useLocation, useSearchParams } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { CheckCircle, Circle, Search, X, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react'; 
 import axiosClient from '../utils/axiosClient';
@@ -97,42 +97,65 @@ const Home = () => {
   };
   
   const [problems, setProblems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); 
-
-  // Search & Pagination State
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  // BUG-15: a failed fetch is shown as an error with Retry, not as "No problems found"
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProblems, setTotalProblems] = useState(0);
   const [allTopics, setAllTopics] = useState([]);
   const limit = 10;
 
-  // Filter State
-  const [filters, setFilters] = useState({
-    difficulty: 'all',
-    topic: 'all',
-    status: 'all'
-  });
+  // Page and filters live in the URL, so reload / back / shared links keep the view (UX-06)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Math.max(1, parseInt(searchParams.get('page'), 10) || 1);
+  const debouncedSearch = searchParams.get('search') || '';
+  const filters = {
+    difficulty: (searchParams.get('difficulty') || 'all').toLowerCase(),
+    topic: searchParams.get('topic') || 'all',
+    status: (searchParams.get('status') || 'all').toLowerCase(),
+  };
 
-  // Debounce search input changes by 300ms
+  // Updates the query string; unset / default values are dropped to keep URLs short
+  const updateParams = (changes, { replace = false } = {}) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      Object.entries(changes).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '' || value === 'all' || (key === 'page' && Number(value) <= 1)) {
+          next.delete(key);
+        } else {
+          next.set(key, String(value));
+        }
+      });
+      return next;
+    }, { replace });
+  };
+  const setCurrentPage = (pageOrFn) => {
+    const page = typeof pageOrFn === 'function' ? pageOrFn(currentPage) : pageOrFn;
+    updateParams({ page });
+  };
+
+  // The text box is local state; the URL is updated 300 ms after typing stops
+  const [searchTerm, setSearchTerm] = useState(debouncedSearch);
   useEffect(() => {
+    if (searchTerm === debouncedSearch) return undefined;
     const handler = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-      setCurrentPage(1);
+      updateParams({ search: searchTerm.trim(), page: 1 }, { replace: true });
     }, 300);
     return () => clearTimeout(handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   // Effective status filter (guest visitors cannot filter by solved status)
   const effectiveStatus = user ? filters.status : 'all';
 
-  // Fetch paginated problems and solved status
+  // Fetch paginated problems (each row carries isSolved for the signed-in user, PERF-05)
   useEffect(() => {
     let isMounted = true;
 
     const fetchData = async () => {
       setIsLoading(true);
+      setLoadError(false);
       try {
         const params = {
           page: currentPage,
@@ -143,7 +166,6 @@ const Home = () => {
           status: effectiveStatus
         };
 
-        // One request per change: each row carries isSolved for the signed-in user (PERF-05)
         const problemRes = await axiosClient.get('/problem/', { params });
 
         if (isMounted) {
@@ -156,38 +178,35 @@ const Home = () => {
         }
       } catch (error) {
         console.error("Error fetching data: ", getApiErrorMessage(error, error.message));
+        if (isMounted) {
+          setProblems([]);
+          setLoadError(true);
+        }
       } finally {
         if (isMounted) {
           setIsLoading(false);
         }
       }
     };
-    
+
     fetchData();
 
     return () => {
       isMounted = false;
     };
-  }, [currentPage, debouncedSearch, filters.difficulty, filters.topic, effectiveStatus, user]);
+  }, [currentPage, debouncedSearch, filters.difficulty, filters.topic, effectiveStatus, user, reloadKey]);
 
   const handleFilterChange = (e) => {
-    setFilters(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-    setCurrentPage(1);
+    updateParams({ [e.target.name]: e.target.value, page: 1 });
   };
 
   const handleResetFilters = () => {
     setSearchTerm('');
-    setDebouncedSearch('');
-    setFilters({
-      difficulty: 'all',
-      topic: 'all',
-      status: 'all'
-    });
-    setCurrentPage(1);
+    setSearchParams(new URLSearchParams());
   };
+
+  // Topic values in the URL may differ in case from the dropdown options (e.g. links from badges)
+  const topicOption = allTopics.find((t) => t.toLowerCase() === filters.topic.toLowerCase()) || filters.topic;
 
   // Generate pagination page numbers
   const paginationRange = useMemo(() => {
@@ -267,12 +286,13 @@ const Home = () => {
             {/* Dynamic Topics Filter */}
             <select 
               name="topic"
-              value={filters.topic}
+              value={topicOption}
               onChange={handleFilterChange}
               aria-label="Filter by topic"
               className="select select-bordered bg-base-100 border-base-content/20 text-base-content focus:outline-none focus:border-primary w-full sm:w-48 capitalize shadow-sm"
             >
               <option value="all">Topics: All</option>
+              {topicOption !== 'all' && !allTopics.includes(topicOption) && <option value={topicOption}>{topicOption}</option>}
               {allTopics.map((topic) => (
                 <option key={topic} value={topic}>{topic}</option>
               ))}
@@ -297,6 +317,14 @@ const Home = () => {
             <div className="flex justify-center items-center py-20">
                <span className="loading loading-spinner loading-lg text-primary"></span>
             </div>
+          ) : loadError ? (
+            <div role="alert" className="text-center py-20 bg-base-100 rounded-xl border border-error/20 shadow-sm p-6 space-y-4">
+              <h2 className="text-xl text-base-content/80 font-semibold">Couldn't load problems.</h2>
+              <p className="text-sm text-base-content/50">Check your connection or try again in a moment.</p>
+              <button type="button" onClick={() => setReloadKey((k) => k + 1)} className="btn btn-sm btn-primary gap-2">
+                <RotateCcw className="w-4 h-4" /> Retry
+              </button>
+            </div>
           ) : problems.length > 0 ? (
             // Render Problems
             problems.map((problem) => (
@@ -310,7 +338,7 @@ const Home = () => {
           ) : (
             // Empty State
             <div className="text-center py-20 bg-base-100 rounded-xl border border-base-content/10 shadow-sm p-6 space-y-4">
-              <h3 className="text-xl text-base-content/70 font-semibold">No problems found</h3>
+              <h2 className="text-xl text-base-content/70 font-semibold">No problems found</h2>
               <p className="text-sm text-base-content/50 max-w-md mx-auto">
                 No coding challenges match your search query or selected filters. Try broadening your criteria.
               </p>
