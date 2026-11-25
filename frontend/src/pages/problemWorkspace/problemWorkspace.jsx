@@ -83,7 +83,10 @@ const ProblemWorkSpace = () => {
 
   const leftTabs = ["Description", "Solution", "Submissions", "ChatAI"];
   const rightTabs = ["Code", "Testcase", "Result"];
-  const languages = ["cpp", "java"];
+  // Only the languages this problem has driver code for (BUG-10)
+  const languages = problem?.codeSnippets?.length
+    ? problem.codeSnippets.map((s) => s.language.toLowerCase())
+    : ["cpp"];
   const fontSizes = [12, 14, 16, 18, 20, 24]; 
 
   // Fetch the problem
@@ -98,15 +101,17 @@ const ProblemWorkSpace = () => {
         if (data.problem && data.problem.codeSnippets) {
           const initialCodes = {};
           data.problem.codeSnippets.forEach(snippet => {
-            initialCodes[snippet.language] = snippet.userSnippet;
+            initialCodes[snippet.language.toLowerCase()] = snippet.userSnippet;
           });
           userCodesRef.current = { ...initialCodes };
           setStarterCodes(initialCodes);
-          const starterCode = initialCodes["cpp"] || PLACEHOLDER_CODE;
+          // Default to the first language the problem supports
+          const firstLanguage = data.problem.codeSnippets[0]?.language?.toLowerCase() || "cpp";
+          const starterCode = initialCodes[firstLanguage] || PLACEHOLDER_CODE;
           codeRef.current = starterCode;
           setCode(starterCode);
-          selectedLanguageRef.current = "cpp";
-          setSelectedLanguage("cpp");
+          selectedLanguageRef.current = firstLanguage;
+          setSelectedLanguage(firstLanguage);
         }
       } catch (err) {
         console.error("Failed to fetch problem", err);
