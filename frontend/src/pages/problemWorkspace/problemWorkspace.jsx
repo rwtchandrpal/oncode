@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
 import { Maximize2, Minimize2, Play, Send } from "lucide-react";
 import axiosClient from "../../utils/axiosClient";
 
@@ -26,6 +26,9 @@ const ProblemWorkSpace = () => {
 
   // --- Core State ---
   const [problem, setProblem] = useState(null);
+  // null | "not-found" | "error"  (BUG-06: never spin forever)
+  const [loadError, setLoadError] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(PLACEHOLDER_CODE);
   // Starter snippet per language, used as each Monaco model's initial value
@@ -86,6 +89,7 @@ const ProblemWorkSpace = () => {
   useEffect(() => {
     let isMounted = true;
     const fetchProblem = async () => {
+      setLoadError(null);
       try {
         const { data } = await axiosClient.get(`/problem/${problemId}`);
         if (!isMounted) return;
@@ -105,13 +109,16 @@ const ProblemWorkSpace = () => {
         }
       } catch (err) {
         console.error("Failed to fetch problem", err);
+        if (!isMounted) return;
+        const status = err.response?.status;
+        setLoadError(status === 400 || status === 404 ? "not-found" : "error");
       }
     };
     fetchProblem();
     return () => {
       isMounted = false;
     };
-  }, [problemId]);
+  }, [problemId, reloadKey]);
 
   // Keep code buffer in ref without triggering parent re-render on every keystroke
   const handleCodeChange = (newCode) => {
@@ -288,6 +295,32 @@ const ProblemWorkSpace = () => {
       setLoadingAction(null);
     }
   };
+
+  if (loadError) {
+    return (
+      <div className="flex flex-col h-screen bg-base-300">
+        <GlobalNavbar />
+        <main className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center text-base-content">
+          {loadError === "not-found" ? (
+            <>
+              <h1 className="text-2xl font-bold">Problem not found</h1>
+              <p className="text-base-content/60">This problem doesn't exist or has been removed.</p>
+              <Link to="/" className="btn btn-primary btn-sm mt-2">Back to problems</Link>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold">Couldn't load this problem</h1>
+              <p className="text-base-content/60">Check your connection and try again.</p>
+              <div className="flex gap-2 mt-2">
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => setReloadKey((k) => k + 1)}>Retry</button>
+                <Link to="/" className="btn btn-ghost btn-sm">Back to problems</Link>
+              </div>
+            </>
+          )}
+        </main>
+      </div>
+    );
+  }
 
   // Prevent rendering until we have basic problem data
   if (!problem) {
