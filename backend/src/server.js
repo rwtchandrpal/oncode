@@ -14,6 +14,8 @@ const problemRouter = require("./routes/problemRoutes");
 const submitRouter = require("./routes/submitRoute");
 const adminRouter = require('./routes/adminRoutes');
 const chatAIRouter = require('./routes/chatAIRoute');
+const healthRouter = require("./routes/healthRoutes");
+const mongoose = require("mongoose");
 const { initDemoCleanupWorker } = require("./utils/cleanupDemoWorker");
 const logger = require("./utils/logger");
 const pinoHttp = require("pino-http");
@@ -38,6 +40,8 @@ app.use(errorShape);
 // Request logging with redacted Authorization header (CQ-06)
 app.use(pinoHttp({
   logger,
+  // Probes hit these every few seconds; keep them out of the request log
+  autoLogging: { ignore: (req) => req.url === "/healthz" || req.url === "/readyz" },
   customLogLevel: (req, res, err) => (err || res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info"),
   serializers: {
     req: (req) => ({ id: req.id, method: req.method, url: req.url, headers: { authorization: req.headers.authorization } }),
@@ -62,6 +66,7 @@ app.use(compression({
 app.use("/problem", express.json({ limit: "2mb" }));
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
+app.use(healthRouter);
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 app.use("/submission", submitRouter);

@@ -1,0 +1,5 @@
+healthz: {"status":"ok"} [200]
+readyz: {"status":"ok","checks":{"mongo":"ok","redis":"ok"}} [200]
+REDIS DOWN healthz: {"status":"ok"} [200]
+REDIS DOWN readyz: {"status":"unavailable","checks":{"mongo":"ok","redis":"down"},"error":{"code":"SERVICE_UNAVAILABLE","message":"Request failed."}} [503] in 0.003814s
+redis back readyz: {"status":"ok","checks":{"mongo":"ok","redis":"ok"}} [200]
