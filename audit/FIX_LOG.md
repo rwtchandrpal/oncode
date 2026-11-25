@@ -192,3 +192,51 @@ Observed during testing: with an expired token the workspace still rendered the 
 schemas · `99d17c4` required-field messages.
 
 ---
+## Phase C2: platform hardening (SEC-04, 06, 07, 09, 12, OPS-01, 02)
+
+**What changed**
+- C2.1 `app.disable('x-powered-by')`, `helmet()` (with `crossOriginResourcePolicy: cross-origin`, since the SPA
+  calls the API cross-origin), `app.set('trust proxy', env.TRUST_PROXY_HOPS)`, default 0. Deps: `helmet@^8.3`,
+  `rate-limit-redis@^4.3`.
+- C2.2 `middlewares/rateLimits.js`: every limiter uses a Redis store (`rl:<name>:` keys) with
+  `passOnStoreError: true` (fail open during a Redis outage). The store's eager Lua-script load rejects when
+  Redis is not yet connected (our boot policy); those early rejections are swallowed and the store reloads the
+  scripts on first use. Without that they would be unhandled rejections. Limits: register 10/15 min/IP; login
+  5 failed/15 min per (IP, email) (`skipSuccessfulRequests`) plus 50/15 min/IP; demo 5/15 min/IP; submit+run
+  50/15 min/IP; AI 10/10 min/user plus 20/10 min/IP.
+- C2.3 `/chatAI/doubt` takes `problemId`; title and description are loaded from MongoDB (client copies ignored).
+  Demo sessions get 3 AI questions per 24 h (`demo_ai:<id>` in Redis, fails open), refunded when Gemini fails.
+  Upstream Gemini 429/503 → 503 "The AI tutor is busy" (one such upstream 503 happened during the test).
+- C2.4 `frontend/src/utils/monacoSetup.js`: Monaco from npm (`monaco-editor@^0.58.0`, the version already
+  installed as the loader's peer), editor core + C++/Java tokenizers + editor worker, `loader.config({ monaco })`.
+  `vendor-monaco` chunk (2.82 MB / 726 kB gzip, lazy with the workspace; Vite warns about its size).
+  `vercel.json` headers: CSP `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';
+  img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:;
+  object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`, plus nosniff, Referrer-Policy,
+  X-Frame-Options DENY, Permissions-Policy. `style-src 'unsafe-inline'` is needed because Monaco sets inline
+  styles. `connect-src https:` is used because the production API host is not in the repo; tightening it to the
+  real host is an owner step. `vite preview` serves the same headers (+ the local API origin) so the CSP was
+  tested on the production build. It worked on the first attempt, so no relaxation was needed.
+- C2.5 `routes/healthRoutes.js`: `GET /healthz` (always 200) and `GET /readyz` (Mongo `ping` + Redis `PING`, 2 s
+  timeout each, 503 otherwise); probes are excluded from request logs.
+- C2.6 SIGTERM/SIGINT → `server.close` → Redis `close` → `mongoose.disconnect` → exit 0 (10 s watchdog → exit 1);
+  `unhandledRejection` is logged.
+- C2.7 Judge0 TLS / token rotation: infra only → `OWNER_TODO.md`.
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| `curl -I /problem/`: no `X-Powered-By`, helmet headers present | PASS | `raw/fixes/C2-headers.txt` (CSP, HSTS, nosniff, X-Frame-Options, Referrer-Policy, COOP) |
+| Vercel preview responses include the CSP header | PASS locally / DEFERRED on Vercel | `vite preview` (same header set from `vercel.json`) returns the CSP. Vercel itself was not touched (owner check) |
+| 6 wrong logins for one email → 429 for that email only; another email from the same IP still logs in | PASS | `401×5, 429`; other@ → 200 (`raw/fixes/C2-rate-limits.txt`) |
+| Restarting the backend does not reset limiter counters | PASS | after restart the same email still got 429 |
+| No `cdn.jsdelivr.net` in the workspace resource list; editor works, including offline | PASS | production build under CSP: resources only `vendor-monaco-*.js/.css` from our origin, editor renders, typing works, Java switch highlights, `MonacoEnvironment.getWorker()` starts a worker with 0 CSP violations. Nothing is fetched from any external host, so the editor does not need network beyond our origin. `screenshots/fixes/C2-monaco-selfhosted-under-csp.jpg` |
+| `/healthz` 200 always; `/readyz` 503 with Redis stopped | PASS | `raw/fixes/C2-health.txt` |
+| `kill -TERM <pid>` → clean shutdown, exit 0 | PASS (Linux container) | Windows cannot deliver SIGTERM to a handler (Node terminates immediately), so this ran in `oncode-api:local` built from the new `backend/Dockerfile` on a Docker network with the local Mongo/Redis: "Shutting down SIGTERM" → "Shutdown complete" in 8 ms, exit 0 (`raw/fixes/C2-sigterm.txt`) |
+| Redis down: limiters fail open | PASS | login and `/problem/` 200 with Redis stopped |
+| AI: client title ignored; demo quota | PASS | reply "Double It" despite `problemTitle: CLIENT_TITLE_INJECTION`; 4th demo question 429 (`raw/fixes/C2-ai-cost-controls.txt`) |
+
+**Commits:** `30e79e1` helmet/trust proxy · `d1c38c4` rate limits · `0d5c318` AI cost controls · `cea9721` Monaco + CSP ·
+`77824cb` health · `93d1ed9` shutdown.
+
+---

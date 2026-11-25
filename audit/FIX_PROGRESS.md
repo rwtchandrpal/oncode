@@ -43,14 +43,14 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] C1 acceptance criteria verified
 
 ## Phase C2: platform hardening
-- [ ] C2.1 helmet, x-powered-by, trust proxy (SEC-12, SEC-09)
-- [ ] C2.2 Split + Redis-backed rate limits, AI limits (SEC-09, SEC-06)
-- [ ] C2.3 AI uses problemId server-side (SEC-06)
-- [ ] C2.4 Self-hosted Monaco + CSP headers (SEC-07, SEC-12)
-- [ ] C2.5 /healthz, /readyz (OPS-01)
-- [ ] C2.6 Graceful shutdown (OPS-02)
-- [ ] C2.7 Judge0 TLS → OWNER_TODO (SEC-04)
-- [ ] C2 acceptance criteria verified
+- [x] C2.1 helmet, x-powered-by, trust proxy (SEC-12, SEC-09)
+- [x] C2.2 Split + Redis-backed rate limits, AI limits (SEC-09, SEC-06)
+- [x] C2.3 AI uses problemId server-side (SEC-06)
+- [x] C2.4 Self-hosted Monaco + CSP headers (SEC-07, SEC-12)
+- [x] C2.5 /healthz, /readyz (OPS-01)
+- [x] C2.6 Graceful shutdown (OPS-02)
+- [~] C2.7 Judge0 TLS → OWNER_TODO (SEC-04)
+- [x] C2 acceptance criteria verified
 
 ## Phase D: performance/data
 - [ ] D1 getAllProblems pagination, topics cache, isSolved (PERF-01, PERF-05)
