@@ -295,4 +295,23 @@ const runCode = async (req, res) => {
     }
 };
 
-module.exports = { submitCode, runCode };
+// ==========================================
+// GET ONE SUBMISSION (owner only, PERF-02)
+// ==========================================
+const getSubmissionById = async (req, res) => {
+    try {
+        // Scoped to the caller: another user's id answers 404, not 403, so ids cannot be probed.
+        const submission = await Submission.findOne({ _id: req.params.id, userId: req.user._id })
+            .select('_id problemId status testCasesPassed testCasesTotal runtime memory language createdAt errorMessage code')
+            .lean();
+        if (!submission) {
+            return res.status(404).json({ message: "Submission not found." });
+        }
+        res.set({ 'Cache-Control': 'no-store, private' });
+        res.status(200).json({ submission });
+    } catch (err) {
+        sendError(res, err, "Failed to fetch submission.");
+    }
+};
+
+module.exports = { submitCode, runCode, getSubmissionById };

@@ -3,7 +3,7 @@ const submitRouter = express.Router();
 
 const userMiddleware = require('../middlewares/userMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
-const {submitCode, runCode} = require('../controllers/submissionController');
+const {submitCode, runCode, getSubmissionById} = require('../controllers/submissionController');
 const {checkJudge0Health} = require('../utils/judge0Utility');
 const { submitLimiter } = require('../middlewares/rateLimits');
 const validate = require('../middlewares/validate');
@@ -19,6 +19,8 @@ submitRouter.get("/health", adminMiddleware, async (req, res) => {
 });
 
 submitRouter.post("/submit/:id", userMiddleware, validate({ params: idParams, body: executeBody }), submitLimiter, submitCode);
+// Owner-scoped submission detail (code + error message), fetched when a history row is expanded
+submitRouter.get("/:id", userMiddleware, validate({ params: idParams }), getSubmissionById);
 submitRouter.post("/run/:id", userMiddleware, validate({ params: idParams, body: executeBody }), submitLimiter, runCode);
 
 

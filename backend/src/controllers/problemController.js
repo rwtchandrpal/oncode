@@ -378,17 +378,30 @@ const getAllSubmissions = async (req, res) => {
         const userId = req.user._id;
         const problemId = req.params.id;
 
-        const allSubmissions = await Submission.find({ userId, problemId })
-            .sort({ createdAt: -1 })
-            .select('_id status testCasesPassed testCasesTotal runtime memory language createdAt errorMessage code')
-            .lean();
+        // Paginated summary rows without code/errorMessage (PERF-02); GET /submission/:id has the details
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 20;
+        const filter = { userId, problemId };
+        const [allSubmissions, total] = await Promise.all([
+            Submission.find(filter)
+                .sort({ createdAt: -1 })
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .select('_id status testCasesPassed testCasesTotal runtime memory language createdAt')
+                .lean(),
+            Submission.countDocuments(filter)
+        ]);
 
         res.set({
             'Cache-Control': 'no-store, no-cache, must-revalidate, private',
             'Pragma': 'no-cache'
         });
         res.status(200).json({
-            submissions: allSubmissions
+            submissions: allSubmissions,
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit) || 1
         });
     } catch (err) {
         sendError(res, err, "Failed to get past submissions.");

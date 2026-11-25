@@ -4,7 +4,7 @@ const userMiddleware = require('../middlewares/userMiddleware');
 const optionalUserMiddleware = require('../middlewares/optionalUserMiddleware');
 const validate = require('../middlewares/validate');
 const { idParams } = require('../validation/common');
-const { createProblemBody, updateProblemBody, listProblemsQuery } = require('../validation/problem');
+const { createProblemBody, updateProblemBody, listProblemsQuery, listSubmissionsQuery } = require('../validation/problem');
 const {createProblem, updateProblem,deleteProblem, getAllProblems, getSolvedProblems, getProblem, getProblemSolution, getAllSubmissions} = require('../controllers/problemController');
 
 
@@ -22,6 +22,6 @@ problemRouter.get("/", optionalUserMiddleware, validate({ query: listProblemsQue
 problemRouter.get("/solved", userMiddleware, getSolvedProblems);
 problemRouter.get("/:id", userMiddleware, validate({ params: idParams }), getProblem);
 problemRouter.get("/:id/solution", userMiddleware, validate({ params: idParams }), getProblemSolution);
-problemRouter.get("/submissions/:id", userMiddleware, validate({ params: idParams }), getAllSubmissions);
+problemRouter.get("/submissions/:id", userMiddleware, validate({ params: idParams, query: listSubmissionsQuery }), getAllSubmissions);
 
 module.exports = problemRouter ;

@@ -2,29 +2,54 @@ import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Clock, Cpu, FileTerminal, AlertCircle } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
 
+const PAGE_SIZE = 20;
+
 const ProblemSubmissions = ({ problemId }) => {
   const [submissions, setSubmissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+  // The list has no code (PERF-02); details are fetched once per row on first expand
+  const [details, setDetails] = useState({});
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchSubmissions = async () => {
+      if (page > 1) setIsLoadingMore(true);
       try {
-        const { data } = await axiosClient.get(`/problem/submissions/${problemId}`); 
-
-        setSubmissions(data.submissions || []);
-        setIsLoading(false);  
+        const { data } = await axiosClient.get(`/problem/submissions/${problemId}`, { params: { page, limit: PAGE_SIZE } });
+        if (!isMounted) return;
+        setSubmissions((prev) => (page === 1 ? data.submissions || [] : [...prev, ...(data.submissions || [])]));
+        setTotalPages(data.totalPages || 1);
       } catch {
-        setError("Failed to load submissions.");
-        setIsLoading(false);
+        if (isMounted) setError("Failed to load submissions.");
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
       }
     };
 
     if (problemId) {
       fetchSubmissions();
     }
-  }, [problemId]);
+    return () => { isMounted = false; };
+  }, [problemId, page]);
+
+  const loadDetail = async (id) => {
+    if (details[id]) return;
+    setDetails((prev) => ({ ...prev, [id]: { loading: true } }));
+    try {
+      const { data } = await axiosClient.get(`/submission/${id}`);
+      setDetails((prev) => ({ ...prev, [id]: { loading: false, ...data.submission } }));
+    } catch {
+      setDetails((prev) => ({ ...prev, [id]: { loading: false, failed: true } }));
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
@@ -39,7 +64,9 @@ const ProblemSubmissions = ({ problemId }) => {
   };
 
   const toggleExpand = (id) => {
-    setExpandedId(expandedId === id ? null : id);
+    const next = expandedId === id ? null : id;
+    setExpandedId(next);
+    if (next) loadDetail(next);
   };
 
   if (isLoading) {
@@ -76,6 +103,7 @@ const ProblemSubmissions = ({ problemId }) => {
       
       {submissions.map((sub) => {
         const isExpanded = expandedId === sub._id;
+        const detail = details[sub._id];
         
         return (
           <div key={sub._id} className="bg-base-100 border border-base-content/10 rounded-lg overflow-hidden transition-all duration-200 hover:border-base-content/20">
@@ -115,25 +143,41 @@ const ProblemSubmissions = ({ problemId }) => {
 
             {isExpanded && (
               <div className="border-t border-base-content/10 bg-base-300">
-                
-                {sub.errorMessage && (
-                  <div className="p-4 bg-error/10 border-b border-error/20">
-                    <p className="text-error font-mono text-xs whitespace-pre-wrap">{sub.errorMessage}</p>
-                  </div>
+                {(!detail || detail.loading) && (
+                  <div className="p-4 flex justify-center"><span className="loading loading-spinner loading-sm text-primary"></span></div>
                 )}
-                
-                {/* Code Block */}
-                <div className="p-4 overflow-x-auto">
-                  <pre className="text-sm font-mono leading-relaxed text-base-content">
-                    <code>{sub.code}</code>
-                  </pre>
-                </div>
+                {detail?.failed && (
+                  <p className="p-4 text-sm text-error">Couldn't load this submission. Try again.</p>
+                )}
+                {detail && !detail.loading && !detail.failed && (
+                  <>
+                    {detail.errorMessage && (
+                      <div className="p-4 bg-error/10 border-b border-error/20">
+                        <p className="text-error font-mono text-xs whitespace-pre-wrap">{detail.errorMessage}</p>
+                      </div>
+                    )}
 
+                    {/* Code Block */}
+                    <div className="p-4 overflow-x-auto">
+                      <pre className="text-sm font-mono leading-relaxed text-base-content">
+                        <code>{detail.code}</code>
+                      </pre>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
         );
       })}
+
+      {page < totalPages && (
+        <div className="flex justify-center pt-2">
+          <button type="button" className="btn btn-sm btn-ghost" onClick={() => setPage((p) => p + 1)} disabled={isLoadingMore}>
+            {isLoadingMore ? <span className="loading loading-spinner loading-xs"></span> : "Load more"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

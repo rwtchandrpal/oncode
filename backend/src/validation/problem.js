@@ -61,4 +61,9 @@ const listProblemsQuery = z.object({
   limit: z.coerce.number({ error: "Limit must be an integer between 1 and 100." }).int("Limit must be an integer between 1 and 100.").min(1, "Limit must be an integer between 1 and 100.").max(100, "Limit must be an integer between 1 and 100."),
 }).partial();
 
-module.exports = { createProblemBody, updateProblemBody, listProblemsQuery };
+const listSubmissionsQuery = z.object({
+  page: z.coerce.number({ error: "Page must be a positive integer." }).int().min(1, "Page must be a positive integer.").max(100000, "Page is too large."),
+  limit: z.coerce.number({ error: "Limit must be an integer between 1 and 50." }).int().min(1, "Limit must be an integer between 1 and 50.").max(50, "Limit must be an integer between 1 and 50."),
+}).partial();
+
+module.exports = { createProblemBody, updateProblemBody, listProblemsQuery, listSubmissionsQuery };

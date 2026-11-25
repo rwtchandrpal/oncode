@@ -1,0 +1,7 @@
+list: {"rows":20,"total":25,"pages":2,"hasCode":false,"keys":["_id","language","status","testCasesPassed","testCasesTotal","runtime","memory","createdAt"]} bytes=3623
+page 2: 5
+detail (owner): {"submission":{"_id":"6b06ec3789d380c35aa5622d","problemId":"6b06ebeb6f124c51072c539c","code":"// SUBMISSION_CODE_0\nint main(){}","language":"cpp","status":"Wr
+detail (other user): {"error":{"code":"NOT_FOUND","message":"Submission not found."}} [404]
+detail (anon): 401
+detail (bad id): 400
+old list JSON (25 rows, seed code): 6509 bytes; with a typical 1.5 KB solution per row: 43144 bytes
