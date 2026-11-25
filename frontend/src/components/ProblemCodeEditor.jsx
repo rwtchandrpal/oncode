@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 import Editor from "@monaco-editor/react";
+// Bundled Monaco instead of the jsDelivr CDN (SEC-07); must run before the first <Editor> mounts.
+import "../utils/monacoSetup";
 import { Settings } from "lucide-react";
 
 const ProblemCodeEditor = memo(({
