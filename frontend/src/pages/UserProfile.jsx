@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router'; 
 import { LogOut, Trash2, Shield, Calendar, Mail, Zap } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
-import { logoutUser } from '../features/auth/authSlice'; 
+import { logoutUser, sessionCleared } from '../features/auth/authSlice';
 import GlobalNavbar from '../components/GlobalNavbar'; 
 
 const UserProfile = () => {
@@ -65,8 +65,10 @@ const UserProfile = () => {
     try {
       await axiosClient.delete('/user/profile');
       setIsDeleteModalOpen(false);
-      await dispatch(logoutUser()).unwrap(); 
+      // The account no longer exists, so a logout API call would only 401. Clear locally (BUG-08).
+      localStorage.removeItem('token');
       navigate('/', { replace: true });
+      dispatch(sessionCleared());
     } catch (err) {
       console.error("Failed to delete account:", err);
       setDeleteError(err.response?.data?.message || "Failed to delete account. Please try again.");
