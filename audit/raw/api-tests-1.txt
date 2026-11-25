@@ -1,0 +1,63 @@
+=== AUTH ===
+login admin 200 user 200 other 200 | response keys ["user","token","message"] | user keys ["firstName","lastName","email","_id","role"]
+JWT payload (user): {"_id":"6b06d6dac2ee03b655deac6b","email":"user@audit.test","role":"user","iat":1795610398,"exp":1795613998}
+login uppercase email: 200
+wrong password -> 401 {"message":"Invalid credentials."} 64ms | nonexistent user -> 401 {"message":"Invalid credentials."} 4ms
+=== NOSQL INJECTION (login) ===
+{email:{$ne:null},password:{$ne:null}} -> 500 {"message":"Login failed: data and hash must be strings"}
+{email:{$ne:null},password:<admin pw>} -> 200 {"user":{"firstName":"Audit","lastName":"Admin","email":"admin@audit.test","_id":"6b06d6dac2ee03b655deac69","role":"admin"},"token":"<redacted>
+{email:{$regex:"^adm"},password:"x"} -> 401 {"message":"Invalid credentials."} 66ms
+{email:{$regex:"^zzz"},password:"x"} -> 401 {"message":"Invalid credentials."} 6ms (timing gap = blind regex enumeration of emails)
+=== REGISTER ===
+register with role:"admin" -> 201 role in response = user
+register with problemsSolved -> 400 {"message":"Registration failed: Invalid properties provided in the request."}
+register duplicate email -> 400 {"message":"Email is already registered."} (enumeration)
+register weak password -> 400 {"message":"Registration failed: Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character."}
+register empty -> 400 {"message":"Registration failed: Missing required fields: firstName, email, password."}
+register firstName 51 chars -> 400 {"message":"Registration failed: First name must be between 1 and 50 characters long."}
+register 200KB password -> 201 {"user":{"firstName":"Big","email":"bigpw@audit.test","_id":"6b06d71f87f8e01e3f436330","role":"user"},"token":"<redacted>
+login with different password sharing first 72 bytes -> 200 {"user":{"firstName":"Big","email":"bigpw@audit.test","_id":"6b06d71f87f8e01e3f436330","role":"user"},"token":"<redacted>
+register mixed-case email -> 201 stored email = mixed.case@audit.test
+register HTML in firstName -> 201 stored firstName = <img src=x onerror=alert(1)>
+malformed JSON body -> 500 {"success":false,"message":"Something went wrong on the server."}
+=== AUTHORIZATION: normal user -> admin endpoints ===
+GET /admin/dashboard: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+POST /problem/: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+PUT /problem/6b06d6dac2ee03b655deac6f: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+DELETE /problem/6b06d6dac2ee03b655deac6f: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+POST /user/admin/register: user -> 403 {"message":"Access denied. Admin privileges required."} | anon -> 401
+=== DATA EXPOSURE ===
+GET /problem/ (anon, no paging) -> 200 count 12 limit 12 leaks markers? false cache-control public, max-age=30, stale-while-revalidate=60
+GET /problem/:id (user) -> 200 keys ["_id","title","topics","description","difficulty","codeSnippets","constraints","visibleTestCase","examples","number"] leaks markers? false cache-control public, max-age=120, stale-while-revalidate=300
+GET /problem/:id (anon) -> 401
+GET /problem/:id/solution (user, unsolved) -> 403 {"isLocked":true,"message":"You must solve this problem before viewing the official solution."}
+GET /problem/:id/solution (admin) -> 200 has reference marker true
+GET /user/profile (user) -> 200 leaks? false
+GET /user/check -> 200 {"user":{"firstName":"Audit","lastName":"User","email":"user@audit.test","_id":"6b06d6dac2ee03b655deac6b","role":"user","isDemo":false,"expiresAt":null},"message":"valid user session."}
+GET /problem/solved -> {"solvedProblems":[]}
+GET /admin/dashboard (admin) -> {"metrics":{"totalProblems":12,"totalUsers":7,"totalSubmissions":0},"acceptanceRate":0,"difficulty":{"easy":4,"medium":4,"hard":4},"demographics":{"standard":6,"admin":1}}
+=== INPUT VALIDATION / ERROR LEAKS ===
+GET /problem/?search=a&search=b -> 500 {"message":"Failed to fetch problems: req.query.search.trim is not a function"}
+GET /problem/?difficulty[$ne]=x -> 200 {"allProblems":[{"_id":"6b06d6dac2ee03b655deac6f","title":"Double It","topics":["String"],"difficulty":"Medium","number":1},{"_id":"6b06d6dac2ee03b655deac78","title":"Audit Problem 2","topics":["Math"],"difficulty":"Hard
+GET /problem/?search=(a+)+$ -> 200 count 0 (escaped)
+GET /problem/?page=-5&limit=100000 -> 200 limit 100 page 1
+GET /problem/submissions/not-an-id -> 500 {"message":"Failed to get past submissions: Cast to ObjectId failed for value \"not-an-id\" (type string) at path \"problemId\" for model \"Submission\""}
+POST /submission/submit/not-an-id -> 500 {"message":"Failed to submit code: Cast to ObjectId failed for value \"not-an-id\" (type string) at path \"_id\" for model \"Problem\""}
+POST submit language as object -> 500 {"message":"Failed to submit code: language.toLowerCase is not a function"}
+GET /submission/health (anon) -> 503 {"isOnline":false,"error":"connect ECONNREFUSED 127.0.0.1:2359","code":"ECONNREFUSED"}
+=== HEADERS / CORS ===
+x-powered-by: Express | ACAO for evil origin: http://localhost:5174 | x-frame-options: null | strict-transport-security: null | x-content-type-options: null
+ACAO for allowed origin: http://localhost:5174 credentials: true
+unknown route -> 404 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /none
+=== TOKEN HANDLING ===
+tampered token (role:admin) /user/check -> 401
+alg:none token -> 401
+logout other -> 200 | reuse after logout -> 401 {"message":"Session expired. Please log in again."}
+__TOKENS__{"tA":"<redacted>","tU":"<redacted>","pid":"6b06d6dac2ee03b655deac6f"}

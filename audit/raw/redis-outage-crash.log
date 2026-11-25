@@ -1,0 +1,29 @@
+[dotenv@17.3.1] injecting env (2) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+Databases are connected successfully
+Server in listening at port : 3100
+Error generating AI response: TypeError: userQuestion.substring is not a function
+    at chatWithAI (D:\projects\oncode\backend\src\controllers\chatWithAI.js:14:43)
+    at Layer.handleRequest (D:\projects\oncode\backend\node_modules\router\lib\layer.js:152:17)
+    at next (D:\projects\oncode\backend\node_modules\router\lib\route.js:157:13)
+    at D:\projects\oncode\backend\node_modules\express-rate-limit\dist\index.cjs:1058:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async D:\projects\oncode\backend\node_modules\express-rate-limit\dist\index.cjs:878:5
+node:events:486
+      throw er; // Unhandled 'error' event
+      ^
+
+SocketClosedUnexpectedlyError: Socket closed unexpectedly
+    at Socket.<anonymous> (D:\projects\oncode\backend\node_modules\@redis\client\dist\lib\client\socket.js:232:33)
+    at Object.onceWrapper (node:events:623:26)
+    at Socket.emit (node:events:508:28)
+    at TCP.<anonymous> (node:net:346:12)
+Emitted 'error' event on Class instance at:
+    at RedisSocket.<anonymous> (D:\projects\oncode\backend\node_modules\@redis\client\dist\lib\client\index.js:469:18)
+    at RedisSocket.emit (node:events:508:28)
+    at #onSocketError (D:\projects\oncode\backend\node_modules\@redis\client\dist\lib\client\socket.js:241:14)
+    at Socket.<anonymous> (D:\projects\oncode\backend\node_modules\@redis\client\dist\lib\client\socket.js:232:32)
+    at Object.onceWrapper (node:events:623:26)
+    at Socket.emit (node:events:508:28)
+    at TCP.<anonymous> (node:net:346:12)
+
+Node.js v24.11.1

@@ -1,0 +1,57 @@
+ID,Severity,Category,Title,File,Effort,Status,Phase
+SEC-01,High,Security,NoSQL operator injection in login,backend/src/controllers/userAuthenticate.js:107-124,S,Confirmed,A
+SEC-02,High,Security,Known-vulnerable dependencies (mongoose critical; axios/react-router/vite high),backend/package.json; frontend/package.json,S,Confirmed,A
+SEC-03,Medium,Security,Hidden test cases extractable via WA details and stderr echo,backend/src/controllers/submissionController.js:120-156,M,Confirmed,A
+SEC-04,Medium,Security,Judge0 over plain HTTP with auth token,backend/src/utils/judge0Utility.js; backend/.env JUDGE0_BASE_URL,M,Confirmed,C2
+SEC-05,Medium,Security,Internal error details (Judge0 host) returned to clients; public health route,backend/src/controllers/*.js; backend/src/routes/submitRoute.js:18-22,S,Confirmed,A
+SEC-06,Medium,Security,Gemini cost amplification via demo accounts,backend/src/routes/chatAIRoute.js; backend/src/routes/userAuth.js,S,Confirmed,C2
+SEC-07,Medium,Security,JWT in localStorage plus Monaco loaded from third-party CDN without SRI,frontend/src/features/auth/authSlice.js; frontend/src/components/ProblemCodeEditor.jsx,M,Confirmed,C2
+SEC-08,Medium,Security,Unbounded payloads (5MB body; code stored before execution),backend/src/server.js:32; backend/src/controllers/submissionController.js:52-86,S,Confirmed,A
+SEC-09,Medium,Security,Rate limits per socket IP in memory; shared login/register bucket; no trust proxy,backend/src/server.js; backend/src/routes/userAuth.js:9-27,S,Confirmed (prod part Suspected),C2
+SEC-10,Low,Security,Account enumeration via register message and login timing,backend/src/controllers/userAuthenticate.js:97-124,S,Confirmed,A
+SEC-11,Low,Security,No password max length; bcrypt 72-byte truncation,backend/src/utils/validate.js:51-68,S,Confirmed,C1
+SEC-12,Low,Security,No security headers (API and Vercel),backend/src/server.js; frontend/vercel.json,S,Confirmed,C2
+SEC-13,Low,Security,Cache-Control public on authenticated problem endpoint,backend/src/controllers/problemController.js:203-206,S,Confirmed (impact Suspected),D
+SEC-14,Medium,Security,Local .env points at hosted Atlas/Redis Cloud (likely production),backend/.env,S,Suspected,A
+SEC-15,Info,Security,Unused CORS credentials and cookie-parser,backend/src/server.js:3-33,S,Confirmed,E3
+BUG-01,High,Bugs,Failed Judge0 calls leave permanent Pending submissions,backend/src/controllers/submissionController.js:79-159,S,Confirmed,B1
+BUG-02,High,Bugs,Redis disconnect crashes the process (no error listener),backend/src/config/redis.js:3-10,S,Confirmed,B1
+BUG-03,High,Bugs,Server hangs without listening when Redis is down at boot,backend/src/server.js:48-63,S,Confirmed,B1
+BUG-04,Medium,Bugs,Redis outage returns 401 and logs every user out,backend/src/middlewares/userMiddleware.js:25-48; adminMiddleware.js:22,S,Confirmed (code),B1
+BUG-05,Medium,Bugs,Language switch overwrites the other language's editor buffer,frontend/src/pages/problemWorkspace/problemWorkspace.jsx:113-133,S,Confirmed,B2
+BUG-06,Medium,Bugs,Invalid or deleted problem id shows infinite spinner,frontend/src/pages/problemWorkspace/problemWorkspace.jsx:102-104;297-303,S,Confirmed,B2
+BUG-07,Medium,Bugs,Expired/invalid token leaves zombie signed-in UI,frontend/src/utils/axiosClient.js:22-33,S,Confirmed,B2
+BUG-08,Medium,Bugs,Deleting account (or failed logout) leaves UI signed in,frontend/src/pages/UserProfile.jsx:62-76; frontend/src/features/auth/authSlice.js:206-209,S,Confirmed,B2
+BUG-09,Medium,Bugs,Problem edits require Judge0; tests/driver/solutions not editable,backend/src/controllers/problemController.js:118-126; frontend/src/pages/admin/UpdateProblem.jsx,M,Confirmed,E1
+BUG-10,Medium,Bugs,Per-problem languages vs hard-coded cpp/java in UI; only first reference solution validated,frontend/src/pages/admin/CreateProblem.jsx:115-119; problemWorkspace.jsx:77; problemController.js:33,M,Confirmed,E1
+BUG-11,Low,Bugs,Malformed JSON / oversized body return 500,backend/src/server.js:40-46,S,Confirmed,C1
+BUG-12,Low,Bugs,Type confusion (array params; non-string fields; bad ObjectId) causes 500s,backend/src/controllers/problemController.js:262-373; submissionController.js:72;189; chatWithAI.js:14,M,Confirmed,C1
+BUG-13,Low,Bugs,Stats and acceptance rate count Pending/system-error submissions,backend/src/controllers/userAuthenticate.js:280-291; adminController.js:21-23,S,Confirmed,B1
+BUG-14,Low,Bugs,Demo execution quota consumed by failed/invalid requests,backend/src/controllers/submissionController.js:59-64;176-181,S,Confirmed,B1
+BUG-15,Low,Bugs,Problem list fetch failure shown as 'No problems found',frontend/src/pages/Home.jsx:160-162,S,Confirmed,E2
+BUG-16,Low,Bugs,Problem number auto-increment race,backend/src/models/problem.js:76-81,S,Suspected,D
+BUG-17,Low,Bugs,Frontend/backend validation rules disagree,frontend/src/validations/authSchemas.js:15-21; backend/src/utils/validate.js,S,Confirmed,C1
+BUG-18,Low,Bugs,Submit can block 40s+ with no client timeout; runtime summed,backend/src/utils/judge0Utility.js:92-111; frontend/src/utils/axiosClient.js,S,Suspected,B1
+PERF-01,Low,Performance,Unbounded problem list by default; distinct+count per request,backend/src/controllers/problemController.js:289-306,S,Confirmed,D
+PERF-02,Low,Performance,Submission history returns full code; no pagination,backend/src/controllers/problemController.js:370-373,S,Confirmed,D
+PERF-03,Low,Performance,Eager AuthModal pulls zod and react-hook-form into initial load,frontend/src/App.jsx:5,S,Confirmed,D
+PERF-04,Medium,Performance,Synchronous Judge0 polling inside HTTP request,backend/src/utils/judge0Utility.js:67-112,L,Suspected,G
+PERF-05,Info,Performance,Home issues two requests per filter change,frontend/src/pages/Home.jsx:146-149,S,Confirmed,D
+CQ-01,Medium,Code quality,No tests; no CI; no backend lint,backend/package.json,M,Confirmed,F
+CQ-02,Medium,Code quality,No environment validation at startup,backend/src/server.js,S,Confirmed,C1
+CQ-03,Low,Code quality,Duplicated middlewares/auth pages/helpers,backend/src/middlewares/*; frontend/src/pages/authentication/*,S,Confirmed,E3
+CQ-04,Low,Code quality,Inconsistent API error shape and status codes,backend/src/controllers/*,M,Confirmed,C1
+CQ-05,Low,Code quality,Dead/unused deps and files (cookie-parser; nodemon in deps; root node_modules; docs/; USER_ID),backend/package.json; /node_modules; /docs,S,Confirmed,E3
+CQ-06,Low,Code quality,Console-only logging; no request ids or redaction,backend/src/*,S,Confirmed,C1
+CQ-07,Info,Code quality,Business logic in controllers; very large components,backend/src/controllers/problemController.js; frontend/src/pages/problemWorkspace/problemWorkspace.jsx,M,Confirmed,E3
+UX-01,Medium,UX/Accessibility,Markdown statements render unstyled (no typography plugin); tables broken; no math,frontend/src/components/ProblemDescription.jsx:44-48; frontend/src/index.css,S,Confirmed,E2
+UX-02,Medium,UX/Accessibility,Auth modal has no focus management and unlabeled inputs,frontend/src/components/AuthModal.jsx,S,Confirmed,E2
+UX-03,Low,UX/Accessibility,Admin form labels not associated with inputs,frontend/src/pages/admin/*.jsx,S,Confirmed,E2
+UX-04,Low,UX/Accessibility,Missing landmarks/h1; 404 page has no way back,frontend/src/pages/Home.jsx; frontend/src/App.jsx:99-107,S,Confirmed,E2
+UX-05,Low,UX/Accessibility,Editor code lost on reload; no reset to starter code,frontend/src/pages/problemWorkspace/problemWorkspace.jsx,S,Confirmed,E2
+UX-06,Low,UX/Accessibility,Page and filters not reflected in URL,frontend/src/pages/Home.jsx:102-116,S,Confirmed,E2
+UX-07,Low,UX/Accessibility,Topic badges look clickable but do nothing,frontend/src/components/ProblemDescription.jsx:33-38,S,Confirmed,E2
+OPS-01,Medium,DevOps,No liveness/readiness endpoint; only Judge0 health (503 while Judge0 off),backend/src/routes/submitRoute.js:18-22,S,Confirmed,C2
+OPS-02,Low,DevOps,No graceful shutdown or process-level handlers,backend/src/server.js,S,Confirmed,C2
+OPS-03,Low,DevOps,README inaccuracies (missing env vars; nonexistent admin features; placeholder clone URL),README.md,S,Confirmed,E3
+OPS-04,Low,DevOps,No backend deploy config in repo; in-memory rate-limit state,backend/,S,Confirmed,F

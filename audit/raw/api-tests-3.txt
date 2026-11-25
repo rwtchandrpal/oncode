@@ -1,0 +1,18 @@
+=== DELETE ACCOUNT then logout (frontend sequence) ===
+register -> 201
+delete profile -> 200 {"message":"Profile deleted successfully"}
+logout right after delete -> 401 {"message":"User account no longer exists."} (frontend logoutUser.rejected keeps user in Redux)
+=== AI TUTOR (3 real Gemini calls, then validation-only calls) ===
+AI normal question -> 200 2034ms {"reply":"Your code fails because the operation `n+n+1` does not calculate `n * 2`.\n\nCarefully review the mathematical operation you've implemented and compare it to the operation described in the problem statement. What is the difference between what your code returns and what the problem asks for?"}
+AI prompt injection -> 200 2482ms {"reply":"It looks like you've made a small logical error in your `solve` function.\n\nThe problem asks you to return `n * 2`.\nConsider what `n + n` evaluates to. How does that compare to what the problem asks for, and what your current return statement calculates?"}
+AI HTML/JS echo -> 200 {"reply":"It looks like your current solution `n+n+1` is very close to doubling the input `n`!\n\nConsider what `n+n` evaluates to. How does that compare to `n*2`?\nWhat effect does the `+1` have in your current return statement?"}
+AI empty question -> 400 {"error":"Missing required fields."}
+AI non-string question -> 500 {"message":"Failed to generate AI response."}
+AI empty code (fresh editor would still send boilerplate) -> 400 {"error":"Missing required fields."}
+AI request #10 -> 429 {"message":"Too many AI Tutor requests. You have reached the limit of 10 questions per 10 minutes. Please take a moment to review the hints before asking again."} | ratelimit header: limit=10, remaining=0, reset=594
+=== RATE LIMITS ===
+login: 429 after 19 requests in this window (register+login share one 20/15min IP bucket; 2 used above) {"message":"Too many authentication attempts, please try again later."}
+correct password while limited -> 429 (legit user locked out by attacker traffic from same IP / NAT)
+X-Forwarded-For spoof -> 429 (no trust proxy: limiter keys on socket IP; behind a real proxy all users would share the proxy IP)
+demo: 429 after 6 requests {"message":"Too many demo accounts created from this IP. Please try again in 15 minutes."}
+run/submit: 429 after 51 requests (50 per 15 min per IP, shared by run and submit) {"message":"Too many submissions. Please wait a few minutes before trying again."}

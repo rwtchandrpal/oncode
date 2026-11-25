@@ -1,0 +1,5 @@
+[dotenv@17.3.1] injecting env (2) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Databases are connected successfully
+Server in listening at port : 3100
+Global Error: Expected ',' or '}' after property value in JSON at position 24 (line 1 column 25)
+Global Error: request entity too large
