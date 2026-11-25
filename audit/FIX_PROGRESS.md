@@ -53,13 +53,13 @@ Legend: [x] done · [~] done with caveat (see FIX_LOG) · [ ] pending · [-] ski
 - [x] C2 acceptance criteria verified
 
 ## Phase D: performance/data
-- [ ] D1 getAllProblems pagination, topics cache, isSolved (PERF-01, PERF-05)
-- [ ] D2 Home/ManageProblems use new shape
-- [ ] D3 Submission list without code + GET /submission/:id (PERF-02)
-- [ ] D4 getProblem cache header (SEC-13)
-- [ ] D5 Atomic problem numbering (BUG-16)
-- [ ] D6 Lazy AuthModal (PERF-03)
-- [ ] D acceptance criteria verified
+- [x] D1 getAllProblems pagination, topics cache, isSolved (PERF-01, PERF-05)
+- [x] D2 Home/ManageProblems use new shape
+- [x] D3 Submission list without code + GET /submission/:id (PERF-02)
+- [x] D4 getProblem cache header (SEC-13)
+- [x] D5 Atomic problem numbering (BUG-16)
+- [x] D6 Lazy AuthModal (PERF-03)
+- [x] D acceptance criteria verified
 
 ## Phase E1: admin authoring
 - [ ] E1.1 Update skips Judge0 for metadata (BUG-09)

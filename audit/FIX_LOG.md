@@ -240,3 +240,49 @@ schemas · `99d17c4` required-field messages.
 `77824cb` health · `93d1ed9` shutdown.
 
 ---
+## Phase D: performance and data layer (PERF-01, 02, 03, 05, SEC-13, BUG-16)
+
+**What changed**
+- D1/D2 `getAllProblems`: always paginated (default 20, max 100; `limit=all` and the 1000-row unbounded path are
+  gone, so `?limit=all` / `?limit=101` → 400). Difficulty is an exact match on the canonical `Easy|Medium|Hard`.
+  Topics are cached in Redis as `topics:v1` (`utils/topicsCache.js`, 1 h TTL safety net, invalidated on
+  create/update/delete, falls back to MongoDB on Redis errors). Each row has `isSolved` for the signed-in user.
+  Response keys are unchanged (`allProblems,totalProblems,totalPages,currentPage,limit,allTopics`), so the frontend
+  needed no shape migration. Home no longer calls `/problem/solved`; ManageProblems paginates (20 per page).
+- D3 `GET /problem/submissions/:id`: paginated (`?page&limit`, default 20, max 50) with
+  `{submissions,page,limit,total,totalPages}`, rows without `code`/`errorMessage`. New `GET /submission/:id`
+  (owner-scoped: another user's id gives 404, not 403). `ProblemSubmissions` fetches the detail on first expand
+  and has "Load more".
+- D4 `GET /problem/:id`: `Cache-Control: private, max-age=60`, `Vary: Accept-Encoding, Authorization`.
+- D5 `models/counter.js` `nextSequence()` (update pipeline + `$ifNull` seeded from the current max number, so
+  existing numbering continues); problem `pre('save')` uses it. Harness `seed.js` also clears `counters`.
+  `new: true` → `returnDocument: 'after'` (mongoose deprecation warning).
+- D6 `App.jsx`: `AuthModal` is `lazy()` and rendered only while `authModal.isOpen`.
+  - **Regression found and fixed here:** the `vendor-monaco` manual chunk from C2 (`cea9721`) made rolldown hoist
+    shared helpers into it, so `index.html` modulepreloaded the 2.8 MB editor on every page. The manual chunk was
+    removed; Monaco now lives in the lazy `problemWorkspace` chunk (2.98 MB / 771 kB gzip, loaded only on
+    `/problem/:id`). Re-verified the editor under CSP afterwards.
+
+**Before/after**
+| Metric | Before (baseline) | After |
+|---|---|---|
+| Initial JS (entry + preloads) | 427.5 kB (139.0 kB gz): index 20.5, vendor-react 257.0, vendor-redux 24.8, vendor-ui 37.4, **schemas 58.7, index.esm 28.4**, runtime 0.7 (Monaco then fetched from jsDelivr on the workspace) | 348.4 kB (116.8 kB gz): index 11.4, vendor-react 254.1, vendor-redux 24.7, vendor-ui 57.4, runtime 0.7 |
+| Home API calls per filter change (signed in) | 2 (`/problem/` + `/problem/solved`) | 1 |
+| `GET /problem/` without params | up to 1000 rows | 20 rows (27 in DB → 20 + `totalPages: 2`) |
+| Submission history (25 rows) | 6.5 kB with seed code; ~43 kB with a 1.5 kB solution per row, no pagination | 3.6 kB for 20 rows, code fetched per row on demand |
+
+**Acceptance criteria**
+| Criterion | Result | Evidence |
+|---|---|---|
+| `GET /problem/` without params → ≤ 20 rows + pagination metadata | PASS | 20 rows, total 27, pages 2 (`raw/fixes/D-problem-list.txt`) |
+| Home makes exactly one API call per filter change | PASS | browser resource timing: one `/problem/?...difficulty=hard...`; `/problem/solved` never called; solved icon from `isSolved` (`screenshots/fixes/D-home-isSolved-single-request.jpg`) |
+| Submission list JSON has no `code`; expanding a row fetches it | PASS | list keys without `code`; one `GET /submission/:id` on expand (`raw/fixes/D-submissions.txt`, `screenshots/fixes/D-submissions-expand-fetches-code.jpg`) |
+| `vite build`: initial chunk set excludes `schemas-*.js` / `index.esm-*.js` until the modal opens | PASS | `index.html` preloads only runtime/vendor-react/redux/ui; opening the modal fetched `AuthModal`, `index.esm`, `schemas`, `authSchemas` (`raw/fixes/D-build-frontend.txt`) |
+| Two concurrent direct model saves → n and n+1, no E11000 | PASS | 13, 14; then 10 more concurrent saves → 15..24, 0 failures (`raw/fixes/D-concurrent-numbering.txt`) |
+| Topics cache invalidated on admin write | PASS | `topics:v1` present after a list call, gone after DELETE |
+| `GET /problem/:id` cache header | PASS | `Cache-Control: private, max-age=60` |
+
+**Commits:** `bd5c7f8` list/topics/isSolved · `b6c15b1` submissions · `fb7a761` cache header · `fb983a3` counters ·
+`f82b22f` lazy AuthModal + Monaco chunk fix.
+
+---
