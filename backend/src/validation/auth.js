@@ -5,10 +5,13 @@ const { z } = require("./common");
 const PASSWORD_MAX_BYTES = 72;
 const byteLength = (s) => Buffer.byteLength(s, "utf8");
 
+// "Required" for a missing field, "must be text" for a wrong type
+const typeError = (label) => ({ error: (iss) => (iss.input === undefined ? `${label} is required.` : `${label} must be text.`) });
+
 const unknownKeys = { error: (iss) => (iss.code === "unrecognized_keys" ? "Invalid properties provided in the request." : undefined) };
 
 const email = z
-  .string({ error: "Email must be text." })
+  .string(typeError("Email"))
   .trim()
   .toLowerCase()
   .min(1, "Email is required.")
@@ -16,7 +19,7 @@ const email = z
   .pipe(z.email({ error: "Please provide a valid email address." }));
 
 const strongPassword = z
-  .string({ error: "Password must be text." })
+  .string(typeError("Password"))
   .refine((p) => byteLength(p) <= PASSWORD_MAX_BYTES, `Password cannot be longer than ${PASSWORD_MAX_BYTES} bytes.`)
   .refine(
     (p) => p.length >= 8 && /[a-z]/.test(p) && /[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p),
@@ -24,7 +27,7 @@ const strongPassword = z
   );
 
 const firstName = z
-  .string({ error: "First name must be text." })
+  .string(typeError("First name"))
   .trim()
   .min(1, "First name must be between 1 and 50 characters long.")
   .max(50, "First name must be between 1 and 50 characters long.");
