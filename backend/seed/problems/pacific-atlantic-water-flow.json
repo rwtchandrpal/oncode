@@ -15,7 +15,7 @@
     {
       "input": "heights = [[1,2,3],[4,5,2],[3,1,1]]",
       "output": "[[0,2],[1,0],[1,1],[2,0]]",
-      "explanation": "Corner cells touch both oceans. The centre (height 5) can drain both up-left and down-right."
+      "explanation": "The top-right and bottom-left corners touch both oceans. The centre (5) drains up to the top edge and right to the right edge; (1, 0) drains left into the Pacific and down to (2, 0) on the Atlantic side."
     },
     {
       "input": "heights = [[7]]",

@@ -1,294 +1,302 @@
 {
   "valid-anagram": {
-    "sha256": "f6c4c6d25a68f5f7f4203f946be5d4ac1f47bd21e9514facfb8b103cd236acdd",
-    "verifiedAt": "2026-11-25T19:02:03.163Z"
+    "sha256": "6a397fbaccb686a215486bb7d8f3a9c227cc382cc7d84fecae5ee9222519d357",
+    "verifiedAt": "2026-11-26T04:50:58.916Z"
   },
   "two-sum": {
-    "sha256": "180c730ebd389b58b17ebe7faf8cf30a05fa7bd5443fe22b3358478548e9dbe6",
-    "verifiedAt": "2026-11-25T19:03:03.411Z"
+    "sha256": "d1249bf9067d370e7124a9cc82f68034945632466fbd2651b9f63c6ec752f9de",
+    "verifiedAt": "2026-11-26T04:51:53.310Z"
   },
   "valid-palindrome": {
-    "sha256": "304c3fc5bebd80251b92b1727622e86913c95243ae9a3fa3be4bd9d8682895f2",
-    "verifiedAt": "2026-11-25T19:03:40.819Z"
+    "sha256": "4b064c5ea56a5b62daa7e3849e8320421804ecf4f17ba29dd1ea295625dd6180",
+    "verifiedAt": "2026-11-26T04:55:14.384Z"
   },
   "climbing-stairs": {
-    "sha256": "371f786ff9c77b527a9434e0ea190d62740d683253c98ccdc04dca9dd1f2ad4e",
-    "verifiedAt": "2026-11-25T19:06:48.356Z"
+    "sha256": "b64976f76323a83fb6ac8477836768c3ff0cdd72d86ea74d712c066186444936",
+    "verifiedAt": "2026-11-26T05:27:35.728Z"
   },
   "missing-number": {
-    "sha256": "fd7d91fbb4a536d56447b0b0092262719d58c6385f653c30dc272f90ef84dc09",
-    "verifiedAt": "2026-11-25T19:07:45.130Z"
+    "sha256": "818b99ce6a9be0ea2df70e18b80fdedec62e3c517c2dc087f09453c963aa1250",
+    "verifiedAt": "2026-11-26T05:43:49.542Z"
   },
   "contains-duplicate": {
-    "sha256": "a3354f82bd19d9a8ab7dbe8821e627a6526f563f385063cc4c3a0ef683177b4b",
-    "verifiedAt": "2026-11-25T19:01:07.549Z"
+    "sha256": "489e85814891cfb8f560bf138d8db4d20e02ab8b0e6ed052529356778ef146da",
+    "verifiedAt": "2026-11-26T04:50:17.571Z"
   },
   "best-time-to-buy-and-sell-stock": {
-    "sha256": "ec9a12d736224d2f2fce35cc45ca5bf3459838fd8c0570985a6ec54e3b69f040",
-    "verifiedAt": "2026-11-25T19:04:44.962Z"
+    "sha256": "96de29fd7d964880d45250d1b3a7d3333e73db02dd2f78d751b97bde3253b341",
+    "verifiedAt": "2026-11-26T04:57:44.917Z"
   },
   "valid-parentheses": {
-    "sha256": "7880f1b5f44455385256f7ed8f8fd06f6e8cd811bbcefc9b2c4643e0f3bfec42",
-    "verifiedAt": "2026-11-25T19:05:48.920Z"
+    "sha256": "8f7c7c2e323104b55f51b865f0e3b3a2549e3db4fea07eefcc8a4180d8c69e37",
+    "verifiedAt": "2026-11-26T05:04:34.201Z"
   },
   "number-of-1-bits": {
-    "sha256": "62ab6b9503e1793ed02a0370b06ec0448145569f9ae0fdd25653cf3ec08b3713",
-    "verifiedAt": "2026-11-25T19:08:21.829Z"
+    "sha256": "06e07ceeb66e8f42280aca8fc45b1576cc671929ea77f595b3b311faad372f70",
+    "verifiedAt": "2026-11-26T05:41:22.903Z"
   },
   "counting-bits": {
-    "sha256": "52d781a34ec24b0aa6c000988df49e1c50312807928f3c61510779e4f90783dd",
-    "verifiedAt": "2026-11-25T19:09:01.762Z"
+    "sha256": "40dff065779d141ad49eb23d5e3ae45433cd097237610c9e26410c6a53f5979e",
+    "verifiedAt": "2026-11-26T05:42:11.564Z"
   },
   "product-of-array-except-self": {
     "sha256": "f159771a2e5a3f2564db48ab33b46452a427d446322add747e8749eb81e4bf41",
-    "verifiedAt": "2026-11-25T19:20:36.409Z"
+    "verifiedAt": "2026-11-26T04:54:10.615Z"
   },
   "longest-consecutive-sequence": {
     "sha256": "701d1a6008f424ec76cfea29d8b25fcecf091d3176d3eee8323801c78f462803",
-    "verifiedAt": "2026-11-25T19:21:13.651Z"
+    "verifiedAt": "2026-11-26T04:54:45.577Z"
   },
   "container-with-most-water": {
     "sha256": "27b078aed84bec7c05520df5e6185ef6585791cda85bd8e2289ee4aa16b6c1f4",
-    "verifiedAt": "2026-11-25T19:21:53.444Z"
+    "verifiedAt": "2026-11-26T04:56:55.224Z"
   },
   "maximum-subarray": {
     "sha256": "13af28a10a187048e4cbd64ab38abf95e51ad931c2a28bdd28569fd01a9bc80b",
-    "verifiedAt": "2026-11-25T19:22:30.585Z"
+    "verifiedAt": "2026-11-26T05:36:53.224Z"
   },
   "jump-game": {
     "sha256": "b6a513db0dd5dd99579d1bfbe4179fdad9a9ae210814d2a414dc65a13171eb92",
-    "verifiedAt": "2026-11-25T19:23:05.636Z"
+    "verifiedAt": "2026-11-26T05:37:31.173Z"
   },
   "house-robber": {
     "sha256": "05d49d8471b729d18812c5decd52c8137315e50363753e65aa1d9b0f38f8c2e4",
-    "verifiedAt": "2026-11-25T19:24:04.466Z"
+    "verifiedAt": "2026-11-26T05:28:44.682Z"
   },
   "house-robber-ii": {
     "sha256": "7f204bceb992d3a3d039a0c732589b332754ca6232c65173e6c4b9872990de75",
-    "verifiedAt": "2026-11-25T19:24:36.822Z"
+    "verifiedAt": "2026-11-26T05:29:23.570Z"
   },
   "sum-of-two-integers": {
     "sha256": "5a9bc3d66fffaf28bbf184ab8cb992268aec58842e3637331a5f68f3bfd16145",
-    "verifiedAt": "2026-11-25T19:25:04.517Z"
+    "verifiedAt": "2026-11-26T05:44:21.823Z"
   },
   "reverse-bits": {
     "sha256": "0ea903a04c66b4e74d5a7f8d1ac2e54ce5582b45460aa527450631b1b9c69b5c",
-    "verifiedAt": "2026-11-25T19:25:34.172Z"
+    "verifiedAt": "2026-11-26T05:42:50.609Z"
   },
   "find-minimum-in-rotated-sorted-array": {
     "sha256": "798093d48c107dc46022a04f51ead399da2fa0578449f391cd0236b308792b61",
-    "verifiedAt": "2026-11-25T19:26:07.399Z"
+    "verifiedAt": "2026-11-26T04:59:50.965Z"
   },
   "search-in-rotated-sorted-array": {
     "sha256": "ba3ce55080d027a67a3756299baf668909c731c7d2047acb89fc529bb4ff1f5f",
-    "verifiedAt": "2026-11-25T19:31:50.201Z"
+    "verifiedAt": "2026-11-26T05:00:23.899Z"
   },
   "coin-change": {
     "sha256": "256e484d1fc6bdb7d453b2ee47588c8e598c54dddfde94b2717d581925e87b94",
-    "verifiedAt": "2026-11-25T19:32:43.769Z"
+    "verifiedAt": "2026-11-26T05:32:22.206Z"
   },
   "maximum-product-subarray": {
     "sha256": "e43dfc491ec0850dada0f2342794aba7f33e4b67105bd7ff5e6cf1733c708ebe",
-    "verifiedAt": "2026-11-25T19:33:23.449Z"
+    "verifiedAt": "2026-11-26T05:32:59.498Z"
   },
   "longest-increasing-subsequence": {
     "sha256": "91d85f1e6c19ea8f9b15f1ada73933d10117f2145be6778916d5026145d1f8bb",
-    "verifiedAt": "2026-11-25T19:33:59.773Z"
+    "verifiedAt": "2026-11-26T05:34:34.566Z"
   },
   "unique-paths": {
     "sha256": "2c98880f6cf4836e55a1c32ad1d530e59ff694e52df03953ddb44fa590652774",
-    "verifiedAt": "2026-11-25T19:34:44.381Z"
+    "verifiedAt": "2026-11-26T05:35:23.609Z"
   },
   "longest-common-subsequence": {
     "sha256": "0ed918b4a1b6c9ffbecd4ed4e837f600233ca8f2ea024ec7cb1b9f40294ea8fb",
-    "verifiedAt": "2026-11-25T19:35:35.278Z"
+    "verifiedAt": "2026-11-26T05:36:15.007Z"
   },
   "palindromic-substrings": {
     "sha256": "0d5f7cb45233861a2b0baa29b5b30eaf7d182e5ea42509a7d1f33226159d1b90",
-    "verifiedAt": "2026-11-25T19:39:02.054Z"
+    "verifiedAt": "2026-11-26T05:30:35.201Z"
   },
   "longest-palindromic-substring": {
     "sha256": "a92c6952723d24b39efc54432e09c7990ed9949ab9da73af4894bc8eba2e8adc",
-    "verifiedAt": "2026-11-25T19:39:36.141Z"
+    "verifiedAt": "2026-11-26T05:30:00.278Z"
   },
   "word-break": {
     "sha256": "0224b4c223b96bd25efcbfb7230c64f05200895d3f03e21a0800b58a965f43eb",
-    "verifiedAt": "2026-11-25T19:40:23.242Z"
+    "verifiedAt": "2026-11-26T05:33:50.800Z"
   },
   "decode-ways": {
     "sha256": "5b0ca1d18b4a89441d448f7201ad8fa50303480218396a53d622fbdb962ef5c6",
-    "verifiedAt": "2026-11-25T19:41:56.248Z"
+    "verifiedAt": "2026-11-26T05:31:28.528Z"
   },
   "longest-substring-without-repeating-characters": {
     "sha256": "6913d30590772020e2a35c027b96fb5051470c4b2bacd68c77a9ce0c7c6a07b2",
-    "verifiedAt": "2026-11-25T19:42:34.074Z"
+    "verifiedAt": "2026-11-26T04:58:17.506Z"
   },
   "longest-repeating-character-replacement": {
     "sha256": "115db32a6ae63aa72a0c9f5085edda7a4d6e113e50737bf91cf3aaedcfd95e32",
-    "verifiedAt": "2026-11-25T19:43:02.875Z"
+    "verifiedAt": "2026-11-26T04:58:43.760Z"
   },
   "minimum-window-substring": {
     "sha256": "a50b177e831de240831b8f422fcfe2cd3ae80e901b840ff4daa1ec9d3d5b0585",
-    "verifiedAt": "2026-11-25T19:43:39.934Z"
+    "verifiedAt": "2026-11-26T04:59:18.409Z"
   },
   "meeting-rooms": {
     "sha256": "cccebafacaf7af9c7ca9c408dc4d657048fe2592e829fffcb2e15445efb98d01",
-    "verifiedAt": "2026-11-25T19:45:04.267Z"
+    "verifiedAt": "2026-11-26T05:40:08.282Z"
   },
   "meeting-rooms-ii": {
     "sha256": "09158d20b753d693be80cc2946e0a5eb8ff243f2b9d0470727635c615560c8f3",
-    "verifiedAt": "2026-11-26T03:50:32.694Z"
+    "verifiedAt": "2026-11-26T05:40:46.408Z"
   },
   "non-overlapping-intervals": {
     "sha256": "31c65331ba1df3b673b189ff67f2fc80a04f682232a2398c12602eb8965c368d",
-    "verifiedAt": "2026-11-26T03:51:27.806Z"
+    "verifiedAt": "2026-11-26T05:39:29.295Z"
   },
   "merge-intervals": {
     "sha256": "96f78668109d81af8349dfae3ab6eca6536aff26abb444e052622151f948f6ed",
-    "verifiedAt": "2026-11-26T03:52:12.455Z"
+    "verifiedAt": "2026-11-26T05:38:50.323Z"
   },
   "insert-interval": {
     "sha256": "4de1b1533f8e6249700e95f0b05d56f3e2d5a577619c710e4a326956ce5b9437",
-    "verifiedAt": "2026-11-26T03:52:53.784Z"
+    "verifiedAt": "2026-11-26T05:38:06.024Z"
   },
   "spiral-matrix": {
     "sha256": "04078312d2c13e71a5e8b86dc82877fa560d990c1676c7822e9a9915b0bafe26",
-    "verifiedAt": "2026-11-26T03:53:42.514Z"
+    "verifiedAt": "2026-11-26T05:45:47.923Z"
   },
   "rotate-image": {
     "sha256": "6496ff1293dc2434535b09420710056287be57ebe766050caebbe0f1bfd23278",
-    "verifiedAt": "2026-11-26T03:54:31.017Z"
+    "verifiedAt": "2026-11-26T05:45:05.064Z"
   },
   "set-matrix-zeroes": {
     "sha256": "a52d72f6b915d85d99593ed0b4f76808af4a832a2390b11e77e8cefeb4808150",
-    "verifiedAt": "2026-11-26T03:55:24.011Z"
+    "verifiedAt": "2026-11-26T05:46:35.487Z"
   },
   "group-anagrams": {
     "sha256": "37e0da234ab72cfdb1ac2cba6066ac0e17212259bd883607ecdf74732d4cd91c",
-    "verifiedAt": "2026-11-26T03:58:31.905Z"
+    "verifiedAt": "2026-11-26T04:52:30.009Z"
   },
   "top-k-frequent-elements": {
     "sha256": "451559c57cc1665a0b15ebe6db912ab70538da355ab6daf86e20e7969ae9f43e",
-    "verifiedAt": "2026-11-26T03:59:26.300Z"
+    "verifiedAt": "2026-11-26T04:53:05.170Z"
   },
   "combination-sum": {
     "sha256": "38e0e28e35502fa14b95dc644d7a0daed1781349412bf004b7158eb5078711bc",
-    "verifiedAt": "2026-11-26T04:00:20.617Z"
+    "verifiedAt": "2026-11-26T05:18:57.276Z"
   },
   "word-search": {
     "sha256": "186f30fb0745850036b83e0fdf4558d81704be84d53f4dffe3b71be665b26be6",
-    "verifiedAt": "2026-11-26T04:01:16.860Z"
+    "verifiedAt": "2026-11-26T05:19:50.332Z"
   },
   "number-of-islands": {
     "sha256": "8b6aa402d30b47fcc3f11d0e2132959a203e3c6454e269ba2eda3a2dc840d67f",
-    "verifiedAt": "2026-11-26T04:14:42.989Z"
+    "verifiedAt": "2026-11-26T05:21:44.823Z"
   },
   "pacific-atlantic-water-flow": {
-    "sha256": "537315840ee67598fd64feb5fe61158a7098a65825d27b1b108967b47351aac8",
-    "verifiedAt": "2026-11-26T04:15:39.254Z"
+    "sha256": "3569ed04d8c51fb4e13c1fe54e8e6b81223664452f0f285b36b396960b448cf2",
+    "verifiedAt": "2026-11-26T05:23:55.800Z"
   },
   "course-schedule": {
     "sha256": "50f2ace90b3dd75c714793d99a390497a008cfb54d3922a3a45b8123efdd5808",
-    "verifiedAt": "2026-11-26T04:05:02.406Z"
+    "verifiedAt": "2026-11-26T05:24:33.005Z"
   },
   "graph-valid-tree": {
     "sha256": "4e0a9de5895c106d9a9d6c4157fcdb43ee22dad6e7461104d251fc3037fef1c9",
-    "verifiedAt": "2026-11-26T04:06:14.215Z"
+    "verifiedAt": "2026-11-26T05:25:13.486Z"
   },
   "number-of-connected-components-in-an-undirected-graph": {
     "sha256": "b0ed925404ccafc8908280b84361b962f6cec8cd2b778d60500413a741171175",
-    "verifiedAt": "2026-11-26T04:07:02.946Z"
+    "verifiedAt": "2026-11-26T05:25:53.020Z"
   },
   "3sum": {
     "sha256": "d4e959ed91e8ccae1c5ee493edb9e74c75b9a51ba23a5ef7945d7dd634d09bc5",
-    "verifiedAt": "2026-11-26T04:13:37.935Z"
+    "verifiedAt": "2026-11-26T04:56:13.546Z"
   },
   "reverse-linked-list": {
     "sha256": "6c1ef4ebd1ea477e7c39027785df62f86ca926f203ea616a9926e6179c3a5a20",
-    "verifiedAt": "2026-11-26T04:17:16.421Z"
+    "verifiedAt": "2026-11-26T05:00:58.490Z"
   },
   "merge-two-sorted-lists": {
     "sha256": "1727c69e1e8ce261bb288e5facacbed893d632ebfa1fa6dceda903e3bfd415c6",
-    "verifiedAt": "2026-11-26T04:17:59.986Z"
+    "verifiedAt": "2026-11-26T05:01:30.371Z"
   },
   "linked-list-cycle": {
     "sha256": "6ef34128f2953c2ca91f64ea60588a1511c34b0f1bcc0bf8d5abd9f8460e4e47",
-    "verifiedAt": "2026-11-26T04:19:00.031Z"
+    "verifiedAt": "2026-11-26T05:02:07.302Z"
   },
   "reorder-list": {
     "sha256": "1c64215d70d0e885e037ec1cae8c32c7a3c8fb16289e394aec2892e4f9f7e440",
-    "verifiedAt": "2026-11-26T04:19:52.021Z"
+    "verifiedAt": "2026-11-26T05:02:35.186Z"
   },
   "remove-nth-node-from-end-of-list": {
     "sha256": "9f5e1eba5311e2e14b710d9fdda72c8db9a1759ef020a39d37ee30b188295742",
-    "verifiedAt": "2026-11-26T04:20:35.573Z"
+    "verifiedAt": "2026-11-26T05:03:11.298Z"
   },
   "merge-k-sorted-lists": {
     "sha256": "cca96129ccfbf63cad2ccc0692e6d9988e1bdb4af5b7db7b1fd6360c8c465ee3",
-    "verifiedAt": "2026-11-26T04:21:29.191Z"
+    "verifiedAt": "2026-11-26T05:03:44.996Z"
   },
   "invert-binary-tree": {
     "sha256": "2bdb9f957bd808611335df1fed855c34e1c486d23b18553d6bd8a2d7163dc480",
-    "verifiedAt": "2026-11-26T04:23:44.339Z"
+    "verifiedAt": "2026-11-26T05:05:08.595Z"
   },
   "maximum-depth-of-binary-tree": {
-    "sha256": "3a84321ff006106570363f0cae2164d9b7485a014511a9817549c72348e038d8",
-    "verifiedAt": "2026-11-26T04:24:52.777Z"
+    "sha256": "dedb32194b665ff9f55cbab57fd31c752a5828f780cad9332474b16bb3d16bd5",
+    "verifiedAt": "2026-11-26T05:05:53.874Z"
   },
   "subtree-of-another-tree": {
     "sha256": "8e528a9640f0fa57f26f96ed9c4469fefa589269ff7652f5c100933ff57b8e3d",
-    "verifiedAt": "2026-11-26T04:26:54.498Z"
+    "verifiedAt": "2026-11-26T05:07:06.782Z"
   },
   "lowest-common-ancestor-of-a-binary-search-tree": {
     "sha256": "7d4bd2bdd8fe6fbde650b9a36ad64129797f7b4e77eca50dcb432a8a7dfa24c1",
-    "verifiedAt": "2026-11-26T04:27:52.190Z"
+    "verifiedAt": "2026-11-26T05:07:47.532Z"
   },
   "binary-tree-level-order-traversal": {
     "sha256": "4647af46de6409d4cb9abf2c10ec4bfb3c44cdacc44abeda9f5a382dc07d7851",
-    "verifiedAt": "2026-11-26T04:28:50.388Z"
+    "verifiedAt": "2026-11-26T05:08:23.959Z"
   },
   "validate-binary-search-tree": {
     "sha256": "d5a92d6c8a40b8511f8c72546a32ffd90abe1b104d5fec3fdffe23e2f2836699",
-    "verifiedAt": "2026-11-26T04:29:58.013Z"
+    "verifiedAt": "2026-11-26T05:09:15.184Z"
   },
   "kth-smallest-element-in-a-bst": {
     "sha256": "21ca0a9b0e3ef19ab64f0b56c77d5fe622d8f94edf98c2f1316a84f3b2fa7b69",
-    "verifiedAt": "2026-11-26T04:30:46.414Z"
+    "verifiedAt": "2026-11-26T05:09:55.487Z"
   },
   "construct-binary-tree-from-preorder-and-inorder-traversal": {
     "sha256": "9c37eec9fb098cc2d749fc6d40b24cc8320b2b01f403d94839116bc69f1cdf67",
-    "verifiedAt": "2026-11-26T04:31:43.681Z"
+    "verifiedAt": "2026-11-26T05:10:33.232Z"
   },
   "binary-tree-maximum-path-sum": {
-    "sha256": "735f5e3c44a2fd4e54954e8a4afdec5c2cc50e320e2fb030d0b57d1623c7ef99",
-    "verifiedAt": "2026-11-26T04:32:56.083Z"
+    "sha256": "5e9bf83f8fa35d28b45d77b35c1867a433c4160049c73c392bee95a395a33215",
+    "verifiedAt": "2026-11-26T05:12:26.827Z"
   },
   "clone-graph": {
     "sha256": "2a736b24618cf24cb45bd56bf2e58ffa6825d0805d483960205451f066ccb901",
-    "verifiedAt": "2026-11-26T04:35:02.921Z"
+    "verifiedAt": "2026-11-26T05:22:32.058Z"
   },
   "alien-dictionary": {
     "sha256": "ec2c507ad4f8d2dab4945519e2c3efb7df1b3277b377825b79fae796022acc0f",
-    "verifiedAt": "2026-11-26T04:35:59.232Z"
+    "verifiedAt": "2026-11-26T05:26:38.499Z"
   },
   "word-search-ii": {
     "sha256": "2eb0ed0e91d680555bb2e98cdc280436cca5982311d55f25687b4857ec8c1dd8",
-    "verifiedAt": "2026-11-26T04:36:49.549Z"
+    "verifiedAt": "2026-11-26T05:17:48.989Z"
   },
   "encode-and-decode-strings": {
     "sha256": "8b54a2d393be8026f823fc10d5699f8aee4575c021148c2751dfdbe92ba9b3df",
-    "verifiedAt": "2026-11-26T04:37:30.495Z"
+    "verifiedAt": "2026-11-26T04:53:37.199Z"
   },
   "implement-trie-prefix-tree": {
     "sha256": "383ff2ca4935520d57ee41713addd7bd6da1b5dbad8515aa19698a70f466d125",
-    "verifiedAt": "2026-11-26T04:38:12.529Z"
+    "verifiedAt": "2026-11-26T05:15:30.242Z"
   },
   "find-median-from-data-stream": {
     "sha256": "fa94ae3b97fcceaebdcb60b25a0d75fd4b6bff70a465a1e600bdf457e15df08f",
-    "verifiedAt": "2026-11-26T04:39:00.331Z"
+    "verifiedAt": "2026-11-26T05:20:53.932Z"
   },
   "serialize-and-deserialize-binary-tree": {
     "sha256": "47e509dc1008855e98a1d3f8bcf0fb30f8216766222b88cb526c9439fb37b54e",
-    "verifiedAt": "2026-11-26T04:40:29.295Z"
+    "verifiedAt": "2026-11-26T05:14:20.734Z"
+  },
+  "same-tree": {
+    "sha256": "f0fb4b052e78e6ac12f47e25d07247fb060f5056fe9d313d58d3e591be8b491b",
+    "verifiedAt": "2026-11-26T05:06:30.456Z"
+  },
+  "design-add-and-search-words-data-structure": {
+    "sha256": "bab8b69d161600252cf8e4dd8ea61e4d7bf908925e34f0c78bc54bebc0ac7d8b",
+    "verifiedAt": "2026-11-26T05:16:25.244Z"
   }
 }

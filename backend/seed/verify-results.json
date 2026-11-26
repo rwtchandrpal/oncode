@@ -2,18 +2,18 @@
   "contains-duplicate": {
     "slug": "contains-duplicate",
     "title": "Contains Duplicate",
-    "hash": "a3354f82bd19d9a8ab7dbe8821e627a6526f563f385063cc4c3a0ef683177b4b",
+    "hash": "489e85814891cfb8f560bf138d8db4d20e02ab8b0e6ed052529356778ef146da",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 37,
-        "maxMemoryKb": 4344,
+        "maxTimeMs": 22,
+        "maxMemoryKb": 4352,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 224,
-        "maxMemoryKb": 39860,
+        "maxTimeMs": 182,
+        "maxMemoryKb": 39476,
         "summary": "Accepted x10"
       }
     },
@@ -50,23 +50,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:01:07.549Z"
+    "verifiedAt": "2026-11-26T04:50:17.571Z"
   },
   "valid-anagram": {
     "slug": "valid-anagram",
     "title": "Valid Anagram",
-    "hash": "f6c4c6d25a68f5f7f4203f946be5d4ac1f47bd21e9514facfb8b103cd236acdd",
+    "hash": "6a397fbaccb686a215486bb7d8f3a9c227cc382cc7d84fecae5ee9222519d357",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 15,
-        "maxMemoryKb": 3584,
+        "maxTimeMs": 21,
+        "maxMemoryKb": 3712,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 157,
-        "maxMemoryKb": 35200,
+        "maxTimeMs": 137,
+        "maxMemoryKb": 34560,
         "summary": "Accepted x10"
       }
     },
@@ -103,23 +103,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:02:03.163Z"
+    "verifiedAt": "2026-11-26T04:50:58.916Z"
   },
   "two-sum": {
     "slug": "two-sum",
     "title": "Two Sum",
-    "hash": "180c730ebd389b58b17ebe7faf8cf30a05fa7bd5443fe22b3358478548e9dbe6",
+    "hash": "d1249bf9067d370e7124a9cc82f68034945632466fbd2651b9f63c6ec752f9de",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 77,
-        "maxMemoryKb": 4332,
+        "maxTimeMs": 30,
+        "maxMemoryKb": 4208,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 239,
-        "maxMemoryKb": 41600,
+        "maxTimeMs": 202,
+        "maxMemoryKb": 40688,
         "summary": "Accepted x10"
       }
     },
@@ -163,22 +163,22 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:03:03.411Z"
+    "verifiedAt": "2026-11-26T04:51:53.310Z"
   },
   "valid-palindrome": {
     "slug": "valid-palindrome",
     "title": "Valid Palindrome",
-    "hash": "304c3fc5bebd80251b92b1727622e86913c95243ae9a3fa3be4bd9d8682895f2",
+    "hash": "4b064c5ea56a5b62daa7e3849e8320421804ecf4f17ba29dd1ea295625dd6180",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 20,
-        "maxMemoryKb": 3420,
+        "maxTimeMs": 23,
+        "maxMemoryKb": 3412,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 155,
+        "maxTimeMs": 130,
         "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
@@ -209,23 +209,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:03:40.819Z"
+    "verifiedAt": "2026-11-26T04:55:14.384Z"
   },
   "best-time-to-buy-and-sell-stock": {
     "slug": "best-time-to-buy-and-sell-stock",
     "title": "Best Time to Buy And Sell Stock",
-    "hash": "ec9a12d736224d2f2fce35cc45ca5bf3459838fd8c0570985a6ec54e3b69f040",
+    "hash": "96de29fd7d964880d45250d1b3a7d3333e73db02dd2f78d751b97bde3253b341",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 79,
-        "maxMemoryKb": 3760,
+        "maxTimeMs": 23,
+        "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 231,
-        "maxMemoryKb": 37576,
+        "maxTimeMs": 164,
+        "maxMemoryKb": 37504,
         "summary": "Accepted x10"
       }
     },
@@ -269,23 +269,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:04:44.962Z"
+    "verifiedAt": "2026-11-26T04:57:44.917Z"
   },
   "valid-parentheses": {
     "slug": "valid-parentheses",
     "title": "Valid Parentheses",
-    "hash": "7880f1b5f44455385256f7ed8f8fd06f6e8cd811bbcefc9b2c4643e0f3bfec42",
+    "hash": "8f7c7c2e323104b55f51b865f0e3b3a2549e3db4fea07eefcc8a4180d8c69e37",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 55,
-        "maxMemoryKb": 3456,
+        "maxTimeMs": 17,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 136,
-        "maxMemoryKb": 34688,
+        "maxTimeMs": 121,
+        "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
     },
@@ -306,9 +306,9 @@
       },
       {
         "label": "slow.cpp",
-        "rejected": 0,
+        "rejected": 1,
         "total": 10,
-        "summary": "Accepted x10",
+        "summary": "Accepted x9, Time Limit Exceeded x1",
         "ok": true
       },
       {
@@ -329,23 +329,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:05:48.920Z"
+    "verifiedAt": "2026-11-26T05:04:34.201Z"
   },
   "climbing-stairs": {
     "slug": "climbing-stairs",
     "title": "Climbing Stairs",
-    "hash": "371f786ff9c77b527a9434e0ea190d62740d683253c98ccdc04dca9dd1f2ad4e",
+    "hash": "b64976f76323a83fb6ac8477836768c3ff0cdd72d86ea74d712c066186444936",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 13,
+        "maxTimeMs": 19,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 168,
-        "maxMemoryKb": 34048,
+        "maxTimeMs": 106,
+        "maxMemoryKb": 33792,
         "summary": "Accepted x10"
       }
     },
@@ -382,23 +382,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:06:48.356Z"
+    "verifiedAt": "2026-11-26T05:27:35.728Z"
   },
   "missing-number": {
     "slug": "missing-number",
     "title": "Missing Number",
-    "hash": "fd7d91fbb4a536d56447b0b0092262719d58c6385f653c30dc272f90ef84dc09",
+    "hash": "818b99ce6a9be0ea2df70e18b80fdedec62e3c517c2dc087f09453c963aa1250",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 30,
+        "maxTimeMs": 24,
         "maxMemoryKb": 3712,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 180,
-        "maxMemoryKb": 38104,
+        "maxTimeMs": 169,
+        "maxMemoryKb": 37628,
         "summary": "Accepted x10"
       }
     },
@@ -435,23 +435,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:07:45.130Z"
+    "verifiedAt": "2026-11-26T05:43:49.542Z"
   },
   "number-of-1-bits": {
     "slug": "number-of-1-bits",
     "title": "Number of 1 Bits",
-    "hash": "62ab6b9503e1793ed02a0370b06ec0448145569f9ae0fdd25653cf3ec08b3713",
+    "hash": "06e07ceeb66e8f42280aca8fc45b1576cc671929ea77f595b3b311faad372f70",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 14,
+        "maxTimeMs": 12,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 142,
-        "maxMemoryKb": 33664,
+        "maxTimeMs": 129,
+        "maxMemoryKb": 33920,
         "summary": "Accepted x10"
       }
     },
@@ -481,23 +481,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:08:21.829Z"
+    "verifiedAt": "2026-11-26T05:41:22.903Z"
   },
   "counting-bits": {
     "slug": "counting-bits",
     "title": "Counting Bits",
-    "hash": "52d781a34ec24b0aa6c000988df49e1c50312807928f3c61510779e4f90783dd",
+    "hash": "40dff065779d141ad49eb23d5e3ae45433cd097237610c9e26410c6a53f5979e",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 46,
-        "maxMemoryKb": 3712,
+        "maxTimeMs": 52,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 159,
-        "maxMemoryKb": 36852,
+        "maxTimeMs": 195,
+        "maxMemoryKb": 36864,
         "summary": "Accepted x10"
       }
     },
@@ -527,7 +527,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:09:01.762Z"
+    "verifiedAt": "2026-11-26T05:42:11.564Z"
   },
   "product-of-array-except-self": {
     "slug": "product-of-array-except-self",
@@ -536,14 +536,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 30,
+        "maxTimeMs": 20,
         "maxMemoryKb": 4052,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 221,
-        "maxMemoryKb": 38244,
+        "maxTimeMs": 207,
+        "maxMemoryKb": 38600,
         "summary": "Accepted x10"
       }
     },
@@ -573,7 +573,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:20:36.409Z"
+    "verifiedAt": "2026-11-26T04:54:10.615Z"
   },
   "longest-consecutive-sequence": {
     "slug": "longest-consecutive-sequence",
@@ -582,14 +582,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 35,
-        "maxMemoryKb": 4588,
+        "maxTimeMs": 40,
+        "maxMemoryKb": 4456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 214,
-        "maxMemoryKb": 40684,
+        "maxTimeMs": 259,
+        "maxMemoryKb": 40792,
         "summary": "Accepted x10"
       }
     },
@@ -619,7 +619,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:21:13.651Z"
+    "verifiedAt": "2026-11-26T04:54:45.577Z"
   },
   "container-with-most-water": {
     "slug": "container-with-most-water",
@@ -628,14 +628,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 24,
-        "maxMemoryKb": 3712,
+        "maxTimeMs": 19,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 144,
-        "maxMemoryKb": 37504,
+        "maxTimeMs": 169,
+        "maxMemoryKb": 37492,
         "summary": "Accepted x10"
       }
     },
@@ -665,7 +665,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:21:53.444Z"
+    "verifiedAt": "2026-11-26T04:56:55.224Z"
   },
   "maximum-subarray": {
     "slug": "maximum-subarray",
@@ -674,14 +674,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 21,
-        "maxMemoryKb": 3704,
+        "maxTimeMs": 18,
+        "maxMemoryKb": 3576,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 188,
-        "maxMemoryKb": 37580,
+        "maxTimeMs": 186,
+        "maxMemoryKb": 36992,
         "summary": "Accepted x10"
       }
     },
@@ -711,7 +711,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:22:30.585Z"
+    "verifiedAt": "2026-11-26T05:36:53.224Z"
   },
   "jump-game": {
     "slug": "jump-game",
@@ -720,14 +720,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 34,
-        "maxMemoryKb": 3532,
+        "maxTimeMs": 23,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 157,
-        "maxMemoryKb": 37504,
+        "maxTimeMs": 180,
+        "maxMemoryKb": 36864,
         "summary": "Accepted x10"
       }
     },
@@ -757,7 +757,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:23:05.636Z"
+    "verifiedAt": "2026-11-26T05:37:31.173Z"
   },
   "house-robber": {
     "slug": "house-robber",
@@ -766,14 +766,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 13,
+        "maxTimeMs": 21,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 124,
-        "maxMemoryKb": 34816,
+        "maxTimeMs": 127,
+        "maxMemoryKb": 34560,
         "summary": "Accepted x10"
       }
     },
@@ -810,7 +810,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:24:04.466Z"
+    "verifiedAt": "2026-11-26T05:28:44.682Z"
   },
   "house-robber-ii": {
     "slug": "house-robber-ii",
@@ -819,14 +819,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 10,
+        "maxTimeMs": 28,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 141,
-        "maxMemoryKb": 35072,
+        "maxTimeMs": 151,
+        "maxMemoryKb": 34688,
         "summary": "Accepted x10"
       }
     },
@@ -856,7 +856,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:24:36.822Z"
+    "verifiedAt": "2026-11-26T05:29:23.570Z"
   },
   "sum-of-two-integers": {
     "slug": "sum-of-two-integers",
@@ -865,14 +865,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 23,
+        "maxTimeMs": 14,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 159,
-        "maxMemoryKb": 34176,
+        "maxTimeMs": 157,
+        "maxMemoryKb": 33920,
         "summary": "Accepted x10"
       }
     },
@@ -895,7 +895,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:25:04.517Z"
+    "verifiedAt": "2026-11-26T05:44:21.823Z"
   },
   "reverse-bits": {
     "slug": "reverse-bits",
@@ -904,13 +904,13 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 9,
+        "maxTimeMs": 17,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 107,
+        "maxTimeMs": 215,
         "maxMemoryKb": 33792,
         "summary": "Accepted x10"
       }
@@ -941,7 +941,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:25:34.172Z"
+    "verifiedAt": "2026-11-26T05:42:50.609Z"
   },
   "find-minimum-in-rotated-sorted-array": {
     "slug": "find-minimum-in-rotated-sorted-array",
@@ -950,14 +950,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 15,
-        "maxMemoryKb": 3696,
+        "maxTimeMs": 18,
+        "maxMemoryKb": 3692,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 165,
-        "maxMemoryKb": 36848,
+        "maxTimeMs": 148,
+        "maxMemoryKb": 36992,
         "summary": "Accepted x10"
       }
     },
@@ -987,7 +987,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:26:07.399Z"
+    "verifiedAt": "2026-11-26T04:59:50.965Z"
   },
   "search-in-rotated-sorted-array": {
     "slug": "search-in-rotated-sorted-array",
@@ -996,14 +996,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 28,
-        "maxMemoryKb": 3712,
+        "maxTimeMs": 21,
+        "maxMemoryKb": 3564,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 147,
-        "maxMemoryKb": 36864,
+        "maxTimeMs": 155,
+        "maxMemoryKb": 37888,
         "summary": "Accepted x10"
       }
     },
@@ -1033,7 +1033,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:31:50.201Z"
+    "verifiedAt": "2026-11-26T05:00:23.899Z"
   },
   "coin-change": {
     "slug": "coin-change",
@@ -1042,14 +1042,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 14,
+        "maxTimeMs": 11,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 141,
-        "maxMemoryKb": 34688,
+        "maxTimeMs": 158,
+        "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
     },
@@ -1086,7 +1086,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:32:43.769Z"
+    "verifiedAt": "2026-11-26T05:32:22.206Z"
   },
   "maximum-product-subarray": {
     "slug": "maximum-product-subarray",
@@ -1095,14 +1095,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 14,
-        "maxMemoryKb": 3584,
+        "maxTimeMs": 21,
+        "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 178,
-        "maxMemoryKb": 36992,
+        "maxTimeMs": 163,
+        "maxMemoryKb": 36480,
         "summary": "Accepted x10"
       }
     },
@@ -1132,7 +1132,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:33:23.449Z"
+    "verifiedAt": "2026-11-26T05:32:59.498Z"
   },
   "longest-increasing-subsequence": {
     "slug": "longest-increasing-subsequence",
@@ -1141,14 +1141,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 22,
+        "maxTimeMs": 21,
         "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 214,
-        "maxMemoryKb": 35456,
+        "maxTimeMs": 167,
+        "maxMemoryKb": 35200,
         "summary": "Accepted x10"
       }
     },
@@ -1178,7 +1178,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:33:59.773Z"
+    "verifiedAt": "2026-11-26T05:34:34.566Z"
   },
   "unique-paths": {
     "slug": "unique-paths",
@@ -1187,14 +1187,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 14,
+        "maxTimeMs": 11,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 118,
-        "maxMemoryKb": 33920,
+        "maxTimeMs": 110,
+        "maxMemoryKb": 33792,
         "summary": "Accepted x10"
       }
     },
@@ -1224,7 +1224,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:34:44.381Z"
+    "verifiedAt": "2026-11-26T05:35:23.609Z"
   },
   "longest-common-subsequence": {
     "slug": "longest-common-subsequence",
@@ -1233,14 +1233,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 35,
+        "maxTimeMs": 42,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 150,
-        "maxMemoryKb": 38016,
+        "maxTimeMs": 159,
+        "maxMemoryKb": 37760,
         "summary": "Accepted x10"
       }
     },
@@ -1270,7 +1270,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:35:35.278Z"
+    "verifiedAt": "2026-11-26T05:36:15.007Z"
   },
   "decode-ways": {
     "slug": "decode-ways",
@@ -1279,14 +1279,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 20,
+        "maxTimeMs": 13,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 125,
-        "maxMemoryKb": 33792,
+        "maxTimeMs": 97,
+        "maxMemoryKb": 33536,
         "summary": "Accepted x10"
       }
     },
@@ -1307,9 +1307,9 @@
       },
       {
         "label": "slow.cpp",
-        "rejected": 2,
+        "rejected": 1,
         "total": 10,
-        "summary": "Accepted x8, Time Limit Exceeded x2",
+        "summary": "Accepted x9, Time Limit Exceeded x1",
         "ok": true
       },
       {
@@ -1323,7 +1323,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:41:56.248Z"
+    "verifiedAt": "2026-11-26T05:31:28.528Z"
   },
   "palindromic-substrings": {
     "slug": "palindromic-substrings",
@@ -1332,14 +1332,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 13,
+        "maxTimeMs": 15,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 157,
-        "maxMemoryKb": 36240,
+        "maxTimeMs": 203,
+        "maxMemoryKb": 35916,
         "summary": "Accepted x10"
       }
     },
@@ -1369,7 +1369,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:39:02.054Z"
+    "verifiedAt": "2026-11-26T05:30:35.201Z"
   },
   "longest-palindromic-substring": {
     "slug": "longest-palindromic-substring",
@@ -1378,14 +1378,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 10,
-        "maxMemoryKb": 3328,
+        "maxTimeMs": 16,
+        "maxMemoryKb": 3200,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 133,
-        "maxMemoryKb": 35328,
+        "maxTimeMs": 181,
+        "maxMemoryKb": 35072,
         "summary": "Accepted x10"
       }
     },
@@ -1415,7 +1415,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:39:36.141Z"
+    "verifiedAt": "2026-11-26T05:30:00.278Z"
   },
   "word-break": {
     "slug": "word-break",
@@ -1424,14 +1424,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 9,
-        "maxMemoryKb": 3200,
+        "maxTimeMs": 29,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 177,
-        "maxMemoryKb": 36084,
+        "maxTimeMs": 323,
+        "maxMemoryKb": 36608,
         "summary": "Accepted x10"
       }
     },
@@ -1461,7 +1461,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:40:23.242Z"
+    "verifiedAt": "2026-11-26T05:33:50.800Z"
   },
   "longest-substring-without-repeating-characters": {
     "slug": "longest-substring-without-repeating-characters",
@@ -1470,14 +1470,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 21,
+        "maxTimeMs": 13,
         "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 231,
-        "maxMemoryKb": 38700,
+        "maxTimeMs": 234,
+        "maxMemoryKb": 39444,
         "summary": "Accepted x10"
       }
     },
@@ -1507,7 +1507,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:42:34.074Z"
+    "verifiedAt": "2026-11-26T04:58:17.506Z"
   },
   "longest-repeating-character-replacement": {
     "slug": "longest-repeating-character-replacement",
@@ -1516,14 +1516,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 20,
+        "maxTimeMs": 28,
         "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 178,
-        "maxMemoryKb": 34816,
+        "maxTimeMs": 171,
+        "maxMemoryKb": 35072,
         "summary": "Accepted x10"
       }
     },
@@ -1546,7 +1546,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:43:02.875Z"
+    "verifiedAt": "2026-11-26T04:58:43.760Z"
   },
   "minimum-window-substring": {
     "slug": "minimum-window-substring",
@@ -1555,14 +1555,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 17,
+        "maxTimeMs": 22,
         "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 580,
-        "maxMemoryKb": 38144,
+        "maxTimeMs": 207,
+        "maxMemoryKb": 38016,
         "summary": "Accepted x10"
       }
     },
@@ -1592,7 +1592,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:43:39.934Z"
+    "verifiedAt": "2026-11-26T04:59:18.409Z"
   },
   "meeting-rooms": {
     "slug": "meeting-rooms",
@@ -1601,14 +1601,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 43,
-        "maxMemoryKb": 3952,
+        "maxTimeMs": 64,
+        "maxMemoryKb": 3828,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 367,
-        "maxMemoryKb": 41216,
+        "maxTimeMs": 234,
+        "maxMemoryKb": 41600,
         "summary": "Accepted x10"
       }
     },
@@ -1638,7 +1638,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-25T19:45:04.267Z"
+    "verifiedAt": "2026-11-26T05:40:08.282Z"
   },
   "meeting-rooms-ii": {
     "slug": "meeting-rooms-ii",
@@ -1647,14 +1647,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 99,
+        "maxTimeMs": 88,
         "maxMemoryKb": 3712,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 284,
-        "maxMemoryKb": 43684,
+        "maxTimeMs": 238,
+        "maxMemoryKb": 44628,
         "summary": "Accepted x10"
       }
     },
@@ -1684,7 +1684,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:50:32.694Z"
+    "verifiedAt": "2026-11-26T05:40:46.408Z"
   },
   "non-overlapping-intervals": {
     "slug": "non-overlapping-intervals",
@@ -1693,14 +1693,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 82,
-        "maxMemoryKb": 3860,
+        "maxTimeMs": 40,
+        "maxMemoryKb": 3868,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 295,
-        "maxMemoryKb": 43564,
+        "maxTimeMs": 388,
+        "maxMemoryKb": 44036,
         "summary": "Accepted x10"
       }
     },
@@ -1730,7 +1730,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:51:27.806Z"
+    "verifiedAt": "2026-11-26T05:39:29.295Z"
   },
   "merge-intervals": {
     "slug": "merge-intervals",
@@ -1739,14 +1739,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 76,
-        "maxMemoryKb": 4156,
+        "maxTimeMs": 83,
+        "maxMemoryKb": 3816,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
         "maxTimeMs": 230,
-        "maxMemoryKb": 43808,
+        "maxMemoryKb": 41932,
         "summary": "Accepted x10"
       }
     },
@@ -1776,7 +1776,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:52:12.455Z"
+    "verifiedAt": "2026-11-26T05:38:50.323Z"
   },
   "insert-interval": {
     "slug": "insert-interval",
@@ -1785,14 +1785,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 51,
-        "maxMemoryKb": 4608,
+        "maxTimeMs": 26,
+        "maxMemoryKb": 4864,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 441,
-        "maxMemoryKb": 47632,
+        "maxTimeMs": 315,
+        "maxMemoryKb": 46948,
         "summary": "Accepted x10"
       }
     },
@@ -1815,7 +1815,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:52:53.784Z"
+    "verifiedAt": "2026-11-26T05:38:06.024Z"
   },
   "spiral-matrix": {
     "slug": "spiral-matrix",
@@ -1824,13 +1824,13 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 18,
+        "maxTimeMs": 16,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 218,
+        "maxTimeMs": 144,
         "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
@@ -1861,7 +1861,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:53:42.514Z"
+    "verifiedAt": "2026-11-26T05:45:47.923Z"
   },
   "rotate-image": {
     "slug": "rotate-image",
@@ -1870,14 +1870,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 32,
+        "maxTimeMs": 19,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 309,
-        "maxMemoryKb": 34944,
+        "maxTimeMs": 156,
+        "maxMemoryKb": 34816,
         "summary": "Accepted x10"
       }
     },
@@ -1907,7 +1907,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:54:31.017Z"
+    "verifiedAt": "2026-11-26T05:45:05.064Z"
   },
   "set-matrix-zeroes": {
     "slug": "set-matrix-zeroes",
@@ -1916,14 +1916,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 40,
+        "maxTimeMs": 34,
         "maxMemoryKb": 3840,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 217,
-        "maxMemoryKb": 39024,
+        "maxTimeMs": 329,
+        "maxMemoryKb": 37760,
         "summary": "Accepted x10"
       }
     },
@@ -1953,7 +1953,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:55:24.011Z"
+    "verifiedAt": "2026-11-26T05:46:35.487Z"
   },
   "group-anagrams": {
     "slug": "group-anagrams",
@@ -1962,14 +1962,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 101,
-        "maxMemoryKb": 5152,
+        "maxTimeMs": 58,
+        "maxMemoryKb": 5020,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 777,
-        "maxMemoryKb": 52876,
+        "maxTimeMs": 583,
+        "maxMemoryKb": 51156,
         "summary": "Accepted x10"
       }
     },
@@ -1999,7 +1999,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:58:31.905Z"
+    "verifiedAt": "2026-11-26T04:52:30.009Z"
   },
   "top-k-frequent-elements": {
     "slug": "top-k-frequent-elements",
@@ -2008,14 +2008,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 26,
-        "maxMemoryKb": 4480,
+        "maxTimeMs": 39,
+        "maxMemoryKb": 4352,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 312,
-        "maxMemoryKb": 40732,
+        "maxTimeMs": 254,
+        "maxMemoryKb": 41016,
         "summary": "Accepted x10"
       }
     },
@@ -2045,7 +2045,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T03:59:26.300Z"
+    "verifiedAt": "2026-11-26T04:53:05.170Z"
   },
   "3sum": {
     "slug": "3sum",
@@ -2054,14 +2054,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 83,
+        "maxTimeMs": 47,
         "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 1581,
-        "maxMemoryKb": 111232,
+        "maxTimeMs": 874,
+        "maxMemoryKb": 131812,
         "summary": "Accepted x10"
       }
     },
@@ -2098,7 +2098,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:13:37.935Z"
+    "verifiedAt": "2026-11-26T04:56:13.546Z"
   },
   "combination-sum": {
     "slug": "combination-sum",
@@ -2107,14 +2107,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 24,
-        "maxMemoryKb": 3456,
+        "maxTimeMs": 26,
+        "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 361,
-        "maxMemoryKb": 35328,
+        "maxTimeMs": 262,
+        "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
     },
@@ -2144,7 +2144,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:00:20.617Z"
+    "verifiedAt": "2026-11-26T05:18:57.276Z"
   },
   "word-search": {
     "slug": "word-search",
@@ -2153,14 +2153,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 19,
+        "maxTimeMs": 15,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 124,
-        "maxMemoryKb": 34944,
+        "maxTimeMs": 134,
+        "maxMemoryKb": 34688,
         "summary": "Accepted x10"
       }
     },
@@ -2197,7 +2197,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:01:16.860Z"
+    "verifiedAt": "2026-11-26T05:19:50.332Z"
   },
   "number-of-islands": {
     "slug": "number-of-islands",
@@ -2206,14 +2206,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 32,
+        "maxTimeMs": 13,
         "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 246,
-        "maxMemoryKb": 41312,
+        "maxTimeMs": 214,
+        "maxMemoryKb": 41360,
         "summary": "Accepted x10"
       }
     },
@@ -2250,23 +2250,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:14:42.989Z"
+    "verifiedAt": "2026-11-26T05:21:44.823Z"
   },
   "pacific-atlantic-water-flow": {
     "slug": "pacific-atlantic-water-flow",
     "title": "Pacific Atlantic Water Flow",
-    "hash": "537315840ee67598fd64feb5fe61158a7098a65825d27b1b108967b47351aac8",
+    "hash": "3569ed04d8c51fb4e13c1fe54e8e6b81223664452f0f285b36b396960b448cf2",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 29,
+        "maxTimeMs": 20,
         "maxMemoryKb": 3712,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 200,
-        "maxMemoryKb": 38500,
+        "maxTimeMs": 325,
+        "maxMemoryKb": 38272,
         "summary": "Accepted x10"
       }
     },
@@ -2301,9 +2301,11 @@
       }
     ],
     "errors": [],
-    "notes": [],
+    "notes": [
+      "cpp: Judge0 infrastructure failure, re-ran 1x"
+    ],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:15:39.254Z"
+    "verifiedAt": "2026-11-26T05:23:55.800Z"
   },
   "course-schedule": {
     "slug": "course-schedule",
@@ -2312,14 +2314,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 33,
+        "maxTimeMs": 14,
         "maxMemoryKb": 3712,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 335,
-        "maxMemoryKb": 36736,
+        "maxTimeMs": 176,
+        "maxMemoryKb": 38116,
         "summary": "Accepted x10"
       }
     },
@@ -2349,7 +2351,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:05:02.406Z"
+    "verifiedAt": "2026-11-26T05:24:33.005Z"
   },
   "graph-valid-tree": {
     "slug": "graph-valid-tree",
@@ -2358,13 +2360,13 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 88,
-        "maxMemoryKb": 3456,
+        "maxTimeMs": 17,
+        "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 241,
+        "maxTimeMs": 182,
         "maxMemoryKb": 36352,
         "summary": "Accepted x10"
       }
@@ -2395,7 +2397,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:06:14.215Z"
+    "verifiedAt": "2026-11-26T05:25:13.486Z"
   },
   "number-of-connected-components-in-an-undirected-graph": {
     "slug": "number-of-connected-components-in-an-undirected-graph",
@@ -2404,14 +2406,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 25,
-        "maxMemoryKb": 3712,
+        "maxTimeMs": 36,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 256,
-        "maxMemoryKb": 37620,
+        "maxTimeMs": 184,
+        "maxMemoryKb": 38016,
         "summary": "Accepted x10"
       }
     },
@@ -2441,7 +2443,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:07:02.946Z"
+    "verifiedAt": "2026-11-26T05:25:53.020Z"
   },
   "reverse-linked-list": {
     "slug": "reverse-linked-list",
@@ -2450,14 +2452,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 12,
-        "maxMemoryKb": 3456,
+        "maxTimeMs": 13,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 158,
-        "maxMemoryKb": 37608,
+        "maxTimeMs": 174,
+        "maxMemoryKb": 37120,
         "summary": "Accepted x10"
       }
     },
@@ -2487,7 +2489,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:17:16.421Z"
+    "verifiedAt": "2026-11-26T05:00:58.490Z"
   },
   "merge-two-sorted-lists": {
     "slug": "merge-two-sorted-lists",
@@ -2496,14 +2498,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 22,
+        "maxTimeMs": 12,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 153,
-        "maxMemoryKb": 35072,
+        "maxTimeMs": 121,
+        "maxMemoryKb": 34816,
         "summary": "Accepted x10"
       }
     },
@@ -2533,7 +2535,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:17:59.986Z"
+    "verifiedAt": "2026-11-26T05:01:30.371Z"
   },
   "linked-list-cycle": {
     "slug": "linked-list-cycle",
@@ -2542,14 +2544,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 17,
-        "maxMemoryKb": 3840,
+        "maxTimeMs": 16,
+        "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 249,
-        "maxMemoryKb": 37328,
+        "maxTimeMs": 169,
+        "maxMemoryKb": 37180,
         "summary": "Accepted x10"
       }
     },
@@ -2579,7 +2581,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:19:00.031Z"
+    "verifiedAt": "2026-11-26T05:02:07.302Z"
   },
   "reorder-list": {
     "slug": "reorder-list",
@@ -2588,14 +2590,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 70,
+        "maxTimeMs": 25,
         "maxMemoryKb": 5108,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 449,
-        "maxMemoryKb": 45968,
+        "maxTimeMs": 299,
+        "maxMemoryKb": 45584,
         "summary": "Accepted x10"
       }
     },
@@ -2618,7 +2620,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:19:52.021Z"
+    "verifiedAt": "2026-11-26T05:02:35.186Z"
   },
   "remove-nth-node-from-end-of-list": {
     "slug": "remove-nth-node-from-end-of-list",
@@ -2627,14 +2629,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 28,
+        "maxTimeMs": 10,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 126,
-        "maxMemoryKb": 34944,
+        "maxTimeMs": 130,
+        "maxMemoryKb": 35072,
         "summary": "Accepted x10"
       }
     },
@@ -2664,7 +2666,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:20:35.573Z"
+    "verifiedAt": "2026-11-26T05:03:11.298Z"
   },
   "merge-k-sorted-lists": {
     "slug": "merge-k-sorted-lists",
@@ -2674,13 +2676,13 @@
       "cpp": {
         "pass": true,
         "maxTimeMs": 46,
-        "maxMemoryKb": 3952,
+        "maxMemoryKb": 4096,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 335,
-        "maxMemoryKb": 43548,
+        "maxTimeMs": 293,
+        "maxMemoryKb": 42300,
         "summary": "Accepted x10"
       }
     },
@@ -2710,7 +2712,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:21:29.191Z"
+    "verifiedAt": "2026-11-26T05:03:44.996Z"
   },
   "invert-binary-tree": {
     "slug": "invert-binary-tree",
@@ -2719,14 +2721,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 14,
-        "maxMemoryKb": 3456,
+        "maxTimeMs": 10,
+        "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 157,
-        "maxMemoryKb": 34816,
+        "maxTimeMs": 123,
+        "maxMemoryKb": 35072,
         "summary": "Accepted x10"
       }
     },
@@ -2756,23 +2758,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:23:44.339Z"
+    "verifiedAt": "2026-11-26T05:05:08.595Z"
   },
   "maximum-depth-of-binary-tree": {
     "slug": "maximum-depth-of-binary-tree",
     "title": "Maximum Depth of Binary Tree",
-    "hash": "3a84321ff006106570363f0cae2164d9b7485a014511a9817549c72348e038d8",
+    "hash": "dedb32194b665ff9f55cbab57fd31c752a5828f780cad9332474b16bb3d16bd5",
     "langs": {
       "cpp": {
         "pass": true,
         "maxTimeMs": 27,
-        "maxMemoryKb": 3840,
+        "maxMemoryKb": 3968,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 282,
-        "maxMemoryKb": 37760,
+        "maxTimeMs": 197,
+        "maxMemoryKb": 37120,
         "summary": "Accepted x10"
       }
     },
@@ -2793,9 +2795,9 @@
       },
       {
         "label": "slow-recursive.java",
-        "rejected": 1,
+        "rejected": 0,
         "total": 10,
-        "summary": "Accepted x9, Runtime Error (NZEC) x1",
+        "summary": "Accepted x10",
         "ok": true
       },
       {
@@ -2809,55 +2811,53 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:24:52.777Z"
+    "verifiedAt": "2026-11-26T05:05:53.874Z"
   },
   "same-tree": {
     "slug": "same-tree",
     "title": "Same Tree",
-    "hash": "035d6fe28087a81ed6e5573902fdb06cd48a8610af715f642120bf357d70a29b",
+    "hash": "f0fb4b052e78e6ac12f47e25d07247fb060f5056fe9d313d58d3e591be8b491b",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 19,
+        "maxTimeMs": 27,
         "maxMemoryKb": 3328,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 247,
-        "maxMemoryKb": 35200,
+        "maxTimeMs": 141,
+        "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
     },
     "negatives": [
       {
         "label": "starter cpp",
-        "rejected": 4,
+        "rejected": 3,
         "total": 10,
-        "summary": "Wrong Answer x4, Accepted x6",
+        "summary": "Wrong Answer x3, Accepted x7",
         "ok": true
       },
       {
         "label": "starter java",
-        "rejected": 4,
+        "rejected": 3,
         "total": 10,
-        "summary": "Wrong Answer x4, Accepted x6",
+        "summary": "Wrong Answer x3, Accepted x7",
         "ok": true
       },
       {
         "label": "wrong-inorder.cpp",
-        "rejected": 0,
+        "rejected": 1,
         "total": 10,
-        "summary": "Accepted x10",
-        "ok": false
+        "summary": "Accepted x9, Wrong Answer x1",
+        "ok": true
       }
     ],
-    "errors": [
-      "wrong-inorder.cpp passed every test: the tests cannot reject it"
-    ],
+    "errors": [],
     "notes": [],
-    "ok": false,
-    "verifiedAt": "2026-11-26T04:26:02.178Z"
+    "ok": true,
+    "verifiedAt": "2026-11-26T05:06:30.456Z"
   },
   "subtree-of-another-tree": {
     "slug": "subtree-of-another-tree",
@@ -2866,14 +2866,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 51,
+        "maxTimeMs": 26,
         "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 257,
-        "maxMemoryKb": 36456,
+        "maxTimeMs": 216,
+        "maxMemoryKb": 36480,
         "summary": "Accepted x10"
       }
     },
@@ -2903,7 +2903,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:26:54.498Z"
+    "verifiedAt": "2026-11-26T05:07:06.782Z"
   },
   "lowest-common-ancestor-of-a-binary-search-tree": {
     "slug": "lowest-common-ancestor-of-a-binary-search-tree",
@@ -2912,14 +2912,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 38,
-        "maxMemoryKb": 4076,
+        "maxTimeMs": 27,
+        "maxMemoryKb": 3968,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 262,
-        "maxMemoryKb": 38280,
+        "maxTimeMs": 185,
+        "maxMemoryKb": 39000,
         "summary": "Accepted x10"
       }
     },
@@ -2949,7 +2949,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:27:52.190Z"
+    "verifiedAt": "2026-11-26T05:07:47.532Z"
   },
   "binary-tree-level-order-traversal": {
     "slug": "binary-tree-level-order-traversal",
@@ -2958,14 +2958,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 20,
+        "maxTimeMs": 9,
         "maxMemoryKb": 3584,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 302,
-        "maxMemoryKb": 35712,
+        "maxTimeMs": 151,
+        "maxMemoryKb": 36584,
         "summary": "Accepted x10"
       }
     },
@@ -2995,7 +2995,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:28:50.388Z"
+    "verifiedAt": "2026-11-26T05:08:23.959Z"
   },
   "validate-binary-search-tree": {
     "slug": "validate-binary-search-tree",
@@ -3004,14 +3004,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 36,
+        "maxTimeMs": 27,
         "maxMemoryKb": 3968,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 250,
-        "maxMemoryKb": 39928,
+        "maxTimeMs": 234,
+        "maxMemoryKb": 39808,
         "summary": "Accepted x10"
       }
     },
@@ -3055,7 +3055,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:29:58.013Z"
+    "verifiedAt": "2026-11-26T05:09:15.184Z"
   },
   "kth-smallest-element-in-a-bst": {
     "slug": "kth-smallest-element-in-a-bst",
@@ -3070,8 +3070,8 @@
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 227,
-        "maxMemoryKb": 36864,
+        "maxTimeMs": 216,
+        "maxMemoryKb": 37356,
         "summary": "Accepted x10"
       }
     },
@@ -3101,7 +3101,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:30:46.414Z"
+    "verifiedAt": "2026-11-26T05:09:55.487Z"
   },
   "construct-binary-tree-from-preorder-and-inorder-traversal": {
     "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
@@ -3110,14 +3110,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 26,
+        "maxTimeMs": 19,
         "maxMemoryKb": 3968,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 250,
-        "maxMemoryKb": 37484,
+        "maxTimeMs": 164,
+        "maxMemoryKb": 37240,
         "summary": "Accepted x10"
       }
     },
@@ -3147,23 +3147,23 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:31:43.681Z"
+    "verifiedAt": "2026-11-26T05:10:33.232Z"
   },
   "binary-tree-maximum-path-sum": {
     "slug": "binary-tree-maximum-path-sum",
     "title": "Binary Tree Maximum Path Sum",
-    "hash": "735f5e3c44a2fd4e54954e8a4afdec5c2cc50e320e2fb030d0b57d1623c7ef99",
+    "hash": "5e9bf83f8fa35d28b45d77b35c1867a433c4160049c73c392bee95a395a33215",
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 65,
-        "maxMemoryKb": 5720,
+        "maxTimeMs": 37,
+        "maxMemoryKb": 5504,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 323,
-        "maxMemoryKb": 40160,
+        "maxTimeMs": 278,
+        "maxMemoryKb": 40600,
         "summary": "Accepted x10"
       }
     },
@@ -3184,9 +3184,9 @@
       },
       {
         "label": "slow-recursive.java",
-        "rejected": 1,
+        "rejected": 0,
         "total": 10,
-        "summary": "Accepted x9, Runtime Error (NZEC) x1",
+        "summary": "Accepted x10",
         "ok": true
       },
       {
@@ -3198,9 +3198,11 @@
       }
     ],
     "errors": [],
-    "notes": [],
+    "notes": [
+      "java: Judge0 infrastructure failure, re-ran 1x"
+    ],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:32:56.083Z"
+    "verifiedAt": "2026-11-26T05:12:26.827Z"
   },
   "clone-graph": {
     "slug": "clone-graph",
@@ -3209,14 +3211,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 44,
-        "maxMemoryKb": 3584,
+        "maxTimeMs": 24,
+        "maxMemoryKb": 3456,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 195,
-        "maxMemoryKb": 35328,
+        "maxTimeMs": 158,
+        "maxMemoryKb": 35840,
         "summary": "Accepted x10"
       }
     },
@@ -3246,7 +3248,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:35:02.921Z"
+    "verifiedAt": "2026-11-26T05:22:32.058Z"
   },
   "alien-dictionary": {
     "slug": "alien-dictionary",
@@ -3255,13 +3257,13 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 19,
-        "maxMemoryKb": 3328,
+        "maxTimeMs": 14,
+        "maxMemoryKb": 3200,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 191,
+        "maxTimeMs": 162,
         "maxMemoryKb": 34944,
         "summary": "Accepted x10"
       }
@@ -3292,7 +3294,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:35:59.232Z"
+    "verifiedAt": "2026-11-26T05:26:38.499Z"
   },
   "word-search-ii": {
     "slug": "word-search-ii",
@@ -3301,14 +3303,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 124,
-        "maxMemoryKb": 10344,
+        "maxTimeMs": 110,
+        "maxMemoryKb": 10268,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 590,
-        "maxMemoryKb": 72872,
+        "maxTimeMs": 1486,
+        "maxMemoryKb": 71772,
         "summary": "Accepted x10"
       }
     },
@@ -3338,7 +3340,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:36:49.549Z"
+    "verifiedAt": "2026-11-26T05:17:48.989Z"
   },
   "encode-and-decode-strings": {
     "slug": "encode-and-decode-strings",
@@ -3347,14 +3349,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 23,
-        "maxMemoryKb": 3584,
+        "maxTimeMs": 12,
+        "maxMemoryKb": 3712,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 148,
-        "maxMemoryKb": 36352,
+        "maxTimeMs": 156,
+        "maxMemoryKb": 36096,
         "summary": "Accepted x10"
       }
     },
@@ -3384,7 +3386,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:37:30.495Z"
+    "verifiedAt": "2026-11-26T04:53:37.199Z"
   },
   "implement-trie-prefix-tree": {
     "slug": "implement-trie-prefix-tree",
@@ -3393,14 +3395,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 36,
-        "maxMemoryKb": 5628,
+        "maxTimeMs": 54,
+        "maxMemoryKb": 5548,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 428,
-        "maxMemoryKb": 43380,
+        "maxTimeMs": 517,
+        "maxMemoryKb": 43988,
         "summary": "Accepted x10"
       }
     },
@@ -3430,14 +3432,53 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:38:12.529Z"
+    "verifiedAt": "2026-11-26T05:15:30.242Z"
   },
   "design-add-and-search-words-data-structure": {
     "slug": "design-add-and-search-words-data-structure",
-    "ok": false,
-    "errors": [
-      "not built (run build.js)"
-    ]
+    "title": "Design Add And Search Words Data Structure",
+    "hash": "bab8b69d161600252cf8e4dd8ea61e4d7bf908925e34f0c78bc54bebc0ac7d8b",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 51,
+        "maxMemoryKb": 7040,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 438,
+        "maxMemoryKb": 47144,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-prefix-match.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T05:16:25.244Z"
   },
   "find-median-from-data-stream": {
     "slug": "find-median-from-data-stream",
@@ -3446,14 +3487,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 48,
-        "maxMemoryKb": 3872,
+        "maxTimeMs": 50,
+        "maxMemoryKb": 4032,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 343,
-        "maxMemoryKb": 41388,
+        "maxTimeMs": 250,
+        "maxMemoryKb": 40292,
         "summary": "Accepted x10"
       }
     },
@@ -3483,7 +3524,7 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:39:00.331Z"
+    "verifiedAt": "2026-11-26T05:20:53.932Z"
   },
   "serialize-and-deserialize-binary-tree": {
     "slug": "serialize-and-deserialize-binary-tree",
@@ -3492,14 +3533,14 @@
     "langs": {
       "cpp": {
         "pass": true,
-        "maxTimeMs": 49,
-        "maxMemoryKb": 5316,
+        "maxTimeMs": 95,
+        "maxMemoryKb": 5500,
         "summary": "Accepted x10"
       },
       "java": {
         "pass": true,
-        "maxTimeMs": 563,
-        "maxMemoryKb": 44268,
+        "maxTimeMs": 480,
+        "maxMemoryKb": 44392,
         "summary": "Accepted x10"
       }
     },
@@ -3536,6 +3577,6 @@
     "errors": [],
     "notes": [],
     "ok": true,
-    "verifiedAt": "2026-11-26T04:40:29.295Z"
+    "verifiedAt": "2026-11-26T05:14:20.734Z"
   }
 }
