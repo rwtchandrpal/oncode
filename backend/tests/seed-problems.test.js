@@ -86,6 +86,16 @@ describe('admin problem API with the seed format', () => {
     expect(JSON.stringify(res.body)).toMatch(/slug already exists/);
   });
 
+  it('a rejected duplicate title does not use up a problem number', async () => {
+    const before = await Problem.findOne({}).sort('-number').select('number').lean();
+    const dup = await create({ ...docOf('house-robber'), title: 'Two Sum', slug: 'two-sum-again' });
+    expect(dup.status).toBe(400);
+    expect(JSON.stringify(dup.body)).toMatch(/title already exists/);
+    const next = await create(docOf('house-robber'));
+    expect(next.status).toBe(201);
+    expect(next.body.problem.number).toBe(before.number + 1);
+  });
+
   it('rejects a malformed slug and normalises case', async () => {
     const bad = await create({ ...docOf('climbing-stairs'), slug: 'Climbing Stairs!' });
     expect(bad.status).toBe(400);

@@ -98,6 +98,17 @@ const duplicateMessage = (err) =>
 // ==========================================
 const createProblem = async (req, res) => {
     try {
+        // Reject a duplicate title or slug up front: the insert would fail on the unique index only after
+        // the Judge0 run and after pre('save') had taken the next problem number, leaving a gap in the
+        // numbering (1..75, then 77). The unique indexes still guard the rare concurrent duplicate.
+        const { title, slug: requestedSlug } = req.body;
+        if (await Problem.exists({ title })) {
+            return res.status(400).json({ message: "A problem with this title already exists." });
+        }
+        if (requestedSlug && await Problem.exists({ slug: requestedSlug })) {
+            return res.status(400).json({ message: "A problem with this slug already exists." });
+        }
+
         const validation = await validateAndTestProblem(req.body);
 
         if (!validation.isValid) {
