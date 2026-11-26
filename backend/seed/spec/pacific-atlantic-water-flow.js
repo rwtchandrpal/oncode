@@ -15,7 +15,7 @@ Return the coordinates \`[r, c]\` of every cell from which rain can reach **both
 `,
   constraints: ["m == heights.length, n == heights[r].length", "1 <= m, n <= 200", "0 <= heights[r][c] <= 10^5"],
   examples: [
-    { explanation: "Corner cells touch both oceans. The centre (height 5) can drain both up-left and down-right." },
+    { explanation: "The top-right and bottom-left corners touch both oceans. The centre (5) drains up to the top edge and right to the right edge; (1, 0) drains left into the Pacific and down to (2, 0) on the Atlantic side." },
     { explanation: "A single cell touches all four edges." },
     { explanation: "Flat ground: water can go anywhere, so every cell reaches both oceans." },
   ],

@@ -1,0 +1,195 @@
+{
+  "slug": "remove-nth-node-from-end-of-list",
+  "title": "Remove Nth Node From End of List",
+  "difficulty": "Medium",
+  "topics": [
+    "Linked List"
+  ],
+  "description": "Given the `head` of a linked list, remove the `n`-th node **counting from the end** (`n = 1` is the last node) and return the head of the resulting list.\n\n**Follow-up:** can you do it in a single pass over the list?",
+  "constraints": [
+    "The number of nodes sz is between 1 and 30",
+    "0 <= Node.val <= 100",
+    "1 <= n <= sz"
+  ],
+  "examples": [
+    {
+      "input": "head = [4,7,1,8], n = 1",
+      "output": "[4,7,1]",
+      "explanation": "n = 1 removes the last node, 8."
+    },
+    {
+      "input": "head = [6], n = 1",
+      "output": "[]",
+      "explanation": "Removing the only node leaves an empty list."
+    },
+    {
+      "input": "head = [3,5], n = 2",
+      "output": "[5]",
+      "explanation": "n = 2 in a two-node list removes the head, 3."
+    }
+  ],
+  "visibleTestCase": {
+    "input": "[4,7,1,8]\n1",
+    "expectedOutput": "[4,7,1]"
+  },
+  "hiddenTestCases": [
+    {
+      "input": "[4,7,1,8]\n1",
+      "expectedOutput": "[4,7,1]"
+    },
+    {
+      "input": "[6]\n1",
+      "expectedOutput": "[]"
+    },
+    {
+      "input": "[3,5]\n2",
+      "expectedOutput": "[5]"
+    },
+    {
+      "input": "[1,2]\n1",
+      "expectedOutput": "[1]"
+    },
+    {
+      "input": "[35,26,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2,59]\n30",
+      "expectedOutput": "[26,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2,59]"
+    },
+    {
+      "input": "[35,26,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2,59]\n1",
+      "expectedOutput": "[35,26,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2]"
+    },
+    {
+      "input": "[35,26,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2,59]\n15",
+      "expectedOutput": "[35,26,16,10,52,52,32,61,69,99,81,62,16,10,1,22,13,85,88,46,70,98,40,93,20,16,12,2,59]"
+    },
+    {
+      "input": "[35,26,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2,59]\n29",
+      "expectedOutput": "[35,16,10,52,52,32,61,69,99,81,62,16,10,1,15,22,13,85,88,46,70,98,40,93,20,16,12,2,59]"
+    },
+    {
+      "input": "[5,5,5,5]\n2",
+      "expectedOutput": "[5,5,5]"
+    },
+    {
+      "input": "[23,21,54,17,3,77,72,15,21,74]\n3",
+      "expectedOutput": "[23,21,54,17,3,77,72,21,74]"
+    }
+  ],
+  "codeSnippets": [
+    {
+      "language": "cpp",
+      "userSnippet": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\n\nclass Solution {\npublic:\n    ListNode* removeNthFromEnd(ListNode* head, int n) {\n        // Write your solution here\n        return nullptr;\n    }\n};",
+      "driverCode": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct ListNode {\n    int val;\n    ListNode *next;\n    ListNode() : val(0), next(nullptr) {}\n    ListNode(int x) : val(x), next(nullptr) {}\n    ListNode(int x, ListNode *next) : val(x), next(next) {}\n};\n\n{{USER_CODE}}\n\n// ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n// Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\nnamespace oncode {\n\n// Nullable int, for level-order tree arrays such as [1,null,2].\nstruct Opt {\n    bool has = false;\n    int v = 0;\n};\n\nstruct Reader {\n    std::string s;\n    size_t p = 0;\n    Reader() {\n        std::ios::sync_with_stdio(false);\n        s.assign(std::istreambuf_iterator<char>(std::cin), std::istreambuf_iterator<char>());\n    }\n    [[noreturn]] void fail(const char* what) {\n        std::cerr << \"driver input error: \" << what << \" at byte \" << p << \"\\n\";\n        std::exit(3);\n    }\n    void ws() {\n        while (p < s.size() && std::isspace(static_cast<unsigned char>(s[p]))) p++;\n    }\n    bool peek(char c) {\n        ws();\n        return p < s.size() && s[p] == c;\n    }\n    void expect(char c) {\n        if (!peek(c)) fail(\"unexpected character\");\n        p++;\n    }\n    long long integer(long long lo, long long hi) {\n        ws();\n        bool neg = false;\n        if (p < s.size() && s[p] == '-') { neg = true; p++; }\n        size_t start = p;\n        long long v = 0;\n        while (p < s.size() && std::isdigit(static_cast<unsigned char>(s[p]))) {\n            if (p - start >= 18) fail(\"integer too long\");\n            v = v * 10 + (s[p++] - '0');\n        }\n        if (p == start) fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) fail(\"integer out of range\");\n        return v;\n    }\n    void read(int& x) { x = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    void read(long long& x) { x = integer(-999999999999999999LL, 999999999999999999LL); }\n    void read(bool& x) {\n        ws();\n        if (s.compare(p, 4, \"true\") == 0) { x = true; p += 4; }\n        else if (s.compare(p, 5, \"false\") == 0) { x = false; p += 5; }\n        else fail(\"expected true or false\");\n    }\n    void read(std::string& x) {\n        expect('\"');\n        x.clear();\n        while (p < s.size() && s[p] != '\"') {\n            if (s[p] == '\\\\') {\n                p++;\n                if (p >= s.size()) break;\n            }\n            x += s[p++];\n        }\n        if (p >= s.size()) fail(\"unterminated string\");\n        p++;\n    }\n    void read(Opt& o) {\n        ws();\n        if (s.compare(p, 4, \"null\") == 0) { o.has = false; p += 4; }\n        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    }\n    void read(char& x) {\n        std::string t;\n        read(t);\n        if (t.size() != 1) fail(\"expected one-character string\");\n        x = t[0];\n    }\n    template <class T> void read(std::vector<T>& v) {\n        v.clear();\n        expect('[');\n        if (peek(']')) { p++; return; }\n        for (;;) {\n            T e;\n            read(e);\n            v.push_back(std::move(e));\n            if (peek(',')) { p++; continue; }\n            expect(']');\n            return;\n        }\n    }\n    void end() {\n        ws();\n        if (p != s.size()) fail(\"unexpected trailing input\");\n    }\n};\n\nstruct Writer {\n    std::string out;\n    void write(int x) { out += std::to_string(x); }\n    void write(long long x) { out += std::to_string(x); }\n    void write(bool x) { out += x ? \"true\" : \"false\"; }\n    void write(const std::string& x) {\n        out += '\"';\n        for (char c : x) {\n            if (c == '\"' || c == '\\\\') out += '\\\\';\n            out += c;\n        }\n        out += '\"';\n    }\n    void write(char c) { write(std::string(1, c)); }\n    void write(const Opt& o) {\n        if (o.has) write(o.v);\n        else out += \"null\";\n    }\n    template <class T> void write(const std::vector<T>& v) {\n        out += '[';\n        for (size_t i = 0; i < v.size(); i++) {\n            if (i) out += ',';\n            write(v[i]);\n        }\n        out += ']';\n    }\n    void line() { out += '\\n'; }\n    void flush() {\n        std::fwrite(out.data(), 1, out.size(), stdout);\n        std::fflush(stdout);\n    }\n};\n\n}  // namespace oncode\n\nnamespace oncode {\nListNode* buildList(const std::vector<int>& v) {\n    ListNode dummy;\n    ListNode* tail = &dummy;\n    for (int x : v) {\n        tail->next = new ListNode(x);\n        tail = tail->next;\n    }\n    return dummy.next;\n}\nstd::vector<int> listOut(ListNode* h) {\n    std::vector<int> r;\n    for (; h; h = h->next) {\n        r.push_back(h->val);\n        if (r.size() > 200000) { std::cerr << \"driver: returned structure is too large or has a cycle\\n\"; std::exit(4); }\n    }\n    return r;\n}\n}  // namespace oncode\n\nint main() {\n    oncode::Reader oc_in;\n    vector<int> oc_v_head;\n    oc_in.read(oc_v_head);\n    ListNode* head = oncode::buildList(oc_v_head);\n    int n;\n    oc_in.read(n);\n    oc_in.end();\n    Solution oc_sol;\n    ListNode* oc_res = oc_sol.removeNthFromEnd(head, n);\n    oncode::Writer oc_out;\n    oc_out.write(oncode::listOut(oc_res));\n    oc_out.line();\n    oc_out.flush();\n    return 0;\n}"
+    },
+    {
+      "language": "java",
+      "userSnippet": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\n\nclass Solution {\n    public ListNode removeNthFromEnd(ListNode head, int n) {\n        // Write your solution here\n        return null;\n    }\n}",
+      "driverCode": "import java.util.*;\nimport java.io.*;\n\n{{USER_CODE}}\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode() {}\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\npublic class Main {\n    // ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n    // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\n    static byte[] inBuf;\n    static int inPos;\n    static final StringBuilder OUT = new StringBuilder();\n\n    interface ElemReader<T> { T read(); }\n\n    static void initInput() throws IOException {\n        inBuf = System.in.readAllBytes();\n        inPos = 0;\n    }\n    static RuntimeException fail(String what) {\n        return new IllegalStateException(\"driver input error: \" + what + \" at byte \" + inPos);\n    }\n    static void ws() {\n        while (inPos < inBuf.length && (inBuf[inPos] == ' ' || inBuf[inPos] == '\\n' || inBuf[inPos] == '\\r' || inBuf[inPos] == '\\t')) inPos++;\n    }\n    static boolean peek(char c) {\n        ws();\n        return inPos < inBuf.length && inBuf[inPos] == c;\n    }\n    static void expect(char c) {\n        if (!peek(c)) throw fail(\"expected '\" + c + \"'\");\n        inPos++;\n    }\n    static long readInteger(long lo, long hi) {\n        ws();\n        boolean neg = false;\n        if (inPos < inBuf.length && inBuf[inPos] == '-') { neg = true; inPos++; }\n        int start = inPos;\n        long v = 0;\n        while (inPos < inBuf.length && inBuf[inPos] >= '0' && inBuf[inPos] <= '9') {\n            if (inPos - start >= 18) throw fail(\"integer too long\");\n            v = v * 10 + (inBuf[inPos++] - '0');\n        }\n        if (inPos == start) throw fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) throw fail(\"integer out of range\");\n        return v;\n    }\n    static int readInt() { return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE); }\n    static long readLong() { return readInteger(-999999999999999999L, 999999999999999999L); }\n    static boolean matchWord(String w) {\n        if (inPos + w.length() > inBuf.length) return false;\n        for (int i = 0; i < w.length(); i++) if (inBuf[inPos + i] != w.charAt(i)) return false;\n        inPos += w.length();\n        return true;\n    }\n    static boolean readBool() {\n        ws();\n        if (matchWord(\"true\")) return true;\n        if (matchWord(\"false\")) return false;\n        throw fail(\"expected true or false\");\n    }\n    static String readString() {\n        expect('\"');\n        StringBuilder sb = new StringBuilder();\n        while (inPos < inBuf.length && inBuf[inPos] != '\"') {\n            if (inBuf[inPos] == '\\\\') {\n                inPos++;\n                if (inPos >= inBuf.length) break;\n            }\n            sb.append((char) inBuf[inPos++]);\n        }\n        if (inPos >= inBuf.length) throw fail(\"unterminated string\");\n        inPos++;\n        return sb.toString();\n    }\n    static char readChar() {\n        String t = readString();\n        if (t.length() != 1) throw fail(\"expected one-character string\");\n        return t.charAt(0);\n    }\n    static <T> List<T> readList(ElemReader<T> r) {\n        List<T> list = new ArrayList<>();\n        expect('[');\n        if (peek(']')) { inPos++; return list; }\n        while (true) {\n            list.add(r.read());\n            if (peek(',')) { inPos++; continue; }\n            expect(']');\n            return list;\n        }\n    }\n    static List<Integer> readIntList() { return readList(Main::readInt); }\n    static List<Long> readLongList() { return readList(Main::readLong); }\n    static List<String> readStringList() { return readList(Main::readString); }\n    static List<List<Integer>> readIntListList() { return readList(Main::readIntList); }\n    static List<List<String>> readStringListList() { return readList(Main::readStringList); }\n    static int[] readIntArray() {\n        List<Integer> l = readIntList();\n        int[] a = new int[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static long[] readLongArray() {\n        List<Long> l = readLongList();\n        long[] a = new long[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static String[] readStringArray() { return readStringList().toArray(new String[0]); }\n    static int[][] readIntMatrix() { return readList(Main::readIntArray).toArray(new int[0][]); }\n    static char[] readCharArray() {\n        List<Character> l = readList(Main::readChar);\n        char[] a = new char[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }\n    static Integer readNullableInt() {\n        ws();\n        if (matchWord(\"null\")) return null;\n        return readInt();\n    }\n    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }\n\n    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.\n    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {\n        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n            int c = a.get(i).compareTo(b.get(i));\n            if (c != 0) return c;\n        }\n        return Integer.compare(a.size(), b.size());\n    }\n    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {\n        List<List<T>> r = new ArrayList<>();\n        for (List<T> v : x) {\n            List<T> c = new ArrayList<>(v);\n            if (sortInner) Collections.sort(c);\n            r.add(c);\n        }\n        r.sort(Main::compareLists);\n        return r;\n    }\n    static <T extends Comparable<T>> List<T> sortList(List<T> x) {\n        List<T> r = new ArrayList<>(x);\n        Collections.sort(r);\n        return r;\n    }\n    static int[][] sortRows(int[][] x) {\n        int[][] r = x.clone();\n        Arrays.sort(r, (a, b) -> {\n            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);\n            return Integer.compare(a.length, b.length);\n        });\n        return r;\n    }\n    static void endInput() {\n        ws();\n        if (inPos != inBuf.length) throw fail(\"unexpected trailing input\");\n    }\n\n    static void writeString(String s) {\n        OUT.append('\"');\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '\"' || c == '\\\\') OUT.append('\\\\');\n            OUT.append(c);\n        }\n        OUT.append('\"');\n    }\n    static void write(Object o) {\n        if (o == null) { OUT.append(\"null\"); return; }\n        if (o instanceof Boolean || o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte) { OUT.append(o); return; }\n        if (o instanceof String) { writeString((String) o); return; }\n        if (o instanceof Character) { writeString(String.valueOf(o)); return; }\n        OUT.append('[');\n        if (o instanceof int[]) {\n            int[] a = (int[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof long[]) {\n            long[] a = (long[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof boolean[]) {\n            boolean[] a = (boolean[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof char[]) {\n            char[] a = (char[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); writeString(String.valueOf(a[i])); }\n        } else if (o instanceof Object[]) {\n            Object[] a = (Object[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); write(a[i]); }\n        } else if (o instanceof Iterable) {\n            boolean first = true;\n            for (Object e : (Iterable<?>) o) { if (!first) OUT.append(','); write(e); first = false; }\n        } else {\n            throw new IllegalStateException(\"driver cannot print \" + o.getClass().getName());\n        }\n        OUT.append(']');\n    }\n    static void flushOutput() {\n        System.out.print(OUT);\n        System.out.flush();\n    }\n\n    static ListNode buildList(int[] v) {\n        ListNode dummy = new ListNode();\n        ListNode tail = dummy;\n        for (int x : v) {\n            tail.next = new ListNode(x);\n            tail = tail.next;\n        }\n        return dummy.next;\n    }\n    static ListNode[] buildLists(int[][] v) {\n        ListNode[] r = new ListNode[v.length];\n        for (int i = 0; i < v.length; i++) r[i] = buildList(v[i]);\n        return r;\n    }\n    static List<Integer> listOut(ListNode h) {\n        List<Integer> r = new ArrayList<>();\n        for (; h != null; h = h.next) {\n            r.add(h.val);\n            if (r.size() > 200000) throw new IllegalStateException(\"driver: returned structure is too large or has a cycle\");\n        }\n        return r;\n    }\n\n    public static void main(String[] oc_args) throws IOException {\n        initInput();\n        ListNode head = buildList(readIntArray());\n        int n = readInt();\n        endInput();\n        ListNode oc_res = new Solution().removeNthFromEnd(head, n);\n        write(listOut(oc_res));\n        OUT.append('\\n');\n        flushOutput();\n    }\n}"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "language": "cpp",
+      "code": "class Solution {\npublic:\n    ListNode* removeNthFromEnd(ListNode* head, int n) {\n        // One pass: `ahead` runs n + 1 nodes in front, so `behind` stops just before the target.\n        ListNode dummy(0, head);\n        ListNode *ahead = &dummy, *behind = &dummy;\n        for (int i = 0; i <= n; i++) ahead = ahead->next;\n        while (ahead) {\n            ahead = ahead->next;\n            behind = behind->next;\n        }\n        behind->next = behind->next->next;\n        return dummy.next;\n    }\n};"
+    },
+    {
+      "language": "java",
+      "code": "class Solution {\n    // Two passes: count the nodes, then remove index (length - n) from the front.\n    public ListNode removeNthFromEnd(ListNode head, int n) {\n        int length = 0;\n        for (ListNode p = head; p != null; p = p.next) length++;\n        int target = length - n;\n        if (target == 0) return head.next;\n        ListNode prev = head;\n        for (int i = 1; i < target; i++) prev = prev.next;\n        prev.next = prev.next.next;\n        return head;\n    }\n}"
+    }
+  ],
+  "seedMeta": {
+    "order": 22,
+    "neetcodeSlug": "remove-node-from-end-of-linked-list",
+    "limits": {
+      "timeLimitMs": 5000,
+      "memoryLimitMb": 256
+    },
+    "signature": {
+      "method": "removeNthFromEnd",
+      "params": [
+        {
+          "name": "head",
+          "type": "ListNode"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        }
+      ],
+      "returns": "ListNode"
+    },
+    "expectedOutputsFrom": "reference/remove-nth-node-from-end-of-list/solution.cpp on Judge0",
+    "tests": [
+      {
+        "n": 1,
+        "kind": "sample",
+        "note": "example 1",
+        "inputBytes": 11,
+        "outputBytes": 7
+      },
+      {
+        "n": 2,
+        "kind": "sample",
+        "note": "example 2",
+        "inputBytes": 5,
+        "outputBytes": 2
+      },
+      {
+        "n": 3,
+        "kind": "sample",
+        "note": "example 3",
+        "inputBytes": 7,
+        "outputBytes": 3
+      },
+      {
+        "n": 4,
+        "kind": "hidden",
+        "note": "two nodes, remove the last",
+        "inputBytes": 7,
+        "outputBytes": 3
+      },
+      {
+        "n": 5,
+        "kind": "hidden",
+        "note": "30 nodes, remove the head",
+        "inputBytes": 92,
+        "outputBytes": 86
+      },
+      {
+        "n": 6,
+        "kind": "hidden",
+        "note": "30 nodes, remove the tail",
+        "inputBytes": 91,
+        "outputBytes": 86
+      },
+      {
+        "n": 7,
+        "kind": "hidden",
+        "note": "30 nodes, remove the middle",
+        "inputBytes": 92,
+        "outputBytes": 86
+      },
+      {
+        "n": 8,
+        "kind": "hidden",
+        "note": "30 nodes, remove the second",
+        "inputBytes": 92,
+        "outputBytes": 86
+      },
+      {
+        "n": 9,
+        "kind": "hidden",
+        "note": "duplicate values",
+        "inputBytes": 11,
+        "outputBytes": 7
+      },
+      {
+        "n": 10,
+        "kind": "hidden",
+        "note": "random length and n",
+        "inputBytes": 32,
+        "outputBytes": 27
+      }
+    ],
+    "notes": ""
+  }
+}

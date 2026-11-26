@@ -108,8 +108,33 @@ const build = async (slug) => {
   return { problem, cases, outputs };
 };
 
+// --check: offline only. Generates and validates every input and the code snippets, no Judge0.
+const check = (slug) => {
+  const { spec, gen } = loadSources(slug);
+  if (!spec.drivers) codegen.checkSignature(spec.signature);
+  const snippets = codegen.generate(spec);
+  for (const { id } of P.LANGS) {
+    if (!snippets[id].driverCode.includes("{{USER_CODE}}")) throw new Error(`${id} driver lacks {{USER_CODE}}`);
+  }
+  return makeCases(slug, spec, gen);
+};
+
 (async () => {
-  const slugs = P.selectSlugs(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const slugs = P.selectSlugs(argv);
+  if (argv.includes("--check")) {
+    let bad = 0;
+    for (const slug of slugs) {
+      try {
+        const cases = check(slug);
+        console.log(`OK     ${slug}: ${cases.length} tests, largest input ${Math.max(...cases.map((c) => Buffer.byteLength(c.input)))} B`);
+      } catch (e) {
+        bad++;
+        console.log(`FAILED ${slug}: ${e.message}`);
+      }
+    }
+    process.exit(bad ? 1 : 0);
+  }
   await ensureJudge0();
   let failed = 0;
   for (const slug of slugs) {

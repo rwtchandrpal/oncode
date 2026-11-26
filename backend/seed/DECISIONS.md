@@ -36,3 +36,33 @@ were taken unattended (autonomous mode, 2026-11-26) following the repo's convent
     category, one per problem.
 13. **Statements** are written fresh for this platform, with our own sample inputs, not copied from LeetCode
     or NeetCode. Constraints follow the usual LeetCode bounds unless a test needed otherwise (noted per problem).
+14. **Output size counts too**: the 200 KB cap applies to each test's expected output as well as its input
+    (Product of Array Except Self and 3Sum large cases were reshaped to keep outputs short).
+15. **Java recursion depth.** Probed on this Judge0 (default JVM stack, which the platform cannot change without
+    a code change): simple one-argument recursion survives 20,000 levels; a four-way grid DFS overflows at
+    10,000 and survives 7,000. Grid tests are therefore capped so the largest connected region is ~4,900 cells
+    (Number of Islands 70 x 70 all-land, Pacific Atlantic 60 x 60 flat). Tree tests keep chains of up to
+    10,000 nodes (single-argument recursion is fine). `slow-recursive.java` files record these checks.
+16. **Multiple valid answers** are normalised in the driver (`post` hook): sort (Two Sum indices, Top K, Merge
+    Intervals, Pacific Atlantic cells, Word Search II), sort inner and outer lists (3Sum, Group Anagrams,
+    Combination Sum). Where the answer cannot be normalised by sorting, the generator makes it unique
+    (Top K, Longest Palindromic Substring, Minimum Window Substring, Two Sum) and says so in the statement.
+17. **Alien Dictionary** accepts any valid order: the driver checks the returned order against the words
+    (every letter once, list sorted under it) and, if valid, prints the alphabetically smallest valid order.
+18. **Design problems** (Trie, WordDictionary, MedianFinder) use LeetCode's two-line format (operations,
+    arguments); the driver replays them and prints one array of results (`null` for constructor/void).
+    Medians are printed with one decimal (they are always multiples of 0.5). See `tools/lib/design.js`.
+19. **Round-trip problems** (Serialize/Deserialize, Encode/Decode) call the two methods on **different**
+    objects and print the decoded value; Serialize/Deserialize and Clone Graph also reject results that reuse
+    the original nodes (deep-copy check in the driver).
+20. **Linked List Cycle** keeps `pos` as a driver-only input: the driver links the tail to node `pos` before
+    calling `hasCycle(head)`. **Lowest Common Ancestor** reads `p`/`q` as values, looks the nodes up, and prints
+    the returned node's value. **Clone Graph** uses a 1-indexed adjacency list and prints the clone's adjacency
+    list with each neighbour list sorted.
+21. **Meeting Rooms I/II** take `int[][]` intervals instead of NeetCode's `Interval` objects (language-neutral).
+22. **seed.js `--dry-run` is offline by default** (no database connection at all), because backend/.env
+    points at the production Atlas cluster and the rules forbid touching it. `--dry-run --connect` reads (never
+    writes) to report insert/update; real writes need `--creator <admin email> --yes`.
+23. **Generator checks are offline-first**: `build.js --check` validates every generated input against the
+    problem's constraints and the 200 KB cap without Judge0 (it caught three constraint violations and one
+    generator that could never terminate before any Judge0 time was spent).

@@ -1954,5 +1954,493 @@
     "notes": [],
     "ok": true,
     "verifiedAt": "2026-11-26T03:55:24.011Z"
+  },
+  "group-anagrams": {
+    "slug": "group-anagrams",
+    "title": "Group Anagrams",
+    "hash": "37e0da234ab72cfdb1ac2cba6066ac0e17212259bd883607ecdf74732d4cd91c",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 101,
+        "maxMemoryKb": 5152,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 777,
+        "maxMemoryKb": 52876,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-letter-set.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Wrong Answer x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:58:31.905Z"
+  },
+  "top-k-frequent-elements": {
+    "slug": "top-k-frequent-elements",
+    "title": "Top K Frequent Elements",
+    "hash": "451559c57cc1665a0b15ebe6db912ab70538da355ab6daf86e20e7969ae9f43e",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 26,
+        "maxMemoryKb": 4480,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 312,
+        "maxMemoryKb": 40732,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-least.cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:59:26.300Z"
+  },
+  "3sum": {
+    "slug": "3sum",
+    "title": "3Sum",
+    "hash": "d4e959ed91e8ccae1c5ee493edb9e74c75b9a51ba23a5ef7945d7dd634d09bc5",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 83,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 1581,
+        "maxMemoryKb": 111232,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Time Limit Exceeded x3",
+        "ok": true
+      },
+      {
+        "label": "wrong-duplicates.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x3, Runtime Error (NZEC) x1, Time Limit Exceeded x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:13:37.935Z"
+  },
+  "combination-sum": {
+    "slug": "combination-sum",
+    "title": "Combination Sum",
+    "hash": "38e0e28e35502fa14b95dc644d7a0daed1781349412bf004b7158eb5078711bc",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 24,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 361,
+        "maxMemoryKb": 35328,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "wrong-use-once.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:00:20.617Z"
+  },
+  "word-search": {
+    "slug": "word-search",
+    "title": "Word Search",
+    "hash": "186f30fb0745850036b83e0fdf4558d81704be84d53f4dffe3b71be665b26be6",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 19,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 124,
+        "maxMemoryKb": 34944,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      },
+      {
+        "label": "slow.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-reuse.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:01:16.860Z"
+  },
+  "number-of-islands": {
+    "slug": "number-of-islands",
+    "title": "Number of Islands",
+    "hash": "8b6aa402d30b47fcc3f11d0e2132959a203e3c6454e269ba2eda3a2dc840d67f",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 32,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 246,
+        "maxMemoryKb": 41312,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "slow-recursive.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-diagonal.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:14:42.989Z"
+  },
+  "pacific-atlantic-water-flow": {
+    "slug": "pacific-atlantic-water-flow",
+    "title": "Pacific Atlantic Water Flow",
+    "hash": "537315840ee67598fd64feb5fe61158a7098a65825d27b1b108967b47351aac8",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 29,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 200,
+        "maxMemoryKb": 38500,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "slow-recursive.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-strict.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:15:39.254Z"
+  },
+  "course-schedule": {
+    "slug": "course-schedule",
+    "title": "Course Schedule",
+    "hash": "50f2ace90b3dd75c714793d99a390497a008cfb54d3922a3a45b8123efdd5808",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 33,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 335,
+        "maxMemoryKb": 36736,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "wrong-visited-only.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Wrong Answer x3, Accepted x7",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:05:02.406Z"
+  },
+  "graph-valid-tree": {
+    "slug": "graph-valid-tree",
+    "title": "Graph Valid Tree",
+    "hash": "4e0a9de5895c106d9a9d6c4157fcdb43ee22dad6e7461104d251fc3037fef1c9",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 88,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 241,
+        "maxMemoryKb": 36352,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "wrong-count-only.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:06:14.215Z"
+  },
+  "number-of-connected-components-in-an-undirected-graph": {
+    "slug": "number-of-connected-components-in-an-undirected-graph",
+    "title": "Number of Connected Components In An Undirected Graph",
+    "hash": "b0ed925404ccafc8908280b84361b962f6cec8cd2b778d60500413a741171175",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 25,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 256,
+        "maxMemoryKb": 37620,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-n-minus-edges.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Wrong Answer x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:07:02.946Z"
   }
 }

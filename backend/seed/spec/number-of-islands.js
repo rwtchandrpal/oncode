@@ -12,5 +12,5 @@ Return the number of islands.
     { explanation: "Land cells that only touch diagonally belong to different islands." },
     { explanation: "Only water." },
   ],
-  notes: "Largest tests are 150 x 150 / 100 x 100 so inputs stay under 200 KB and recursive Java DFS keeps a sane depth.",
+  notes: "Largest fully connected island is 70 x 70: recursive Java DFS overflows the default JVM stack near 10^4 levels on Judge0 (see DECISIONS.md).",
 };

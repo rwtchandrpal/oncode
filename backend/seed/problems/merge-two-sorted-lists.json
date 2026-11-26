@@ -1,0 +1,195 @@
+{
+  "slug": "merge-two-sorted-lists",
+  "title": "Merge Two Sorted Lists",
+  "difficulty": "Easy",
+  "topics": [
+    "Linked List"
+  ],
+  "description": "`list1` and `list2` are the heads of two linked lists, each sorted in **non-decreasing** order. Combine them into a single sorted list by **relinking their existing nodes**, and return the head of the merged list.\n\nLists are written as arrays of node values from head to tail; `[]` is an empty list.",
+  "constraints": [
+    "Each list has between 0 and 50 nodes",
+    "-100 <= Node.val <= 100",
+    "Both lists are sorted in non-decreasing order"
+  ],
+  "examples": [
+    {
+      "input": "list1 = [2,5,9], list2 = [1,5,6]",
+      "output": "[1,2,5,5,6,9]",
+      "explanation": "Take the smaller front node each time: 1, 2, 5, 5, 6, 9."
+    },
+    {
+      "input": "list1 = [], list2 = []",
+      "output": "[]",
+      "explanation": "Two empty lists merge into an empty list."
+    },
+    {
+      "input": "list1 = [], list2 = [0]",
+      "output": "[0]",
+      "explanation": "One list is empty, so the result is the other list."
+    }
+  ],
+  "visibleTestCase": {
+    "input": "[2,5,9]\n[1,5,6]",
+    "expectedOutput": "[1,2,5,5,6,9]"
+  },
+  "hiddenTestCases": [
+    {
+      "input": "[2,5,9]\n[1,5,6]",
+      "expectedOutput": "[1,2,5,5,6,9]"
+    },
+    {
+      "input": "[]\n[]",
+      "expectedOutput": "[]"
+    },
+    {
+      "input": "[]\n[0]",
+      "expectedOutput": "[0]"
+    },
+    {
+      "input": "[5]\n[]",
+      "expectedOutput": "[5]"
+    },
+    {
+      "input": "[-84,-80,-77,-75,-70,-69,-68,-67,-61,-61,-52,-47,-46,-42,-41,-36,-11,-5,0,7,8,11,19,23,27,28,30,30,38,39,40,40,44,47,51,56,59,64,67,73,74,75,75,78,80,82,85,89,91,98]\n[-84,-80,-77,-75,-70,-69,-68,-67,-61,-61,-52,-47,-46,-42,-41,-36,-11,-5,0,7,8,11,19,23,27,28,30,30,38,39,40,40,44,47,51,56,59,64,67,73,74,75,75,78,80,82,85,89,91,98]",
+      "expectedOutput": "[-84,-84,-80,-80,-77,-77,-75,-75,-70,-70,-69,-69,-68,-68,-67,-67,-61,-61,-61,-61,-52,-52,-47,-47,-46,-46,-42,-42,-41,-41,-36,-36,-11,-11,-5,-5,0,0,7,7,8,8,11,11,19,19,23,23,27,27,28,28,30,30,30,30,38,38,39,39,40,40,40,40,44,44,47,47,51,51,56,56,59,59,64,64,67,67,73,73,74,74,75,75,75,75,78,78,80,80,82,82,85,85,89,89,91,91,98,98]"
+    },
+    {
+      "input": "[-96,-96,-96,-93,-91,-91,-90,-87,-85,-83,-83,-79,-78,-75,-75,-73,-69,-69,-67,-66,-62,-60,-59,-58,-57,-57,-56,-55,-52,-51,-50,-50,-46,-40,-35,-35,-34,-31,-31,-30,-29,-26,-20,-20,-16,-16,-14,-12,-7,-1]\n[0,0,2,3,3,3,4,4,5,7,10,13,13,14,16,17,20,21,25,26,28,31,31,32,35,46,47,49,51,52,53,60,62,62,63,66,70,73,77,78,78,81,81,82,83,83,89,90,97,99]",
+      "expectedOutput": "[-96,-96,-96,-93,-91,-91,-90,-87,-85,-83,-83,-79,-78,-75,-75,-73,-69,-69,-67,-66,-62,-60,-59,-58,-57,-57,-56,-55,-52,-51,-50,-50,-46,-40,-35,-35,-34,-31,-31,-30,-29,-26,-20,-20,-16,-16,-14,-12,-7,-1,0,0,2,3,3,3,4,4,5,7,10,13,13,14,16,17,20,21,25,26,28,31,31,32,35,46,47,49,51,52,53,60,62,62,63,66,70,73,77,78,78,81,81,82,83,83,89,90,97,99]"
+    },
+    {
+      "input": "[51,53,57,58,60,61,63,64,64,64,64,66,67,68,69,73,77,79,80,82,82,84,84,85,85,89,91,94,96,97]\n[-100,-99,-91,-89,-81,-79,-77,-71,-65,-64,-62,-60,-58,-55,-54,-52,-50,-50,-47,-30,-29,-28,-27,-24,-19,-18,-9,-5,-1,22,22,26,27,27,32,34,42,43,46,47]",
+      "expectedOutput": "[-100,-99,-91,-89,-81,-79,-77,-71,-65,-64,-62,-60,-58,-55,-54,-52,-50,-50,-47,-30,-29,-28,-27,-24,-19,-18,-9,-5,-1,22,22,26,27,27,32,34,42,43,46,47,51,53,57,58,60,61,63,64,64,64,64,66,67,68,69,73,77,79,80,82,82,84,84,85,85,89,91,94,96,97]"
+    },
+    {
+      "input": "[-91,-86,-82,-81,-79,-71,-70,-69,-64,-56,-55,-54,-51,-50,-43,-43,-41,-39,-38,-37,-33,-30,-29,-23,-6,-4,-1,3,12,13,13,14,16,20,29,32,34,43,44,48,58,61,66,76,76,78,81,86,90,97]\n[-99,-95,-81,-71,-70,-67,-67,-57,-51,-50,-36,-28,-27,-12,-7,-7,-3,-2,-2,-1,-1,6,10,11,13,21,22,22,30,31,34,35,43,45,47,50,51,52,52,56,60,67,70,72,72,74,79,80,87,91]",
+      "expectedOutput": "[-99,-95,-91,-86,-82,-81,-81,-79,-71,-71,-70,-70,-69,-67,-67,-64,-57,-56,-55,-54,-51,-51,-50,-50,-43,-43,-41,-39,-38,-37,-36,-33,-30,-29,-28,-27,-23,-12,-7,-7,-6,-4,-3,-2,-2,-1,-1,-1,3,6,10,11,12,13,13,13,14,16,20,21,22,22,29,30,31,32,34,34,35,43,43,44,45,47,48,50,51,52,52,56,58,60,61,66,67,70,72,72,74,76,76,78,79,80,81,86,87,90,91,97]"
+    },
+    {
+      "input": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]\n[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]",
+      "expectedOutput": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]"
+    },
+    {
+      "input": "[-100]\n[-100]",
+      "expectedOutput": "[-100,-100]"
+    }
+  ],
+  "codeSnippets": [
+    {
+      "language": "cpp",
+      "userSnippet": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\n\nclass Solution {\npublic:\n    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {\n        // Write your solution here\n        return nullptr;\n    }\n};",
+      "driverCode": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct ListNode {\n    int val;\n    ListNode *next;\n    ListNode() : val(0), next(nullptr) {}\n    ListNode(int x) : val(x), next(nullptr) {}\n    ListNode(int x, ListNode *next) : val(x), next(next) {}\n};\n\n{{USER_CODE}}\n\n// ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n// Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\nnamespace oncode {\n\n// Nullable int, for level-order tree arrays such as [1,null,2].\nstruct Opt {\n    bool has = false;\n    int v = 0;\n};\n\nstruct Reader {\n    std::string s;\n    size_t p = 0;\n    Reader() {\n        std::ios::sync_with_stdio(false);\n        s.assign(std::istreambuf_iterator<char>(std::cin), std::istreambuf_iterator<char>());\n    }\n    [[noreturn]] void fail(const char* what) {\n        std::cerr << \"driver input error: \" << what << \" at byte \" << p << \"\\n\";\n        std::exit(3);\n    }\n    void ws() {\n        while (p < s.size() && std::isspace(static_cast<unsigned char>(s[p]))) p++;\n    }\n    bool peek(char c) {\n        ws();\n        return p < s.size() && s[p] == c;\n    }\n    void expect(char c) {\n        if (!peek(c)) fail(\"unexpected character\");\n        p++;\n    }\n    long long integer(long long lo, long long hi) {\n        ws();\n        bool neg = false;\n        if (p < s.size() && s[p] == '-') { neg = true; p++; }\n        size_t start = p;\n        long long v = 0;\n        while (p < s.size() && std::isdigit(static_cast<unsigned char>(s[p]))) {\n            if (p - start >= 18) fail(\"integer too long\");\n            v = v * 10 + (s[p++] - '0');\n        }\n        if (p == start) fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) fail(\"integer out of range\");\n        return v;\n    }\n    void read(int& x) { x = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    void read(long long& x) { x = integer(-999999999999999999LL, 999999999999999999LL); }\n    void read(bool& x) {\n        ws();\n        if (s.compare(p, 4, \"true\") == 0) { x = true; p += 4; }\n        else if (s.compare(p, 5, \"false\") == 0) { x = false; p += 5; }\n        else fail(\"expected true or false\");\n    }\n    void read(std::string& x) {\n        expect('\"');\n        x.clear();\n        while (p < s.size() && s[p] != '\"') {\n            if (s[p] == '\\\\') {\n                p++;\n                if (p >= s.size()) break;\n            }\n            x += s[p++];\n        }\n        if (p >= s.size()) fail(\"unterminated string\");\n        p++;\n    }\n    void read(Opt& o) {\n        ws();\n        if (s.compare(p, 4, \"null\") == 0) { o.has = false; p += 4; }\n        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    }\n    void read(char& x) {\n        std::string t;\n        read(t);\n        if (t.size() != 1) fail(\"expected one-character string\");\n        x = t[0];\n    }\n    template <class T> void read(std::vector<T>& v) {\n        v.clear();\n        expect('[');\n        if (peek(']')) { p++; return; }\n        for (;;) {\n            T e;\n            read(e);\n            v.push_back(std::move(e));\n            if (peek(',')) { p++; continue; }\n            expect(']');\n            return;\n        }\n    }\n    void end() {\n        ws();\n        if (p != s.size()) fail(\"unexpected trailing input\");\n    }\n};\n\nstruct Writer {\n    std::string out;\n    void write(int x) { out += std::to_string(x); }\n    void write(long long x) { out += std::to_string(x); }\n    void write(bool x) { out += x ? \"true\" : \"false\"; }\n    void write(const std::string& x) {\n        out += '\"';\n        for (char c : x) {\n            if (c == '\"' || c == '\\\\') out += '\\\\';\n            out += c;\n        }\n        out += '\"';\n    }\n    void write(char c) { write(std::string(1, c)); }\n    void write(const Opt& o) {\n        if (o.has) write(o.v);\n        else out += \"null\";\n    }\n    template <class T> void write(const std::vector<T>& v) {\n        out += '[';\n        for (size_t i = 0; i < v.size(); i++) {\n            if (i) out += ',';\n            write(v[i]);\n        }\n        out += ']';\n    }\n    void line() { out += '\\n'; }\n    void flush() {\n        std::fwrite(out.data(), 1, out.size(), stdout);\n        std::fflush(stdout);\n    }\n};\n\n}  // namespace oncode\n\nnamespace oncode {\nListNode* buildList(const std::vector<int>& v) {\n    ListNode dummy;\n    ListNode* tail = &dummy;\n    for (int x : v) {\n        tail->next = new ListNode(x);\n        tail = tail->next;\n    }\n    return dummy.next;\n}\nstd::vector<int> listOut(ListNode* h) {\n    std::vector<int> r;\n    for (; h; h = h->next) {\n        r.push_back(h->val);\n        if (r.size() > 200000) { std::cerr << \"driver: returned structure is too large or has a cycle\\n\"; std::exit(4); }\n    }\n    return r;\n}\n}  // namespace oncode\n\nint main() {\n    oncode::Reader oc_in;\n    vector<int> oc_v_list1;\n    oc_in.read(oc_v_list1);\n    ListNode* list1 = oncode::buildList(oc_v_list1);\n    vector<int> oc_v_list2;\n    oc_in.read(oc_v_list2);\n    ListNode* list2 = oncode::buildList(oc_v_list2);\n    oc_in.end();\n    Solution oc_sol;\n    ListNode* oc_res = oc_sol.mergeTwoLists(list1, list2);\n    oncode::Writer oc_out;\n    oc_out.write(oncode::listOut(oc_res));\n    oc_out.line();\n    oc_out.flush();\n    return 0;\n}"
+    },
+    {
+      "language": "java",
+      "userSnippet": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\n\nclass Solution {\n    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {\n        // Write your solution here\n        return null;\n    }\n}",
+      "driverCode": "import java.util.*;\nimport java.io.*;\n\n{{USER_CODE}}\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode() {}\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\npublic class Main {\n    // ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n    // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\n    static byte[] inBuf;\n    static int inPos;\n    static final StringBuilder OUT = new StringBuilder();\n\n    interface ElemReader<T> { T read(); }\n\n    static void initInput() throws IOException {\n        inBuf = System.in.readAllBytes();\n        inPos = 0;\n    }\n    static RuntimeException fail(String what) {\n        return new IllegalStateException(\"driver input error: \" + what + \" at byte \" + inPos);\n    }\n    static void ws() {\n        while (inPos < inBuf.length && (inBuf[inPos] == ' ' || inBuf[inPos] == '\\n' || inBuf[inPos] == '\\r' || inBuf[inPos] == '\\t')) inPos++;\n    }\n    static boolean peek(char c) {\n        ws();\n        return inPos < inBuf.length && inBuf[inPos] == c;\n    }\n    static void expect(char c) {\n        if (!peek(c)) throw fail(\"expected '\" + c + \"'\");\n        inPos++;\n    }\n    static long readInteger(long lo, long hi) {\n        ws();\n        boolean neg = false;\n        if (inPos < inBuf.length && inBuf[inPos] == '-') { neg = true; inPos++; }\n        int start = inPos;\n        long v = 0;\n        while (inPos < inBuf.length && inBuf[inPos] >= '0' && inBuf[inPos] <= '9') {\n            if (inPos - start >= 18) throw fail(\"integer too long\");\n            v = v * 10 + (inBuf[inPos++] - '0');\n        }\n        if (inPos == start) throw fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) throw fail(\"integer out of range\");\n        return v;\n    }\n    static int readInt() { return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE); }\n    static long readLong() { return readInteger(-999999999999999999L, 999999999999999999L); }\n    static boolean matchWord(String w) {\n        if (inPos + w.length() > inBuf.length) return false;\n        for (int i = 0; i < w.length(); i++) if (inBuf[inPos + i] != w.charAt(i)) return false;\n        inPos += w.length();\n        return true;\n    }\n    static boolean readBool() {\n        ws();\n        if (matchWord(\"true\")) return true;\n        if (matchWord(\"false\")) return false;\n        throw fail(\"expected true or false\");\n    }\n    static String readString() {\n        expect('\"');\n        StringBuilder sb = new StringBuilder();\n        while (inPos < inBuf.length && inBuf[inPos] != '\"') {\n            if (inBuf[inPos] == '\\\\') {\n                inPos++;\n                if (inPos >= inBuf.length) break;\n            }\n            sb.append((char) inBuf[inPos++]);\n        }\n        if (inPos >= inBuf.length) throw fail(\"unterminated string\");\n        inPos++;\n        return sb.toString();\n    }\n    static char readChar() {\n        String t = readString();\n        if (t.length() != 1) throw fail(\"expected one-character string\");\n        return t.charAt(0);\n    }\n    static <T> List<T> readList(ElemReader<T> r) {\n        List<T> list = new ArrayList<>();\n        expect('[');\n        if (peek(']')) { inPos++; return list; }\n        while (true) {\n            list.add(r.read());\n            if (peek(',')) { inPos++; continue; }\n            expect(']');\n            return list;\n        }\n    }\n    static List<Integer> readIntList() { return readList(Main::readInt); }\n    static List<Long> readLongList() { return readList(Main::readLong); }\n    static List<String> readStringList() { return readList(Main::readString); }\n    static List<List<Integer>> readIntListList() { return readList(Main::readIntList); }\n    static List<List<String>> readStringListList() { return readList(Main::readStringList); }\n    static int[] readIntArray() {\n        List<Integer> l = readIntList();\n        int[] a = new int[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static long[] readLongArray() {\n        List<Long> l = readLongList();\n        long[] a = new long[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static String[] readStringArray() { return readStringList().toArray(new String[0]); }\n    static int[][] readIntMatrix() { return readList(Main::readIntArray).toArray(new int[0][]); }\n    static char[] readCharArray() {\n        List<Character> l = readList(Main::readChar);\n        char[] a = new char[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }\n    static Integer readNullableInt() {\n        ws();\n        if (matchWord(\"null\")) return null;\n        return readInt();\n    }\n    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }\n\n    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.\n    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {\n        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n            int c = a.get(i).compareTo(b.get(i));\n            if (c != 0) return c;\n        }\n        return Integer.compare(a.size(), b.size());\n    }\n    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {\n        List<List<T>> r = new ArrayList<>();\n        for (List<T> v : x) {\n            List<T> c = new ArrayList<>(v);\n            if (sortInner) Collections.sort(c);\n            r.add(c);\n        }\n        r.sort(Main::compareLists);\n        return r;\n    }\n    static <T extends Comparable<T>> List<T> sortList(List<T> x) {\n        List<T> r = new ArrayList<>(x);\n        Collections.sort(r);\n        return r;\n    }\n    static int[][] sortRows(int[][] x) {\n        int[][] r = x.clone();\n        Arrays.sort(r, (a, b) -> {\n            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);\n            return Integer.compare(a.length, b.length);\n        });\n        return r;\n    }\n    static void endInput() {\n        ws();\n        if (inPos != inBuf.length) throw fail(\"unexpected trailing input\");\n    }\n\n    static void writeString(String s) {\n        OUT.append('\"');\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '\"' || c == '\\\\') OUT.append('\\\\');\n            OUT.append(c);\n        }\n        OUT.append('\"');\n    }\n    static void write(Object o) {\n        if (o == null) { OUT.append(\"null\"); return; }\n        if (o instanceof Boolean || o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte) { OUT.append(o); return; }\n        if (o instanceof String) { writeString((String) o); return; }\n        if (o instanceof Character) { writeString(String.valueOf(o)); return; }\n        OUT.append('[');\n        if (o instanceof int[]) {\n            int[] a = (int[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof long[]) {\n            long[] a = (long[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof boolean[]) {\n            boolean[] a = (boolean[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof char[]) {\n            char[] a = (char[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); writeString(String.valueOf(a[i])); }\n        } else if (o instanceof Object[]) {\n            Object[] a = (Object[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); write(a[i]); }\n        } else if (o instanceof Iterable) {\n            boolean first = true;\n            for (Object e : (Iterable<?>) o) { if (!first) OUT.append(','); write(e); first = false; }\n        } else {\n            throw new IllegalStateException(\"driver cannot print \" + o.getClass().getName());\n        }\n        OUT.append(']');\n    }\n    static void flushOutput() {\n        System.out.print(OUT);\n        System.out.flush();\n    }\n\n    static ListNode buildList(int[] v) {\n        ListNode dummy = new ListNode();\n        ListNode tail = dummy;\n        for (int x : v) {\n            tail.next = new ListNode(x);\n            tail = tail.next;\n        }\n        return dummy.next;\n    }\n    static ListNode[] buildLists(int[][] v) {\n        ListNode[] r = new ListNode[v.length];\n        for (int i = 0; i < v.length; i++) r[i] = buildList(v[i]);\n        return r;\n    }\n    static List<Integer> listOut(ListNode h) {\n        List<Integer> r = new ArrayList<>();\n        for (; h != null; h = h.next) {\n            r.add(h.val);\n            if (r.size() > 200000) throw new IllegalStateException(\"driver: returned structure is too large or has a cycle\");\n        }\n        return r;\n    }\n\n    public static void main(String[] oc_args) throws IOException {\n        initInput();\n        ListNode list1 = buildList(readIntArray());\n        ListNode list2 = buildList(readIntArray());\n        endInput();\n        ListNode oc_res = new Solution().mergeTwoLists(list1, list2);\n        write(listOut(oc_res));\n        OUT.append('\\n');\n        flushOutput();\n    }\n}"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "language": "cpp",
+      "code": "class Solution {\npublic:\n    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {\n        ListNode dummy;\n        ListNode* tail = &dummy;\n        while (list1 && list2) {\n            ListNode*& smaller = (list1->val <= list2->val) ? list1 : list2;\n            tail->next = smaller;\n            tail = smaller;\n            smaller = smaller->next;\n        }\n        tail->next = list1 ? list1 : list2;  // attach whatever is left\n        return dummy.next;\n    }\n};"
+    },
+    {
+      "language": "java",
+      "code": "class Solution {\n    // Recursive version (the C++ reference is iterative).\n    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {\n        if (list1 == null) return list2;\n        if (list2 == null) return list1;\n        if (list1.val <= list2.val) {\n            list1.next = mergeTwoLists(list1.next, list2);\n            return list1;\n        }\n        list2.next = mergeTwoLists(list1, list2.next);\n        return list2;\n    }\n}"
+    }
+  ],
+  "seedMeta": {
+    "order": 19,
+    "neetcodeSlug": "merge-two-sorted-linked-lists",
+    "limits": {
+      "timeLimitMs": 5000,
+      "memoryLimitMb": 256
+    },
+    "signature": {
+      "method": "mergeTwoLists",
+      "params": [
+        {
+          "name": "list1",
+          "type": "ListNode"
+        },
+        {
+          "name": "list2",
+          "type": "ListNode"
+        }
+      ],
+      "returns": "ListNode"
+    },
+    "expectedOutputsFrom": "reference/merge-two-sorted-lists/solution.cpp on Judge0",
+    "tests": [
+      {
+        "n": 1,
+        "kind": "sample",
+        "note": "example 1",
+        "inputBytes": 15,
+        "outputBytes": 13
+      },
+      {
+        "n": 2,
+        "kind": "sample",
+        "note": "example 2",
+        "inputBytes": 5,
+        "outputBytes": 2
+      },
+      {
+        "n": 3,
+        "kind": "sample",
+        "note": "example 3",
+        "inputBytes": 6,
+        "outputBytes": 3
+      },
+      {
+        "n": 4,
+        "kind": "hidden",
+        "note": "second list empty",
+        "inputBytes": 6,
+        "outputBytes": 3
+      },
+      {
+        "n": 5,
+        "kind": "hidden",
+        "note": "identical lists",
+        "inputBytes": 331,
+        "outputBytes": 329
+      },
+      {
+        "n": 6,
+        "kind": "hidden",
+        "note": "all of list1 before list2",
+        "inputBytes": 341,
+        "outputBytes": 339
+      },
+      {
+        "n": 7,
+        "kind": "hidden",
+        "note": "all of list2 before list1",
+        "inputBytes": 240,
+        "outputBytes": 238
+      },
+      {
+        "n": 8,
+        "kind": "hidden",
+        "note": "50 + 50 interleaved",
+        "inputBytes": 339,
+        "outputBytes": 337
+      },
+      {
+        "n": 9,
+        "kind": "hidden",
+        "note": "many duplicates",
+        "inputBytes": 193,
+        "outputBytes": 191
+      },
+      {
+        "n": 10,
+        "kind": "hidden",
+        "note": "single nodes, equal",
+        "inputBytes": 13,
+        "outputBytes": 11
+      }
+    ],
+    "notes": ""
+  }
+}

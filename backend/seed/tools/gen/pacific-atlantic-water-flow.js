@@ -14,7 +14,7 @@ module.exports = {
       { note: "max heights in a ridge", args: { heights: [[0, 100000, 0], [0, 100000, 0], [0, 100000, 0]] } },
       { note: "20x20 random", args: { heights: random(rng, 20, 20, 10) } },
       { note: "150x150 random 0..999", args: { heights: random(rng, 150, 150, 999) } },
-      { note: "120x120 flat", args: { heights: random(rng, 120, 120, 0) } },
+      { note: "60x60 flat", args: { heights: random(rng, 60, 60, 0) } },
       { note: "150x150 smooth slope with noise", args: { heights: rng.array(150, (r) => rng.array(150, (c) => Math.max(0, 300 - r - c + rng.int(0, 3)))) } },
     ];
   },

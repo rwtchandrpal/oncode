@@ -56,8 +56,28 @@ The drivers accept any whitespace between tokens on input, but always print exac
 | null | `null` | `null` |
 
 This is JSON restricted to integers, booleans, printable-ASCII strings and arrays, so generators
-serialise values with `JSON.stringify`. Later batches add: linked lists and trees as level-order arrays
-with `null`, design problems as an operation list, and floating-point output (to be documented with them).
+serialise values with `JSON.stringify`.
+
+### Structures and special inputs
+
+| Kind | Format | Example |
+|---|---|---|
+| Linked list | values from head to tail; `[]` is null | `[1,2,3]` |
+| Array of lists | array of lists | `[[1,4],[],[2]]` |
+| Binary tree | level order, `null` for a missing child, trailing nulls removed; `[]` is null | `[1,null,2,3]` |
+| Tree node reference | the node's (unique) value; the driver looks it up in the tree parameter | `5` |
+| Unsigned 32-bit | decimal 0..4294967295 (Java receives the same bits in an `int`) | `4294967293` |
+| Graph (Clone Graph) | adjacency list, node values 1..n, `adjList[i]` = neighbours of node i+1 | `[[2,4],[1,3],[2,4],[1,3]]` |
+| Design problem | line 1: operation names; line 2: argument lists; output: one result per call, `null` for constructor/void | `["Trie","insert","search"]` / `[[],["a"],["a"]]` -> `[null,null,true]` |
+| Median (double) | one decimal place | `2.5`, `-3.0` |
+
+Driver-only inputs: Linked List Cycle reads `pos` after the list; the driver links the tail to node `pos`
+(-1 = no cycle) and passes only `head`. In-place (void) methods print the mutated parameter after the call
+(Rotate Image, Set Matrix Zeroes, Reorder List).
+
+Code generation lives in `tools/lib/codegen.js` (types, starters, drivers), `tools/lib/structs.js` (list
+and tree node types and helpers) and `tools/lib/design.js` (operation replay). Clone Graph, Encode/Decode
+Strings and Serialize/Deserialize Binary Tree have hand-written drivers in their spec files.
 
 Judge0 compares stdout with the expected output after removing trailing whitespace from each line and
 trailing blank lines. Everything else must match exactly, which is why drivers print one canonical form.
@@ -65,7 +85,11 @@ trailing blank lines. Everything else must match exactly, which is why drivers p
 ### Problems with several correct answers
 
 The driver normalises the user's result before printing (spec `post`), for example sorting the two indices
-in Two Sum. The normalisation lives only in the driver, never in the user's code.
+in Two Sum, or each triplet and then the list in 3Sum. The normalisation lives only in the driver, never in
+the user's code. Alien Dictionary goes further: the driver checks the returned order against the words and,
+if it is valid, prints the alphabetically smallest valid order, so every correct answer prints the same thing.
+Where sorting cannot make answers comparable, the generator only produces tests with a unique answer
+(Longest Palindromic Substring, Minimum Window Substring, Top K Frequent Elements).
 
 ## Language notes
 

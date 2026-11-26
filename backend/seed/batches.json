@@ -59,5 +59,35 @@
     "course-schedule",
     "graph-valid-tree",
     "number-of-connected-components-in-an-undirected-graph"
+  ],
+  "6": [
+    "reverse-linked-list",
+    "merge-two-sorted-lists",
+    "linked-list-cycle",
+    "reorder-list",
+    "remove-nth-node-from-end-of-list",
+    "merge-k-sorted-lists"
+  ],
+  "7": [
+    "invert-binary-tree",
+    "maximum-depth-of-binary-tree",
+    "same-tree",
+    "subtree-of-another-tree",
+    "lowest-common-ancestor-of-a-binary-search-tree",
+    "binary-tree-level-order-traversal",
+    "validate-binary-search-tree",
+    "kth-smallest-element-in-a-bst",
+    "construct-binary-tree-from-preorder-and-inorder-traversal",
+    "binary-tree-maximum-path-sum"
+  ],
+  "8": [
+    "clone-graph",
+    "alien-dictionary",
+    "word-search-ii",
+    "encode-and-decode-strings",
+    "implement-trie-prefix-tree",
+    "design-add-and-search-words-data-structure",
+    "find-median-from-data-stream",
+    "serialize-and-deserialize-binary-tree"
   ]
 }

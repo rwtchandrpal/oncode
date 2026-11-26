@@ -162,5 +162,45 @@
   "set-matrix-zeroes": {
     "sha256": "a52d72f6b915d85d99593ed0b4f76808af4a832a2390b11e77e8cefeb4808150",
     "verifiedAt": "2026-11-26T03:55:24.011Z"
+  },
+  "group-anagrams": {
+    "sha256": "37e0da234ab72cfdb1ac2cba6066ac0e17212259bd883607ecdf74732d4cd91c",
+    "verifiedAt": "2026-11-26T03:58:31.905Z"
+  },
+  "top-k-frequent-elements": {
+    "sha256": "451559c57cc1665a0b15ebe6db912ab70538da355ab6daf86e20e7969ae9f43e",
+    "verifiedAt": "2026-11-26T03:59:26.300Z"
+  },
+  "combination-sum": {
+    "sha256": "38e0e28e35502fa14b95dc644d7a0daed1781349412bf004b7158eb5078711bc",
+    "verifiedAt": "2026-11-26T04:00:20.617Z"
+  },
+  "word-search": {
+    "sha256": "186f30fb0745850036b83e0fdf4558d81704be84d53f4dffe3b71be665b26be6",
+    "verifiedAt": "2026-11-26T04:01:16.860Z"
+  },
+  "number-of-islands": {
+    "sha256": "8b6aa402d30b47fcc3f11d0e2132959a203e3c6454e269ba2eda3a2dc840d67f",
+    "verifiedAt": "2026-11-26T04:14:42.989Z"
+  },
+  "pacific-atlantic-water-flow": {
+    "sha256": "537315840ee67598fd64feb5fe61158a7098a65825d27b1b108967b47351aac8",
+    "verifiedAt": "2026-11-26T04:15:39.254Z"
+  },
+  "course-schedule": {
+    "sha256": "50f2ace90b3dd75c714793d99a390497a008cfb54d3922a3a45b8123efdd5808",
+    "verifiedAt": "2026-11-26T04:05:02.406Z"
+  },
+  "graph-valid-tree": {
+    "sha256": "4e0a9de5895c106d9a9d6c4157fcdb43ee22dad6e7461104d251fc3037fef1c9",
+    "verifiedAt": "2026-11-26T04:06:14.215Z"
+  },
+  "number-of-connected-components-in-an-undirected-graph": {
+    "sha256": "b0ed925404ccafc8908280b84361b962f6cec8cd2b778d60500413a741171175",
+    "verifiedAt": "2026-11-26T04:07:02.946Z"
+  },
+  "3sum": {
+    "sha256": "d4e959ed91e8ccae1c5ee493edb9e74c75b9a51ba23a5ef7945d7dd634d09bc5",
+    "verifiedAt": "2026-11-26T04:13:37.935Z"
   }
 }

@@ -1,0 +1,196 @@
+{
+  "slug": "word-search",
+  "title": "Word Search",
+  "difficulty": "Medium",
+  "topics": [
+    "Backtracking"
+  ],
+  "description": "You are given an `m x n` grid of letters `board` and a string `word`. Decide whether `word` can be traced on the board by starting at some cell and repeatedly stepping to a **horizontally or vertically adjacent** cell, reading one letter per cell.\n\nA cell may be used **at most once** in the same trace. Letters are case-sensitive. Return `true` if the word can be traced, and `false` otherwise.",
+  "constraints": [
+    "m == board.length, n == board[i].length",
+    "1 <= m, n <= 6",
+    "1 <= word.length <= 15",
+    "board and word consist of uppercase and lowercase English letters"
+  ],
+  "examples": [
+    {
+      "input": "board = [[\"C\",\"A\",\"T\"],[\"X\",\"O\",\"S\"],[\"D\",\"O\",\"G\"]], word = \"CATS\"",
+      "output": "true",
+      "explanation": "C (0,0) -> A (0,1) -> T (0,2) -> S (1,2)."
+    },
+    {
+      "input": "board = [[\"C\",\"A\",\"T\"],[\"X\",\"O\",\"S\"],[\"D\",\"O\",\"G\"]], word = \"COAT\"",
+      "output": "false",
+      "explanation": "After C, the next letter must be O, but neither neighbour of C is an O."
+    },
+    {
+      "input": "board = [[\"a\"]], word = \"a\"",
+      "output": "true",
+      "explanation": "The single cell spells the word."
+    }
+  ],
+  "visibleTestCase": {
+    "input": "[[\"C\",\"A\",\"T\"],[\"X\",\"O\",\"S\"],[\"D\",\"O\",\"G\"]]\n\"CATS\"",
+    "expectedOutput": "true"
+  },
+  "hiddenTestCases": [
+    {
+      "input": "[[\"C\",\"A\",\"T\"],[\"X\",\"O\",\"S\"],[\"D\",\"O\",\"G\"]]\n\"CATS\"",
+      "expectedOutput": "true"
+    },
+    {
+      "input": "[[\"C\",\"A\",\"T\"],[\"X\",\"O\",\"S\"],[\"D\",\"O\",\"G\"]]\n\"COAT\"",
+      "expectedOutput": "false"
+    },
+    {
+      "input": "[[\"a\"]]\n\"a\"",
+      "expectedOutput": "true"
+    },
+    {
+      "input": "[[\"A\",\"B\"],[\"C\",\"D\"]]\n\"ABA\"",
+      "expectedOutput": "false"
+    },
+    {
+      "input": "[[\"a\"]]\n\"A\"",
+      "expectedOutput": "false"
+    },
+    {
+      "input": "[[\"a\",\"b\"],[\"c\",\"d\"]]\n\"abdca\"",
+      "expectedOutput": "false"
+    },
+    {
+      "input": "[[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"]]\n\"AAAAAAAAAAAAAAB\"",
+      "expectedOutput": "false"
+    },
+    {
+      "input": "[[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"],[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\"]]\n\"AAAAAAAAAAAAAAA\"",
+      "expectedOutput": "true"
+    },
+    {
+      "input": "[[\"C\",\"a\",\"b\",\"D\",\"F\",\"d\"],[\"B\",\"c\",\"f\",\"E\",\"b\",\"e\"],[\"A\",\"C\",\"d\",\"b\",\"a\",\"c\"],[\"b\",\"A\",\"F\",\"C\",\"a\",\"F\"],[\"c\",\"C\",\"b\",\"A\",\"a\",\"C\"],[\"C\",\"A\",\"B\",\"D\",\"b\",\"A\"]]\n\"BDbaACbdFbCA\"",
+      "expectedOutput": "true"
+    },
+    {
+      "input": "[[\"b\",\"c\",\"a\",\"c\",\"b\",\"c\"],[\"c\",\"c\",\"b\",\"b\",\"b\",\"c\"],[\"a\",\"b\",\"c\",\"c\",\"a\",\"c\"],[\"b\",\"c\",\"a\",\"a\",\"a\",\"b\"],[\"c\",\"b\",\"c\",\"b\",\"c\",\"a\"],[\"a\",\"b\",\"c\",\"a\",\"a\",\"c\"]]\n\"abcabcabcabcabd\"",
+      "expectedOutput": "false"
+    }
+  ],
+  "codeSnippets": [
+    {
+      "language": "cpp",
+      "userSnippet": "class Solution {\npublic:\n    bool exist(vector<vector<char>>& board, string word) {\n        // Write your solution here\n        return false;\n    }\n};",
+      "driverCode": "#include <bits/stdc++.h>\nusing namespace std;\n\n{{USER_CODE}}\n\n// ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n// Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\nnamespace oncode {\n\n// Nullable int, for level-order tree arrays such as [1,null,2].\nstruct Opt {\n    bool has = false;\n    int v = 0;\n};\n\nstruct Reader {\n    std::string s;\n    size_t p = 0;\n    Reader() {\n        std::ios::sync_with_stdio(false);\n        s.assign(std::istreambuf_iterator<char>(std::cin), std::istreambuf_iterator<char>());\n    }\n    [[noreturn]] void fail(const char* what) {\n        std::cerr << \"driver input error: \" << what << \" at byte \" << p << \"\\n\";\n        std::exit(3);\n    }\n    void ws() {\n        while (p < s.size() && std::isspace(static_cast<unsigned char>(s[p]))) p++;\n    }\n    bool peek(char c) {\n        ws();\n        return p < s.size() && s[p] == c;\n    }\n    void expect(char c) {\n        if (!peek(c)) fail(\"unexpected character\");\n        p++;\n    }\n    long long integer(long long lo, long long hi) {\n        ws();\n        bool neg = false;\n        if (p < s.size() && s[p] == '-') { neg = true; p++; }\n        size_t start = p;\n        long long v = 0;\n        while (p < s.size() && std::isdigit(static_cast<unsigned char>(s[p]))) {\n            if (p - start >= 18) fail(\"integer too long\");\n            v = v * 10 + (s[p++] - '0');\n        }\n        if (p == start) fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) fail(\"integer out of range\");\n        return v;\n    }\n    void read(int& x) { x = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    void read(long long& x) { x = integer(-999999999999999999LL, 999999999999999999LL); }\n    void read(bool& x) {\n        ws();\n        if (s.compare(p, 4, \"true\") == 0) { x = true; p += 4; }\n        else if (s.compare(p, 5, \"false\") == 0) { x = false; p += 5; }\n        else fail(\"expected true or false\");\n    }\n    void read(std::string& x) {\n        expect('\"');\n        x.clear();\n        while (p < s.size() && s[p] != '\"') {\n            if (s[p] == '\\\\') {\n                p++;\n                if (p >= s.size()) break;\n            }\n            x += s[p++];\n        }\n        if (p >= s.size()) fail(\"unterminated string\");\n        p++;\n    }\n    void read(Opt& o) {\n        ws();\n        if (s.compare(p, 4, \"null\") == 0) { o.has = false; p += 4; }\n        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    }\n    void read(char& x) {\n        std::string t;\n        read(t);\n        if (t.size() != 1) fail(\"expected one-character string\");\n        x = t[0];\n    }\n    template <class T> void read(std::vector<T>& v) {\n        v.clear();\n        expect('[');\n        if (peek(']')) { p++; return; }\n        for (;;) {\n            T e;\n            read(e);\n            v.push_back(std::move(e));\n            if (peek(',')) { p++; continue; }\n            expect(']');\n            return;\n        }\n    }\n    void end() {\n        ws();\n        if (p != s.size()) fail(\"unexpected trailing input\");\n    }\n};\n\nstruct Writer {\n    std::string out;\n    void write(int x) { out += std::to_string(x); }\n    void write(long long x) { out += std::to_string(x); }\n    void write(bool x) { out += x ? \"true\" : \"false\"; }\n    void write(const std::string& x) {\n        out += '\"';\n        for (char c : x) {\n            if (c == '\"' || c == '\\\\') out += '\\\\';\n            out += c;\n        }\n        out += '\"';\n    }\n    void write(char c) { write(std::string(1, c)); }\n    void write(const Opt& o) {\n        if (o.has) write(o.v);\n        else out += \"null\";\n    }\n    template <class T> void write(const std::vector<T>& v) {\n        out += '[';\n        for (size_t i = 0; i < v.size(); i++) {\n            if (i) out += ',';\n            write(v[i]);\n        }\n        out += ']';\n    }\n    void line() { out += '\\n'; }\n    void flush() {\n        std::fwrite(out.data(), 1, out.size(), stdout);\n        std::fflush(stdout);\n    }\n};\n\n}  // namespace oncode\n\nint main() {\n    oncode::Reader oc_in;\n    vector<vector<char>> board;\n    oc_in.read(board);\n    string word;\n    oc_in.read(word);\n    oc_in.end();\n    Solution oc_sol;\n    bool oc_res = oc_sol.exist(board, word);\n    oncode::Writer oc_out;\n    oc_out.write(oc_res);\n    oc_out.line();\n    oc_out.flush();\n    return 0;\n}"
+    },
+    {
+      "language": "java",
+      "userSnippet": "class Solution {\n    public boolean exist(char[][] board, String word) {\n        // Write your solution here\n        return false;\n    }\n}",
+      "driverCode": "import java.util.*;\nimport java.io.*;\n\n{{USER_CODE}}\n\npublic class Main {\n    // ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n    // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\n    static byte[] inBuf;\n    static int inPos;\n    static final StringBuilder OUT = new StringBuilder();\n\n    interface ElemReader<T> { T read(); }\n\n    static void initInput() throws IOException {\n        inBuf = System.in.readAllBytes();\n        inPos = 0;\n    }\n    static RuntimeException fail(String what) {\n        return new IllegalStateException(\"driver input error: \" + what + \" at byte \" + inPos);\n    }\n    static void ws() {\n        while (inPos < inBuf.length && (inBuf[inPos] == ' ' || inBuf[inPos] == '\\n' || inBuf[inPos] == '\\r' || inBuf[inPos] == '\\t')) inPos++;\n    }\n    static boolean peek(char c) {\n        ws();\n        return inPos < inBuf.length && inBuf[inPos] == c;\n    }\n    static void expect(char c) {\n        if (!peek(c)) throw fail(\"expected '\" + c + \"'\");\n        inPos++;\n    }\n    static long readInteger(long lo, long hi) {\n        ws();\n        boolean neg = false;\n        if (inPos < inBuf.length && inBuf[inPos] == '-') { neg = true; inPos++; }\n        int start = inPos;\n        long v = 0;\n        while (inPos < inBuf.length && inBuf[inPos] >= '0' && inBuf[inPos] <= '9') {\n            if (inPos - start >= 18) throw fail(\"integer too long\");\n            v = v * 10 + (inBuf[inPos++] - '0');\n        }\n        if (inPos == start) throw fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) throw fail(\"integer out of range\");\n        return v;\n    }\n    static int readInt() { return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE); }\n    static long readLong() { return readInteger(-999999999999999999L, 999999999999999999L); }\n    static boolean matchWord(String w) {\n        if (inPos + w.length() > inBuf.length) return false;\n        for (int i = 0; i < w.length(); i++) if (inBuf[inPos + i] != w.charAt(i)) return false;\n        inPos += w.length();\n        return true;\n    }\n    static boolean readBool() {\n        ws();\n        if (matchWord(\"true\")) return true;\n        if (matchWord(\"false\")) return false;\n        throw fail(\"expected true or false\");\n    }\n    static String readString() {\n        expect('\"');\n        StringBuilder sb = new StringBuilder();\n        while (inPos < inBuf.length && inBuf[inPos] != '\"') {\n            if (inBuf[inPos] == '\\\\') {\n                inPos++;\n                if (inPos >= inBuf.length) break;\n            }\n            sb.append((char) inBuf[inPos++]);\n        }\n        if (inPos >= inBuf.length) throw fail(\"unterminated string\");\n        inPos++;\n        return sb.toString();\n    }\n    static char readChar() {\n        String t = readString();\n        if (t.length() != 1) throw fail(\"expected one-character string\");\n        return t.charAt(0);\n    }\n    static <T> List<T> readList(ElemReader<T> r) {\n        List<T> list = new ArrayList<>();\n        expect('[');\n        if (peek(']')) { inPos++; return list; }\n        while (true) {\n            list.add(r.read());\n            if (peek(',')) { inPos++; continue; }\n            expect(']');\n            return list;\n        }\n    }\n    static List<Integer> readIntList() { return readList(Main::readInt); }\n    static List<Long> readLongList() { return readList(Main::readLong); }\n    static List<String> readStringList() { return readList(Main::readString); }\n    static List<List<Integer>> readIntListList() { return readList(Main::readIntList); }\n    static List<List<String>> readStringListList() { return readList(Main::readStringList); }\n    static int[] readIntArray() {\n        List<Integer> l = readIntList();\n        int[] a = new int[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static long[] readLongArray() {\n        List<Long> l = readLongList();\n        long[] a = new long[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static String[] readStringArray() { return readStringList().toArray(new String[0]); }\n    static int[][] readIntMatrix() { return readList(Main::readIntArray).toArray(new int[0][]); }\n    static char[] readCharArray() {\n        List<Character> l = readList(Main::readChar);\n        char[] a = new char[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }\n    static Integer readNullableInt() {\n        ws();\n        if (matchWord(\"null\")) return null;\n        return readInt();\n    }\n    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }\n\n    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.\n    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {\n        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n            int c = a.get(i).compareTo(b.get(i));\n            if (c != 0) return c;\n        }\n        return Integer.compare(a.size(), b.size());\n    }\n    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {\n        List<List<T>> r = new ArrayList<>();\n        for (List<T> v : x) {\n            List<T> c = new ArrayList<>(v);\n            if (sortInner) Collections.sort(c);\n            r.add(c);\n        }\n        r.sort(Main::compareLists);\n        return r;\n    }\n    static <T extends Comparable<T>> List<T> sortList(List<T> x) {\n        List<T> r = new ArrayList<>(x);\n        Collections.sort(r);\n        return r;\n    }\n    static int[][] sortRows(int[][] x) {\n        int[][] r = x.clone();\n        Arrays.sort(r, (a, b) -> {\n            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);\n            return Integer.compare(a.length, b.length);\n        });\n        return r;\n    }\n    static void endInput() {\n        ws();\n        if (inPos != inBuf.length) throw fail(\"unexpected trailing input\");\n    }\n\n    static void writeString(String s) {\n        OUT.append('\"');\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '\"' || c == '\\\\') OUT.append('\\\\');\n            OUT.append(c);\n        }\n        OUT.append('\"');\n    }\n    static void write(Object o) {\n        if (o == null) { OUT.append(\"null\"); return; }\n        if (o instanceof Boolean || o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte) { OUT.append(o); return; }\n        if (o instanceof String) { writeString((String) o); return; }\n        if (o instanceof Character) { writeString(String.valueOf(o)); return; }\n        OUT.append('[');\n        if (o instanceof int[]) {\n            int[] a = (int[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof long[]) {\n            long[] a = (long[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof boolean[]) {\n            boolean[] a = (boolean[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof char[]) {\n            char[] a = (char[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); writeString(String.valueOf(a[i])); }\n        } else if (o instanceof Object[]) {\n            Object[] a = (Object[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); write(a[i]); }\n        } else if (o instanceof Iterable) {\n            boolean first = true;\n            for (Object e : (Iterable<?>) o) { if (!first) OUT.append(','); write(e); first = false; }\n        } else {\n            throw new IllegalStateException(\"driver cannot print \" + o.getClass().getName());\n        }\n        OUT.append(']');\n    }\n    static void flushOutput() {\n        System.out.print(OUT);\n        System.out.flush();\n    }\n\n    public static void main(String[] oc_args) throws IOException {\n        initInput();\n        char[][] board = readCharMatrix();\n        String word = readString();\n        endInput();\n        boolean oc_res = new Solution().exist(board, word);\n        write(oc_res);\n        OUT.append('\\n');\n        flushOutput();\n    }\n}"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "language": "cpp",
+      "code": "class Solution {\n    bool dfs(vector<vector<char>>& b, const string& w, int i, int r, int c) {\n        if (i == (int)w.size()) return true;\n        if (r < 0 || c < 0 || r >= (int)b.size() || c >= (int)b[0].size() || b[r][c] != w[i]) return false;\n        char saved = b[r][c];\n        b[r][c] = '#';  // mark as used for this trace\n        bool found = dfs(b, w, i + 1, r + 1, c) || dfs(b, w, i + 1, r - 1, c) ||\n                     dfs(b, w, i + 1, r, c + 1) || dfs(b, w, i + 1, r, c - 1);\n        b[r][c] = saved;\n        return found;\n    }\npublic:\n    bool exist(vector<vector<char>>& board, string word) {\n        // Pruning: the board must contain enough of every letter.\n        map<char, int> have, need;\n        for (auto& row : board) for (char ch : row) have[ch]++;\n        for (char ch : word) if (++need[ch] > have[ch]) return false;\n        // Start from the rarer end of the word to cut the search.\n        if (have[word.front()] > have[word.back()]) reverse(word.begin(), word.end());\n        for (int r = 0; r < (int)board.size(); r++)\n            for (int c = 0; c < (int)board[0].size(); c++)\n                if (dfs(board, word, 0, r, c)) return true;\n        return false;\n    }\n};"
+    },
+    {
+      "language": "java",
+      "code": "class Solution {\n    private char[][] b;\n    private String w;\n    private boolean[][] used;\n\n    private boolean dfs(int i, int r, int c) {\n        if (i == w.length()) return true;\n        if (r < 0 || c < 0 || r >= b.length || c >= b[0].length || used[r][c] || b[r][c] != w.charAt(i)) return false;\n        used[r][c] = true;\n        boolean found = dfs(i + 1, r + 1, c) || dfs(i + 1, r - 1, c) || dfs(i + 1, r, c + 1) || dfs(i + 1, r, c - 1);\n        used[r][c] = false;\n        return found;\n    }\n\n    public boolean exist(char[][] board, String word) {\n        int[] have = new int[128], need = new int[128];\n        for (char[] row : board) for (char ch : row) have[ch]++;\n        for (char ch : word.toCharArray()) if (++need[ch] > have[ch]) return false;\n        if (have[word.charAt(0)] > have[word.charAt(word.length() - 1)]) word = new StringBuilder(word).reverse().toString();\n        b = board;\n        w = word;\n        used = new boolean[board.length][board[0].length];\n        for (int r = 0; r < board.length; r++)\n            for (int c = 0; c < board[0].length; c++)\n                if (dfs(0, r, c)) return true;\n        return false;\n    }\n}"
+    }
+  ],
+  "seedMeta": {
+    "order": 40,
+    "neetcodeSlug": "search-for-word",
+    "limits": {
+      "timeLimitMs": 5000,
+      "memoryLimitMb": 256
+    },
+    "signature": {
+      "method": "exist",
+      "params": [
+        {
+          "name": "board",
+          "type": "char[][]"
+        },
+        {
+          "name": "word",
+          "type": "string"
+        }
+      ],
+      "returns": "bool"
+    },
+    "expectedOutputsFrom": "reference/word-search/solution.cpp on Judge0",
+    "tests": [
+      {
+        "n": 1,
+        "kind": "sample",
+        "note": "example 1",
+        "inputBytes": 50,
+        "outputBytes": 4
+      },
+      {
+        "n": 2,
+        "kind": "sample",
+        "note": "example 2",
+        "inputBytes": 50,
+        "outputBytes": 5
+      },
+      {
+        "n": 3,
+        "kind": "sample",
+        "note": "example 3",
+        "inputBytes": 11,
+        "outputBytes": 4
+      },
+      {
+        "n": 4,
+        "kind": "hidden",
+        "note": "a cell cannot be reused",
+        "inputBytes": 27,
+        "outputBytes": 5
+      },
+      {
+        "n": 5,
+        "kind": "hidden",
+        "note": "case-sensitive",
+        "inputBytes": 11,
+        "outputBytes": 5
+      },
+      {
+        "n": 6,
+        "kind": "hidden",
+        "note": "word longer than the board",
+        "inputBytes": 29,
+        "outputBytes": 5
+      },
+      {
+        "n": 7,
+        "kind": "hidden",
+        "note": "6x6 all A, word ends in B (search trap)",
+        "inputBytes": 175,
+        "outputBytes": 5
+      },
+      {
+        "n": 8,
+        "kind": "hidden",
+        "note": "6x6 all A, 15 A's (present)",
+        "inputBytes": 175,
+        "outputBytes": 4
+      },
+      {
+        "n": 9,
+        "kind": "hidden",
+        "note": "6x6 random, 12-letter path present",
+        "inputBytes": 172,
+        "outputBytes": 4
+      },
+      {
+        "n": 10,
+        "kind": "hidden",
+        "note": "6x6 random, absent word",
+        "inputBytes": 175,
+        "outputBytes": 5
+      }
+    ],
+    "notes": ""
+  }
+}

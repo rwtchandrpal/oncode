@@ -19,10 +19,10 @@ module.exports = {
       { note: "single land cell", args: { grid: toGrid(["1"]) } },
       { note: "one row with gaps", args: { grid: toGrid(["1011011101"]) } },
       { note: "checkerboard 20x20", args: { grid: Array.from({ length: 20 }, (_, r) => Array.from({ length: 20 }, (_, c) => ((r + c) % 2 ? "0" : "1"))) } },
-      { note: "100x100 all land", args: { grid: random(rng, 100, 100, 1) } },
-      { note: "snake island 100x100", args: { grid: snake(100, 100) } },
-      { note: "150x150 random, 45% land", args: { grid: random(rng, 150, 150, 0.45) } },
-      { note: "150x150 random, 60% land", args: { grid: random(rng, 150, 150, 0.6) } },
+      { note: "70x70 all land", args: { grid: random(rng, 70, 70, 1) } },
+      { note: "snake island 70x70", args: { grid: snake(70, 70) } },
+      { note: "150x150 random, 40% land", args: { grid: random(rng, 150, 150, 0.4) } },
+      { note: "150x150 random, 50% land", args: { grid: random(rng, 150, 150, 0.5) } },
     ];
   },
 
