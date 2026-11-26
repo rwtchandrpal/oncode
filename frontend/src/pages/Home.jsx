@@ -132,6 +132,13 @@ const Home = () => {
 
   // The text box is local state; the URL is updated 300 ms after typing stops
   const [searchTerm, setSearchTerm] = useState(debouncedSearch);
+  // The URL's search changed without typing (logo link, Back, a shared link): show it in the box.
+  // Otherwise the box keeps the old text while the list shows the new URL's results.
+  const [lastUrlSearch, setLastUrlSearch] = useState(debouncedSearch);
+  if (debouncedSearch !== lastUrlSearch) {
+    setLastUrlSearch(debouncedSearch);
+    if (searchTerm.trim() !== debouncedSearch) setSearchTerm(debouncedSearch);
+  }
   useEffect(() => {
     if (searchTerm === debouncedSearch) return undefined;
     const handler = setTimeout(() => {
