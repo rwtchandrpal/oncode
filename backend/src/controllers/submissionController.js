@@ -138,7 +138,8 @@ const submitCode = async (req, res) => {
             return res.status(400).json({ message: "Missing required field." });
         }
 
-        const problem = await Problem.findById(problemId);
+        // Only what grading needs: a problem document is up to ~750 KB, mostly hidden tests (PERF)
+        const problem = await Problem.findById(problemId).select('hiddenTestCases codeSnippets').lean();
         if(!problem) {
             return res.status(404).json({ message: "Problem not found." });
         }
@@ -221,7 +222,8 @@ const runCode = async (req, res) => {
             return res.status(400).json({ message: "Some fields are missing" });
         }
 
-        const problem = await Problem.findById(problemId);
+        // Run needs only the visible test and the drivers: ~19 KB instead of the whole document (up to ~750 KB)
+        const problem = await Problem.findById(problemId).select('visibleTestCase codeSnippets').lean();
         if(!problem) {
             return res.status(404).json({ message: "Problem not found." });
         }
