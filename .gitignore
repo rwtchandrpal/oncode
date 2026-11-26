@@ -1,7 +1,36 @@
+# Dependencies
 node_modules/
+
+# Environment files (keep the examples)
 .env
+.env.*
+!.env.example
+
+# Build output and coverage
 dist/
 dist-qa/
-.DS_Store
+build/
 coverage/
+.cache/
+
+# Logs
+logs/
+*.log
+
+# Uploads and temp files
+uploads/
+tmp/
+temp/
+
+# Local database backups
 backend/backups/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local AI-assistant configuration
+.claude/
+CLAUDE.md
