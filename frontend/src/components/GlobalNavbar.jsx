@@ -95,7 +95,7 @@ const GlobalNavbar = () => {
                 <UserRound className="w-3.5 h-3.5" aria-hidden="true" />
                 Guest<span className="hidden sm:inline"> · progress not saved</span>
               </div>
-              <ul tabIndex={0} className="mt-3 z-1 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 border border-base-content/10 rounded-box w-60">
+              <ul tabIndex={0} className="mt-3 z-1 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 border border-base-content/10 rounded-box w-52 sm:w-60">
                 <li className="px-4 py-2 border-b border-base-content/10 text-base-content/70 text-xs cursor-default">
                   You&apos;re in guest mode. Your progress won&apos;t be saved.
                   {guest?.expiresAt && (

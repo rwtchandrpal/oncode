@@ -186,6 +186,12 @@ describe('auth modal: sign up, log in, or continue as guest', () => {
     expect(store.getState().auth.authModal.isOpen).toBe(false);
   });
 
+  it('a current guest who opens the dialog is offered sign up / log in, not another guest session', () => {
+    renderWithStore(<AuthModal />, makeStore(guestAuth({ authModal: { isOpen: true, mode: 'signup', redirectPath: '/', notice: null } })));
+    expect(screen.getByRole('heading', { name: /create your account/i })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /continue as guest/i })).toBeNull();
+  });
+
   it('after a guest session ends it offers to start a new one', () => {
     renderWithStore(<AuthModal />, makeStore(baseAuth({ authModal: { isOpen: true, mode: 'guest-expired', redirectPath: '/', notice: null } })));
     expect(screen.getByRole('heading', { name: /guest session ended/i })).toBeTruthy();

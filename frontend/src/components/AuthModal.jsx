@@ -20,7 +20,7 @@ const srLabel = 'sr-only';
 const AuthModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { authModal, error, isLoading } = useSelector((state) => state.auth);
+  const { authModal, error, isLoading, isGuest } = useSelector((state) => state.auth);
   const { isOpen, mode, redirectPath, notice } = authModal;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -328,7 +328,8 @@ const AuthModal = () => {
             </div>
           </form>
         )}
-        {mode === 'login' && guestOption}
+        {/* Someone already in guest mode is here to sign up or log in, not to start another guest session */}
+        {mode === 'login' && !isGuest && guestOption}
 
         {/* ================= MODE: SIGN UP ================= */}
         {mode === 'signup' && (
@@ -464,7 +465,7 @@ const AuthModal = () => {
             </div>
           </form>
         )}
-        {mode === 'signup' && guestOption}
+        {mode === 'signup' && !isGuest && guestOption}
 
         {/* ================= MODE: GUEST SESSION ENDED ================= */}
         {mode === 'guest-expired' && (
