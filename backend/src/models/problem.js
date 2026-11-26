@@ -13,6 +13,16 @@ const problemSchema = new Schema({
     type: Number,
     unique: true
   },
+  // Stable kebab-case key used by the seed scripts (backend/seed) to upsert problems.
+  // Optional: problems created in the admin UI have none, so the unique index is sparse.
+  slug: {
+    type: String,
+    unique: true,
+    sparse: true,
+    trim: true,
+    lowercase: true,
+    match: /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+  },
   topics: { 
     type: [String], 
     required: true, 
