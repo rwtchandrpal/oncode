@@ -4,6 +4,9 @@
 const { rateLimit, ipKeyGenerator } = require("express-rate-limit");
 const { RedisStore } = require("rate-limit-redis");
 const client = require("../config/redis");
+const guestConfig = require("../config/guest");
+const { errorBody } = require("../utils/AppError");
+const { GUEST_UNAVAILABLE_MESSAGE } = require("../utils/guestSession");
 
 const makeStore = (name) => {
   const store = new RedisStore({
@@ -25,6 +28,20 @@ const limiter = (name, options) =>
     store: makeStore(name),
     ...options,
   });
+
+// Guest limiters fail CLOSED: when Redis is down the request gets 503 instead of passing unlimited.
+// Anonymous one-click sessions have no other abuse control (see docs/GUEST_MODE_DESIGN.md).
+const failClosed = (middleware) => async (req, res, next) => {
+  let passed = false;
+  try {
+    await middleware(req, res, () => {
+      passed = true;
+    });
+  } catch {
+    return res.status(503).json(errorBody(503, GUEST_UNAVAILABLE_MESSAGE, "GUEST_MODE_UNAVAILABLE"));
+  }
+  if (passed) next();
+};
 
 const clientIp = (req) => ipKeyGenerator(req.ip || "");
 const normalizedEmail = (req) =>
@@ -59,6 +76,24 @@ const demoLimiter = limiter("demo", {
   message: { message: "Too many demo accounts created from this IP. Please try again in 15 minutes." },
 });
 
+// New guest sessions per IP
+const guestSessionLimiter = failClosed(limiter("guest-session", {
+  windowMs: 60 * 60 * 1000,
+  limit: guestConfig.sessionsPerIpPerHour,
+  passOnStoreError: false,
+  message: { message: "Too many guest sessions started from this network. Please sign up or try again later." },
+}));
+
+// Run + Submit across all guests together (users never count against it)
+const guestGlobalExecutionLimiter = failClosed(limiter("guest-exec-global", {
+  windowMs: 15 * 60 * 1000,
+  limit: guestConfig.globalExecutionsPer15Min,
+  passOnStoreError: false,
+  skip: (req) => !req.guest,
+  keyGenerator: () => "all",
+  message: { message: "Guest mode is busy right now. Please sign up or log in to keep coding." },
+}));
+
 const submitLimiter = limiter("submit", {
   windowMs: 15 * 60 * 1000,
   limit: 50,
@@ -69,7 +104,7 @@ const submitLimiter = limiter("submit", {
 const aiUserLimiter = limiter("ai-user", {
   windowMs: 10 * 60 * 1000,
   limit: 10,
-  keyGenerator: (req) => req.user?._id?.toString() || clientIp(req),
+  keyGenerator: (req) => req.user?._id?.toString() || (req.guest ? `guest:${req.guest.id}` : clientIp(req)),
   message: { message: "Too many AI Tutor requests. You have reached the limit of 10 questions per 10 minutes. Please take a moment to review the hints before asking again." },
 });
 
@@ -85,6 +120,8 @@ module.exports = {
   loginEmailLimiter,
   loginIpLimiter,
   demoLimiter,
+  guestSessionLimiter,
+  guestGlobalExecutionLimiter,
   submitLimiter,
   aiUserLimiter,
   aiIpLimiter,

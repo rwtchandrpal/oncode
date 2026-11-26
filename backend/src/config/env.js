@@ -29,6 +29,11 @@ const envSchema = z.object({
   // Number of reverse-proxy hops in front of the API (express "trust proxy"). 0 = trust none.
   TRUST_PROXY_HOPS: optionalInt(0, 10).default(0),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
+  // Kill switch for guest mode (one-click sessions without an account). Default on.
+  GUEST_MODE_ENABLED: z.preprocess(
+    (v) => (v === undefined || v === "" ? undefined : String(v).trim().toLowerCase()),
+    z.enum(["true", "false", "1", "0"]).default("true").transform((v) => v === "true" || v === "1")
+  ),
 });
 
 const parseEnv = (source = process.env) => {

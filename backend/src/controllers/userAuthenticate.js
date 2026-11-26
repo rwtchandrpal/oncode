@@ -9,6 +9,28 @@ const client = require("../config/redis");
 const crypto = require("crypto");
 const { AppError, sendError } = require("../utils/AppError");
 const logger = require('../utils/logger');
+const guestConfig = require("../config/guest");
+const { signGuestToken } = require("../utils/guestSession");
+
+// Starts a guest session: a short-lived signed token, no user document and no saved progress.
+const startGuestSession = (req, res) => {
+  if (!guestConfig.enabled) {
+    return res.status(503).json({
+      message: "Guest mode is currently unavailable. Please sign up or log in.",
+      code: "GUEST_MODE_DISABLED",
+    });
+  }
+  const { token, expiresAt } = signGuestToken();
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+    'Pragma': 'no-cache'
+  });
+  res.status(201).json({
+    message: "Guest session started.",
+    guest: { expiresAt },
+    token,
+  });
+};
 
 // handler for temporary isolated demo session
 const demoLogin = async (req, res) => {
@@ -341,6 +363,7 @@ module.exports = {
   login,
   logout,
   demoLogin,
+  startGuestSession,
   adminRegister,
   deleteProfile,
   checkAuth,
