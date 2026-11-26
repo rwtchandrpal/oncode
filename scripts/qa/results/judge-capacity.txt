@@ -1,0 +1,6 @@
+problem two-sum, found
+1 correct                          wall  11497 ms | Accepted 11497ms
+1 infinite loop (TLE on 10 tests)  wall  18759 ms | Time Limit Exceeded 18759ms
+2 concurrent correct               wall  26908 ms | 503 EXECUTION_UNAVAILABLE 26891ms | 503 EXECUTION_UNAVAILABLE 26908ms
+3 concurrent correct               wall  24408 ms | Accepted 11275ms | Accepted 24408ms | Accepted 24259ms
+1 correct + 1 infinite loop        wall  29763 ms | 503 EXECUTION_UNAVAILABLE 29590ms | 503 EXECUTION_UNAVAILABLE 29762ms

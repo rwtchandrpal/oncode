@@ -5,7 +5,7 @@
 //                                                       + wrong / infinite loop / runtime error / compile
 //                                                       error on a sample of problems
 //   node scripts/qa/run-submissions.mjs two-sum 3sum    only these slugs
-//   QA_API=http://localhost:3200 QA_SAMPLE_EVERY=7 ...  overrides
+//   QA_API=http://localhost:3200 QA_SAMPLE_EVERY=7 ...  overrides; QA_SAMPLES=0 skips the sampled checks for listed slugs
 //
 // The per-IP submit rate limit (50 / 15 min) would stop a 150+ submission run, so the script deletes the
 // rl:submit:* keys in the LOCAL QA Redis before each request. That is a harness step, not app behaviour.
@@ -93,7 +93,7 @@ for (const p of problems) {
     const r = await submit(p._id, lang, ref[lang]);
     checks.push({ kind: `correct ${lang}`, expect: 'Accepted', ...r, ok: r.status === 'Accepted' && r.passed === r.total && r.total > 0 && r.total <= 10 });
   }
-  if (i % SAMPLE_EVERY === 1 || only.length) {
+  if (i % SAMPLE_EVERY === 1 || (only.length && process.env.QA_SAMPLES !== '0')) {
     const wrongFile = existsSync(dir) && readdirSync(dir).find((f) => /^wrong.*\.(cpp|java)$/.test(f));
     if (wrongFile) {
       const lang = wrongFile.endsWith('.java') ? 'java' : 'cpp';
@@ -123,7 +123,7 @@ for (const r of rows) {
 }
 const total = rows.length, failed = rows.filter((r) => r.checks.some((x) => !x.ok)).length;
 md.push('', `${total} problems, ${total - failed} PASS, ${failed} FAIL. Generated ${new Date().toISOString()}.`);
-const name = only.length ? 'submissions-partial.md' : 'submissions.md';
+const name = process.env.QA_OUT || (only.length ? 'submissions-partial.md' : 'submissions.md');
 writeFileSync(path.join(outDir, name), md.join('\n') + '\n');
 writeFileSync(path.join(outDir, name.replace('.md', '.json')), JSON.stringify(rows, null, 1));
 console.log(`\n${total} problems, ${total - failed} PASS, ${failed} FAIL -> scripts/qa/results/${name}`);

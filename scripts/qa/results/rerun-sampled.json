@@ -1,0 +1,236 @@
+[
+ {
+  "n": 36,
+  "slug": "implement-trie-prefix-tree",
+  "checks": [
+   {
+    "kind": "correct cpp",
+    "expect": "Accepted",
+    "http": 201,
+    "status": "Accepted",
+    "passed": 10,
+    "total": 10,
+    "ms": 6382,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "correct java",
+    "expect": "Accepted",
+    "http": 201,
+    "status": "Accepted",
+    "passed": 10,
+    "total": 10,
+    "ms": 8506,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "wrong cpp (wrong-no-end-mark.cpp)",
+    "expect": "Wrong Answer",
+    "http": 201,
+    "status": "Wrong Answer",
+    "passed": 0,
+    "total": 10,
+    "ms": 6384,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "tle cpp",
+    "expect": "Time Limit Exceeded",
+    "http": 201,
+    "status": "Time Limit Exceeded",
+    "passed": 0,
+    "total": 10,
+    "ms": 16904,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "rte cpp",
+    "expect": "Runtime Error",
+    "http": 201,
+    "status": "Runtime Error (NZEC)",
+    "passed": 0,
+    "total": 10,
+    "ms": 6361,
+    "retried": false,
+    "errorMessage": "Runtime Error (NZEC) on hidden test case 1.",
+    "ok": true
+   },
+   {
+    "kind": "ce cpp",
+    "expect": "Compilation Error",
+    "http": 201,
+    "status": "Compilation Error",
+    "passed": 0,
+    "total": 10,
+    "ms": 4418,
+    "retried": false,
+    "errorMessage": "main.cpp:4:1: error: expected unqualified-id before ‘this’\n    4 | this is not C++ ;\n      | ^~~~\nmain.cpp: In function ‘int main()’:\nmain.cpp:163:5: error: ‘Trie’ was not declared in this scope\n  163 |     Trie* oc_obj = nullptr;\n      |     ^~~~\nmain.cpp:163:11: error: ‘oc_obj’ was not declared in this scope; did you mean ‘oc_out’?\n  163 |     Trie* oc_obj = nullptr;\n      |           ^~~~~~\n      |           oc_out\nmain.cpp:169:45: error: expected type-specifier before ‘Trie’\n  169 |         if (oc_op == \"Trie\") { oc_obj = new Trie(); oc_out.out += \"null\"; }\n      |                                             ^~~~\n",
+    "ok": true
+   }
+  ]
+ },
+ {
+  "n": 43,
+  "slug": "clone-graph",
+  "checks": [
+   {
+    "kind": "correct cpp",
+    "expect": "Accepted",
+    "http": 201,
+    "status": "Accepted",
+    "passed": 10,
+    "total": 10,
+    "ms": 6223,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "correct java",
+    "expect": "Accepted",
+    "http": 201,
+    "status": "Accepted",
+    "passed": 10,
+    "total": 10,
+    "ms": 8286,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "wrong cpp (wrong-shallow.cpp)",
+    "expect": "Wrong Answer",
+    "http": 201,
+    "status": "Wrong Answer",
+    "passed": 0,
+    "total": 10,
+    "ms": 8270,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "tle java",
+    "expect": "Time Limit Exceeded",
+    "http": 201,
+    "status": "Time Limit Exceeded",
+    "passed": 0,
+    "total": 10,
+    "ms": 18358,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "rte java",
+    "expect": "Runtime Error",
+    "http": 201,
+    "status": "Runtime Error (NZEC)",
+    "passed": 0,
+    "total": 10,
+    "ms": 8283,
+    "retried": false,
+    "errorMessage": "Runtime Error (NZEC) on hidden test case 1.",
+    "ok": true
+   },
+   {
+    "kind": "ce java",
+    "expect": "Compilation Error",
+    "http": 201,
+    "status": "Compilation Error",
+    "passed": 0,
+    "total": 10,
+    "ms": 4263,
+    "retried": false,
+    "errorMessage": "Main.java:4: error: illegal start of type\nclass Solution { this is not java }\n                 ^\nMain.java:4: error: ';' expected\nclass Solution { this is not java }\n                     ^\nMain.java:4: error: ';' expected\nclass Solution { this is not java }\n                            ^\nMain.java:4: error: <identifier> expected\nclass Solution { this is not java }\n                                 ^\n4 errors\n",
+    "ok": true
+   }
+  ]
+ },
+ {
+  "n": 64,
+  "slug": "merge-intervals",
+  "checks": [
+   {
+    "kind": "correct cpp",
+    "expect": "Accepted",
+    "http": 201,
+    "status": "Accepted",
+    "passed": 10,
+    "total": 10,
+    "ms": 6379,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "correct java",
+    "expect": "Accepted",
+    "http": 201,
+    "status": "Accepted",
+    "passed": 10,
+    "total": 10,
+    "ms": 8358,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "wrong cpp (wrong-strict.cpp)",
+    "expect": "Wrong Answer",
+    "http": 201,
+    "status": "Wrong Answer",
+    "passed": 1,
+    "total": 10,
+    "ms": 6327,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "tle cpp",
+    "expect": "Time Limit Exceeded",
+    "http": 201,
+    "status": "Time Limit Exceeded",
+    "passed": 0,
+    "total": 10,
+    "ms": 16513,
+    "retried": false,
+    "errorMessage": null,
+    "ok": true
+   },
+   {
+    "kind": "rte cpp",
+    "expect": "Runtime Error",
+    "http": 201,
+    "status": "Runtime Error (NZEC)",
+    "passed": 0,
+    "total": 10,
+    "ms": 6301,
+    "retried": false,
+    "errorMessage": "Runtime Error (NZEC) on hidden test case 1.",
+    "ok": true
+   },
+   {
+    "kind": "ce cpp",
+    "expect": "Compilation Error",
+    "http": 201,
+    "status": "Compilation Error",
+    "passed": 0,
+    "total": 10,
+    "ms": 4273,
+    "retried": false,
+    "errorMessage": "main.cpp:4:1: error: expected unqualified-id before ‘this’\n    4 | this is not C++ ;\n      | ^~~~\nmain.cpp: In function ‘int main()’:\nmain.cpp:144:5: error: ‘Solution’ was not declared in this scope\n  144 |     Solution oc_sol;\n      |     ^~~~~~~~\nmain.cpp:145:34: error: ‘oc_sol’ was not declared in this scope\n  145 |     vector<vector<int>> oc_res = oc_sol.merge(intervals);\n      |                                  ^~~~~~\n",
+    "ok": true
+   }
+  ]
+ }
+]
