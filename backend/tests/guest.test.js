@@ -270,6 +270,18 @@ describe("guest run and submit", () => {
       incr.mockRestore();
     }
   });
+
+  it("Redis down: no new guest sessions (the per-IP limiter fails closed)", async () => {
+    const sendCommand = vi.spyOn(redis, "sendCommand").mockRejectedValue(new Error("ECONNREFUSED"));
+    try {
+      const res = await api().post("/user/guest");
+      expect(res.status).toBe(503);
+      expect(res.body.error.code).toBe("GUEST_MODE_UNAVAILABLE");
+      expect(res.body.token).toBeUndefined();
+    } finally {
+      sendCommand.mockRestore();
+    }
+  });
 });
 
 describe("guest history isolation", () => {

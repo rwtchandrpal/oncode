@@ -31,15 +31,20 @@ const limiter = (name, options) =>
 
 // Guest limiters fail CLOSED: when Redis is down the request gets 503 instead of passing unlimited.
 // Anonymous one-click sessions have no other abuse control (see docs/GUEST_MODE_DESIGN.md).
+// express-rate-limit does not throw a store error: it catches it and calls next(error), so the callback's
+// argument must be checked. Ignoring it treated "Redis down" as "allowed" (guest sessions failed open).
 const failClosed = (middleware) => async (req, res, next) => {
   let passed = false;
+  let failed = false;
   try {
-    await middleware(req, res, () => {
-      passed = true;
+    await middleware(req, res, (err) => {
+      if (err) failed = true;
+      else passed = true;
     });
   } catch {
-    return res.status(503).json(errorBody(503, GUEST_UNAVAILABLE_MESSAGE, "GUEST_MODE_UNAVAILABLE"));
+    failed = true;
   }
+  if (failed) return res.status(503).json(errorBody(503, GUEST_UNAVAILABLE_MESSAGE, "GUEST_MODE_UNAVAILABLE"));
   if (passed) next();
 };
 
