@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { Maximize2, Minimize2, Play, Send } from "lucide-react";
 import axiosClient from "../../utils/axiosClient";
-import { loadDraft, saveDraft, clearDraft } from "../../utils/editorStorage";
+import { useSelector } from "react-redux";
+import { loadDraft, saveDraft, clearDraft, purgeLegacyDrafts } from "../../utils/editorStorage";
+import { readGuestId } from "../../utils/guestSession";
 
 import GlobalNavbar from "../../components/GlobalNavbar";
 
@@ -27,6 +29,13 @@ const ProblemWorkSpace = () => {
   // The URL key: the problem's slug, or its _id on old links (swapped for the slug once loaded)
   const { slug } = useParams();
   const navigate = useNavigate();
+  // Whose editor drafts to load and save: the signed-in user, or this guest session (never shared)
+  const userId = useSelector((state) => state.auth.user?._id);
+  const isGuest = useSelector((state) => state.auth.isGuest);
+  const draftOwner = userId || (isGuest ? `guest-${readGuestId() || "session"}` : null);
+  useEffect(() => {
+    purgeLegacyDrafts();
+  }, []);
 
   // --- Core State ---
   const [problem, setProblem] = useState(null);
@@ -130,7 +139,7 @@ const ProblemWorkSpace = () => {
           data.problem.codeSnippets.forEach(snippet => {
             const lang = snippet.language.toLowerCase();
             starters[lang] = snippet.userSnippet;
-            initial[lang] = loadDraft(data.problem._id, lang) ?? snippet.userSnippet;
+            initial[lang] = loadDraft(draftOwner, data.problem._id, lang) ?? snippet.userSnippet;
           });
           userCodesRef.current = { ...initial };
           setStarterCodes(starters);
@@ -154,7 +163,7 @@ const ProblemWorkSpace = () => {
     return () => {
       isMounted = false;
     };
-  }, [slug, reloadKey, navigate]);
+  }, [slug, reloadKey, navigate, draftOwner]);
 
   // Keep code buffer in ref without triggering parent re-render on every keystroke
   const handleCodeChange = (newCode) => {
@@ -163,7 +172,7 @@ const ProblemWorkSpace = () => {
     userCodesRef.current[lang] = newCode || "";
     // Save the draft 500 ms after the last keystroke (UX-05)
     clearTimeout(saveTimersRef.current[lang]);
-    saveTimersRef.current[lang] = setTimeout(() => saveDraft(problemId, lang, newCode || ""), 500);
+    saveTimersRef.current[lang] = setTimeout(() => saveDraft(draftOwner, problemId, lang, newCode || ""), 500);
   };
 
   const handleResetCode = () => {
@@ -172,7 +181,7 @@ const ProblemWorkSpace = () => {
     if (!window.confirm("Reset your code to the starter template? Your current code for this language will be lost.")) return;
     if (editorRef.current) editorRef.current.setValue(starter);
     clearTimeout(saveTimersRef.current[lang]);
-    clearDraft(problemId, lang);
+    clearDraft(draftOwner, problemId, lang);
     userCodesRef.current[lang] = starter;
     codeRef.current = starter;
   };

@@ -39,6 +39,17 @@ export const decodeTokenExpiry = (token) => {
   }
 };
 
+// The stored guest session's random id (the token's `gid`), or null. UI only, like decodeTokenExpiry.
+export const readGuestId = () => {
+  try {
+    const payload = readGuestToken().split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const { gid } = JSON.parse(atob(payload));
+    return typeof gid === 'string' ? gid : null;
+  } catch {
+    return null;
+  }
+};
+
 // The guest session stored in this browser, or null. An expired or unreadable token is removed.
 export const readActiveGuestSession = () => {
   const token = readGuestToken();

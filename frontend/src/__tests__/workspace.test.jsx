@@ -57,8 +57,13 @@ const { default: axiosClient } = await import('../utils/axiosClient');
 
 const Where = () => <span data-testid="where">{useLocation().pathname}</span>;
 
-const renderWorkspace = (url = '/problems/double-it') => {
-  const store = configureStore({ reducer: { auth: authReducer } });
+// The workspace is only reachable signed in (or as a guest); drafts are scoped to that account.
+const signedIn = (userId) => ({
+  auth: { ...authReducer(undefined, { type: '@@init' }), user: { _id: userId, role: 'user' }, isAuthenticated: true },
+});
+
+const renderWorkspace = (url = '/problems/double-it', userId = 'u1') => {
+  const store = configureStore({ reducer: { auth: authReducer }, preloadedState: signedIn(userId) });
   return render(
     <Provider store={store}>
       <MemoryRouter initialEntries={[url]}>
@@ -110,7 +115,7 @@ describe('workspace language buffers (BUG-05) and drafts (UX-05)', () => {
     await screen.findByTestId('editor');
     type('// draft');
     await act(async () => { vi.advanceTimersByTime(600); });
-    expect(localStorage.getItem('oncode:code:p1:cpp')).toBe('// draft');
+    expect(localStorage.getItem('oncode:code:u1:p1:cpp')).toBe('// draft');
     vi.useRealTimers();
 
     cleanup();
@@ -118,6 +123,13 @@ describe('workspace language buffers (BUG-05) and drafts (UX-05)', () => {
     renderWorkspace();
     await screen.findByTestId('editor');
     expect(editor().value).toBe('// draft');
+  });
+
+  it('another account on the same browser gets the starter code, not the previous user\'s draft', async () => {
+    localStorage.setItem('oncode:code:u1:p1:cpp', '// private code of u1');
+    renderWorkspace('/problems/double-it', 'u2');
+    await screen.findByTestId('editor');
+    expect(editor().value).toBe('// cpp starter');
   });
 });
 
