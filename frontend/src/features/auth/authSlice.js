@@ -87,7 +87,10 @@ export const checkAuth = createAsyncThunk(
             const { data } = await axiosClient.get('/user/check');
             return data.user;
         } catch (error) {
-            localStorage.removeItem('token');
+            // Only a 401 means the token is bad. A network error, timeout or 5xx (backend asleep or
+            // restarting, MongoDB blip: the API answers 503 on purpose) must not sign the user out, and
+            // other tabs would follow through the storage event. A reload retries the check.
+            if (error.response?.status === 401) localStorage.removeItem('token');
             return handleAxiosError(error, rejectWithValue);
         }
     }

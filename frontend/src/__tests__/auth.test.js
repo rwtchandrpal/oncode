@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer, { logoutUser, sessionCleared, openAuthModal } from '../features/auth/authSlice';
+import authReducer, { logoutUser, checkAuth, sessionCleared, openAuthModal } from '../features/auth/authSlice';
 import axiosClient, { setupInterceptors } from '../utils/axiosClient';
 
 const signedInState = () => ({
@@ -39,6 +39,32 @@ describe('authSlice (BUG-08)', () => {
     await store.dispatch(logoutUser());
     expect(store.getState().auth.isAuthenticated).toBe(false);
     expect(store.getState().auth.user).toBeNull();
+    expect(localStorage.getItem('token')).toBeNull();
+  });
+});
+
+describe('checkAuth keeps the token unless the server rejects it', () => {
+  const failWithNetworkError = () => {
+    axiosClient.defaults.adapter = (config) =>
+      Promise.reject(Object.assign(new Error('Network Error'), { config, code: 'ERR_NETWORK', request: {} }));
+  };
+
+  it.each([
+    ['a network error', failWithNetworkError],
+    ['a 503', () => failWith(503)],
+  ])('%s on /user/check does not delete the stored token', async (_label, fail) => {
+    const store = makeStore();
+    localStorage.setItem('token', 'valid-token');
+    fail();
+    await store.dispatch(checkAuth());
+    expect(localStorage.getItem('token')).toBe('valid-token');
+  });
+
+  it('a 401 on /user/check deletes the stored token', async () => {
+    const store = makeStore();
+    localStorage.setItem('token', 'expired-token');
+    failWith(401);
+    await store.dispatch(checkAuth());
     expect(localStorage.getItem('token')).toBeNull();
   });
 });
