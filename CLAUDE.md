@@ -4,7 +4,8 @@
 Oncode is a LeetCode-style online coding platform (MERN). Users browse a problem list
 (search / difficulty / topic / solved filters), solve problems in a Monaco editor in **C++ or Java**,
 and Run (visible sample test) or Submit (all hidden tests) through a self-hosted **Judge0** on AWS EC2.
-It also has profiles and stats, 24-hour isolated **demo sessions**, a Gemini-backed **AI tutor**, and an
+It also has profiles and stats, a 4-hour **guest mode** (no account, nothing saved; see `docs/GUEST_MODE_DESIGN.md`),
+a Gemini-backed **AI tutor**, and an
 admin area (dashboard metrics, create/edit/delete problems, register users or admins).
 
 ## 2. Tech stack (from package.json)
@@ -17,19 +18,21 @@ admin area (dashboard metrics, create/edit/delete problems, register users or ad
 ## 3. Repo map
 ```
 /                    README.md, .gitignore, stray root node_modules/ (compression only, no root package.json)
-docs/                empty
+docs/                GUEST_MODE_DESIGN.md (guest mode design and decisions)
 backend/
   src/server.js      Express app: CORS, compression, JSON 5mb, routers, global error handler, DB + Redis boot
   src/config/        db.js (mongoose.connect), redis.js (node-redis client)
   src/routes/        userAuth.js (/user), problemRoutes.js (/problem), submitRoute.js (/submission),
                      adminRoutes.js (/admin), chatAIRoute.js (/chatAI); rate limiters live here
-  src/middlewares/   userMiddleware (JWT + Redis blocklist + DB user), adminMiddleware (+ role check),
-                     optionalUserMiddleware (guest-friendly)
-  src/controllers/   userAuthenticate.js (register/login/demo/logout/profile/stats), problemController.js
+  src/middlewares/   authenticate.js: requireUser, requireAdmin, requireUserOrGuest (sets req.guest, never
+                     req.user, for guest tokens), optionalUser; rateLimits.js (incl. fail-closed guest limiters)
+  src/controllers/   userAuthenticate.js (register/login/guest/logout/profile/stats), problemController.js
                      (problem CRUD, list, solution, per-problem submissions), submissionController.js (run/submit),
                      adminController.js (dashboard), chatWithAI.js (Gemini)
-  src/models/        user.js, problem.js (codeSnippets with driverCode, hiddenTestCases, referenceSolutions), submission.js
-  src/utils/         judge0Utility.js (batch submit + poll), validate.js (register whitelist), cleanupDemoWorker.js
+  src/models/        user.js, problem.js (codeSnippets with driverCode, hiddenTestCases, referenceSolutions), submission.js,
+                     guestSubmission.js (guest-only, TTL-expiring)
+  src/config/guest.js  guest mode limits (session length, quotas)
+  src/utils/         judge0Utility.js (batch submit + poll), guestSession.js (guest tokens + quotas)
 frontend/
   src/main.jsx, App.jsx   router + route guards (ProtectedRoute, AdminRoute, PublicOnlyRoute), lazy routes
   src/store/, features/auth/authSlice.js   single Redux slice: auth + auth-modal state
@@ -48,11 +51,13 @@ audit/                     audit deliverables (report, findings CSV, plan, progr
 - Install: `npm install` in `backend/` and in `frontend/`.
 - Backend env var **names** (`backend/.env`, gitignored): `PORT`, `MONGO_URI`, `JWT_KEY`, `REDIS_HOST`,
   `REDIS_PORT`, `REDIS_PASS`, `JUDGE0_BASE_URL`, `JUDGE0_AUTH_TOKEN`, `JUDGE0_TIMEOUT_MS` (optional),
-  `GEMINI_API_KEY`, `CLIENT_URL`, `USER_ID` (present in .env, unused by code).
+  `GEMINI_API_KEY`, `CLIENT_URL`, `GUEST_MODE_ENABLED` (optional, default true), `USER_ID` (present in .env,
+  unused by code).
 - Frontend env var: `VITE_API_URL` (defaults to `http://localhost:3000`).
 - Dev: backend `npm run dev` (nodemon, port `PORT` || 3000); frontend `npm run dev` (Vite, 5173).
   Frontend calls the backend directly at `VITE_API_URL`; CORS allows `CLIENT_URL` only.
-- Build: `cd frontend && npm run build`. Lint: `cd frontend && npm run lint`. Backend has no tests or lint.
+- Build: `cd frontend && npm run build`. Lint: `npm run lint` in each app. Tests: `npm test` in each app (backend
+  needs the `audit/harness` Mongo/Redis containers on 127.0.0.1:27018 / :6380; Judge0 is mocked). CI runs both.
 - **Local / audit runs must not use the Atlas and Redis Cloud values in `backend/.env`.** Override them on the
   command line with disposable Docker containers (see `audit/harness/README.md`).
 
@@ -61,8 +66,10 @@ audit/                     audit deliverables (report, findings CSV, plan, progr
   no `next(err)` usage, no service layer.
 - Response shape is inconsistent: usually `{ message, ...data }`; errors are `{ message }` but the AI route returns
   `{ error }`. Many 500s concatenate `err.message` into the message.
-- Auth: `POST /user/login|register|demo` returns `{ user, token }`; the frontend stores the token in
-  `localStorage.token` and sends `Authorization: Bearer`. JWT lifetime is 1h (demo 24h), with no refresh token.
+- Auth: `POST /user/login|register` returns `{ user, token }`; the frontend stores the token in
+  `localStorage.token` and sends `Authorization: Bearer`. JWT lifetime is 1h, with no refresh token.
+  Guest mode: `POST /user/guest` returns `{ guest, token }` (4h, `{ typ: "guest", gid }`, no DB user), stored in
+  `localStorage.guestToken`. User-only routes answer guests 403 `GUEST_NOT_ALLOWED`.
   Logout puts the token on a Redis blocklist (`token:<jwt>`). Middleware re-reads the user (and role) from Mongo on every request.
 - Frontend pages fetch with `axiosClient` inside `useEffect` with an `isMounted` guard. Only auth lives in Redux.
 - Styling uses DaisyUI semantic classes (`bg-base-200`, `text-base-content/60`); dark theme only.
@@ -84,5 +91,4 @@ audit/                     audit deliverables (report, findings CSV, plan, progr
 - The update form only edits title, difficulty, topics, description and constraints. Test cases, driver code and
   solutions cannot be edited from the UI.
 - No admin "view all submissions" feature exists, despite the README.
-- No automated tests, no CI, no backend lint.
 - See `audit/AUDIT_REPORT.md` for the full findings list.

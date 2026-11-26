@@ -12,3 +12,7 @@ or Judge0 values in `backend/.env`.
 | Frontend | `cd frontend && VITE_API_URL=http://localhost:3100 npx vite --port 5174 --strictPort` |
 
 Tear down: `docker rm -f oncode-audit-mongo oncode-audit-redis`.
+
+Note: `api-tests-2.mjs` and `api-tests-3.mjs` are a frozen record of the audit. Their demo-session checks call
+`POST /user/demo`, which was removed when guest mode replaced demo accounts (see `docs/GUEST_MODE_DESIGN.md`), so
+those checks now get a 404. Guest mode is covered by `backend/tests/guest.test.js`.

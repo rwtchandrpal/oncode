@@ -27,8 +27,28 @@ submit against hidden tests on a self-hosted Judge0, and get hints from an AI tu
   full solutions. Rate-limited per user and per network.
 - **Profile:** solved counts by difficulty, submission totals and acceptance rate (graded submissions only);
   account deletion.
-- **Demo mode:** one click creates an isolated 24-hour guest account (20 code runs, 3 AI questions), deleted
-  automatically when it expires.
+- **Guest mode:** "Continue as Guest" in the sign-in dialog starts solving in one click, with no account. See
+  [Guest mode](#guest-mode) below.
+
+### Guest mode
+A guest session is a signed 4-hour token with a random id. No user document is created and nothing is saved to a
+profile. The UI says so when the session starts ("You're in guest mode. Your progress won't be saved...") and
+keeps a **Guest** badge with **Sign up** / **Log in** in the navbar.
+
+| | Guest |
+|---|---|
+| Problem list, statements, editor, drafts | yes |
+| Run + Submit | yes, 30 per session (plus a global guest budget and the usual per-IP limit) |
+| Submission history | this session only, kept in `guestsubmissions` and deleted by a TTL index when the session ends |
+| AI tutor | 5 questions per session |
+| Official solutions, profile, stats, solved badges, admin | no |
+
+- Guest submissions never touch `submissions`, solved lists, profile stats or the admin dashboard.
+- Signing up or logging in ends guest mode, and that session's submissions are **discarded** (code drafts stay
+  in the browser).
+- Guest limits fail **closed**: if Redis is down, guest mode pauses (503) while signed-in users keep working.
+- `GUEST_MODE_ENABLED=false` switches guest mode off (new sessions get 503, existing guest tokens stop working).
+- Settings live in `backend/src/config/guest.js`; design notes in [`docs/GUEST_MODE_DESIGN.md`](docs/GUEST_MODE_DESIGN.md).
 
 ### For admins (`/admin`)
 - Dashboard: problems by difficulty, users by role, submissions and acceptance rate.
@@ -50,7 +70,7 @@ There is no admin "all submissions" view.
 - **Backend:** Node ≥ 20, Express 5, Mongoose 9, node-redis 5, zod (env + request validation), pino logging,
   helmet, express-rate-limit with a Redis store, JWT (Bearer) + bcrypt, @google/genai.
 - **Data:** MongoDB (replica set: problem deletion uses a transaction), Redis (token blocklist, rate limits,
-  demo quotas, topic cache).
+  guest quotas, topic cache).
 - **Code execution:** Judge0 CE (self-hosted on AWS EC2).
 
 ---
@@ -86,6 +106,7 @@ The backend validates these at boot (`backend/src/config/env.js`) and exits list
 | `PORT` | no | `3000` | HTTP port |
 | `TRUST_PROXY_HOPS` | no | `0` | Reverse proxies in front of the API (Express `trust proxy`); must match the host |
 | `LOG_LEVEL` | no | `info` | pino level |
+| `GUEST_MODE_ENABLED` | no | `true` | Kill switch for guest mode (`false` turns it off) |
 | `NODE_ENV` | no | `development` | `development` / `production` / `test` |
 
 Frontend: `VITE_API_URL` (public, bundled into the client), default `http://localhost:3000`.
@@ -153,14 +174,19 @@ frontend build / backend Docker image build.
 ## Operations
 - **Health:** `GET /healthz` (process up) and `GET /readyz` (MongoDB + Redis ping; 503 when not ready). The Judge0
   diagnostic `GET /submission/health` is admin-only.
-- **Degraded mode:** the API starts and keeps serving if Redis is down (logout revocation, rate limits and demo
-  quotas fail open with warnings); it exits if MongoDB is unreachable at boot. SIGTERM/SIGINT shut down cleanly.
+- **Degraded mode:** the API starts and keeps serving if Redis is down (logout revocation and rate limits fail
+  open with warnings; guest mode pauses with a 503 because its quotas fail closed); it exits if MongoDB is
+  unreachable at boot. SIGTERM/SIGINT shut down cleanly.
 - **Errors** are always `{ "error": { "code", "message" } }`; internal details are only logged.
 - **Deploy:** frontend on Vercel (`frontend/`, output `dist`). The backend runs on any Node 20+ host. Set the
   variables above in the host's secret store and `TRUST_PROXY_HOPS` to its proxy count. A `backend/Dockerfile`
   is provided. Judge0 should be reached over TLS or a private network.
 - **One-off cleanup:** `backend/scripts/mark-stale-pending.js` turns old `Pending` submissions (from Judge0 outages
   before the fix) into `System Error`. Dry run by default, `--apply` to write.
+- **After removing demo accounts:** old demo users and submissions delete themselves through their TTL indexes
+  within 24 hours of the last demo session. After that, `backend/scripts/drop-demo-artifacts.js` drops the
+  leftover `expiresAt`/`isDemo` indexes and fields. It refuses to change anything while demo documents remain,
+  never deletes users or submissions, and is a dry run unless you pass `--apply`.
 
 ---
 

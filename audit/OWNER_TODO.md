@@ -81,7 +81,7 @@ Your local `backend/.env` points at the hosted Atlas cluster and Redis Cloud (li
 4. Optional: rotate the production Atlas/Redis passwords once the local file no longer has them.
 
 ## 6. Google Cloud spend cap for Gemini (SEC-06)
-The code now limits AI use (10/10 min per user, 20/10 min per IP, demo 3/day) and loads the problem server-side, but
+The code now limits AI use (10/10 min per user, 20/10 min per IP, 5 per guest session) and loads the problem server-side, but
 a hard budget is still needed.
 1. Google Cloud console → **Billing → Budgets & alerts → Create budget** for the project that owns `GEMINI_API_KEY`
    (e.g. $5/month, alerts at 50/90/100 %).
@@ -126,7 +126,8 @@ Record results in `audit/JUDGE0_RETEST.md`. Everything below was verified only w
 - [ ] Judge0 reachable but slow / `In Queue` past `JUDGE0_DEADLINE_MS`: clear 503, record marked `System Error`, no Pending (BUG-01).
 - [ ] Admin create: every language's reference solution validated; failures name the language (BUG-10).
 - [ ] Admin update: metadata-only edit skips Judge0; a test-case edit re-validates (BUG-09).
-- [ ] Demo quota: 20 *successful* runs then 429; failed infrastructure calls refunded (BUG-14).
+- [ ] Guest quota (replaced the demo quota): 30 *successful* runs + submits per guest session then 429; failed
+      infrastructure calls refunded (BUG-14). See `docs/GUEST_MODE_DESIGN.md`.
 - [ ] TLS to Judge0 and the rotated `JUDGE0_AUTH_TOKEN` work end to end (SEC-04).
 - [ ] Rate limits behind the real proxy apply per client, not globally (SEC-09, `TRUST_PROXY_HOPS`).
 - [ ] Decide PERF-04 (queue + callback vs synchronous polling) from the latency table; write a short decision record.
