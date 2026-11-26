@@ -202,5 +202,29 @@
   "3sum": {
     "sha256": "d4e959ed91e8ccae1c5ee493edb9e74c75b9a51ba23a5ef7945d7dd634d09bc5",
     "verifiedAt": "2026-11-26T04:13:37.935Z"
+  },
+  "reverse-linked-list": {
+    "sha256": "6c1ef4ebd1ea477e7c39027785df62f86ca926f203ea616a9926e6179c3a5a20",
+    "verifiedAt": "2026-11-26T04:17:16.421Z"
+  },
+  "merge-two-sorted-lists": {
+    "sha256": "1727c69e1e8ce261bb288e5facacbed893d632ebfa1fa6dceda903e3bfd415c6",
+    "verifiedAt": "2026-11-26T04:17:59.986Z"
+  },
+  "linked-list-cycle": {
+    "sha256": "6ef34128f2953c2ca91f64ea60588a1511c34b0f1bcc0bf8d5abd9f8460e4e47",
+    "verifiedAt": "2026-11-26T04:19:00.031Z"
+  },
+  "reorder-list": {
+    "sha256": "1c64215d70d0e885e037ec1cae8c32c7a3c8fb16289e394aec2892e4f9f7e440",
+    "verifiedAt": "2026-11-26T04:19:52.021Z"
+  },
+  "remove-nth-node-from-end-of-list": {
+    "sha256": "9f5e1eba5311e2e14b710d9fdda72c8db9a1759ef020a39d37ee30b188295742",
+    "verifiedAt": "2026-11-26T04:20:35.573Z"
+  },
+  "merge-k-sorted-lists": {
+    "sha256": "cca96129ccfbf63cad2ccc0692e6d9988e1bdb4af5b7db7b1fd6360c8c465ee3",
+    "verifiedAt": "2026-11-26T04:21:29.191Z"
   }
 }

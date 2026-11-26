@@ -2442,5 +2442,274 @@
     "notes": [],
     "ok": true,
     "verifiedAt": "2026-11-26T04:07:02.946Z"
+  },
+  "reverse-linked-list": {
+    "slug": "reverse-linked-list",
+    "title": "Reverse Linked List",
+    "hash": "6c1ef4ebd1ea477e7c39027785df62f86ca926f203ea616a9926e6179c3a5a20",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 12,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 158,
+        "maxMemoryKb": 37608,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-lost-tail.cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:17:16.421Z"
+  },
+  "merge-two-sorted-lists": {
+    "slug": "merge-two-sorted-lists",
+    "title": "Merge Two Sorted Lists",
+    "hash": "1727c69e1e8ce261bb288e5facacbed893d632ebfa1fa6dceda903e3bfd415c6",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 22,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 153,
+        "maxMemoryKb": 35072,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-drop-rest.cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:17:59.986Z"
+  },
+  "linked-list-cycle": {
+    "slug": "linked-list-cycle",
+    "title": "Linked List Cycle",
+    "hash": "6ef34128f2953c2ca91f64ea60588a1511c34b0f1bcc0bf8d5abd9f8460e4e47",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 17,
+        "maxMemoryKb": 3840,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 249,
+        "maxMemoryKb": 37328,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "wrong-values.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:19:00.031Z"
+  },
+  "reorder-list": {
+    "slug": "reorder-list",
+    "title": "Reorder List",
+    "hash": "1c64215d70d0e885e037ec1cae8c32c7a3c8fb16289e394aec2892e4f9f7e440",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 70,
+        "maxMemoryKb": 5108,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 449,
+        "maxMemoryKb": 45968,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:19:52.021Z"
+  },
+  "remove-nth-node-from-end-of-list": {
+    "slug": "remove-nth-node-from-end-of-list",
+    "title": "Remove Nth Node From End of List",
+    "hash": "9f5e1eba5311e2e14b710d9fdda72c8db9a1759ef020a39d37ee30b188295742",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 28,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 126,
+        "maxMemoryKb": 34944,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-from-front.cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:20:35.573Z"
+  },
+  "merge-k-sorted-lists": {
+    "slug": "merge-k-sorted-lists",
+    "title": "Merge K Sorted Lists",
+    "hash": "cca96129ccfbf63cad2ccc0692e6d9988e1bdb4af5b7db7b1fd6360c8c465ee3",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 46,
+        "maxMemoryKb": 3952,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 335,
+        "maxMemoryKb": 43548,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "wrong-concat.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:21:29.191Z"
   }
 }
