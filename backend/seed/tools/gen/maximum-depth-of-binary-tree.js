@@ -11,7 +11,7 @@ module.exports = {
       { note: "random shape, 2000 nodes", args: { root: T.toLevel(T.randomShape(rng, 2000, v)) } },
       { note: "random shape, 10000 nodes", args: { root: T.toLevel(T.randomShape(rng, 10000, v)) } },
       { note: "left chain of 3000", args: { root: T.toLevel(T.chain(3000, v, "left")) } },
-      { note: "right chain of 10000", args: { root: T.toLevel(T.chain(10000, v, "right")) } },
+      { note: "right chain of 5000", args: { root: T.toLevel(T.chain(5000, v, "right")) } },
       { note: "deep branch on one side", args: { root: T.toLevel(T.node(1, T.complete(31, v), T.chain(40, v, "left"))) } },
     ];
   },

@@ -10,7 +10,7 @@ module.exports = {
       { note: "all positive, complete 2000", args: { root: T.toLevel(T.complete(2000, () => rng.int(0, 1000))) } },
       { note: "random shape, 15000 nodes", args: { root: T.toLevel(T.randomShape(rng, 15000, v)) } },
       { note: "complete tree, 30000 nodes", args: { root: T.toLevel(T.complete(30000, v)) } },
-      { note: "left chain of 10000", args: { root: T.toLevel(T.chain(10000, v, "left")) } },
+      { note: "left chain of 5000", args: { root: T.toLevel(T.chain(5000, v, "left")) } },
       { note: "two long arms through a negative root", args: { root: T.toLevel(T.node(-1000, T.chain(3000, () => 1000, "left"), T.chain(3000, () => 1000, "right"))) } },
       { note: "best path avoids the root", args: { root: [-1000, 1000, -1000, 999, 998] } },
     ];

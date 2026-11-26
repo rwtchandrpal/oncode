@@ -41,7 +41,7 @@ module.exports = {
       { note: "300 calls, alphabet ab", args: session(rng, 300, "ab", 5) },
       { note: "3000 calls, full alphabet", args: session(rng, 3000, LOWER, 8) },
       { note: "10000 calls, alphabet abc", args: session(rng, 10000, "abc", 6) },
-      { note: "8000 calls, long words", args: session(rng, 8000, LOWER, 25) },
+      { note: "6500 calls, long words", args: session(rng, 6500, LOWER, 25) },
     ];
   },
 

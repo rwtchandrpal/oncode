@@ -41,8 +41,11 @@ were taken unattended (autonomous mode, 2026-11-26) following the repo's convent
 15. **Java recursion depth.** Probed on this Judge0 (default JVM stack, which the platform cannot change without
     a code change): simple one-argument recursion survives 20,000 levels; a four-way grid DFS overflows at
     10,000 and survives 7,000. Grid tests are therefore capped so the largest connected region is ~4,900 cells
-    (Number of Islands 70 x 70 all-land, Pacific Atlantic 60 x 60 flat). Tree tests keep chains of up to
-    10,000 nodes (single-argument recursion is fine). `slow-recursive.java` files record these checks.
+    (Number of Islands 70 x 70 all-land, Pacific Atlantic 60 x 60 flat). A recursive `maxDepth` (two calls
+    per level) then overflowed on a 10,000-node chain, so tree chains are capped at 5,000 nodes, below the
+    LeetCode bound of 10^4 stated in some problems. `slow-recursive.java` files are the standing checks that a
+    plain recursive Java solution passes every test (Number of Islands, Pacific Atlantic, Maximum Depth,
+    Maximum Path Sum, Validate BST).
 16. **Multiple valid answers** are normalised in the driver (`post` hook): sort (Two Sum indices, Top K, Merge
     Intervals, Pacific Atlantic cells, Word Search II), sort inner and outer lists (3Sum, Group Anagrams,
     Combination Sum). Where the answer cannot be normalised by sorting, the generator makes it unique

@@ -1,0 +1,191 @@
+{
+  "slug": "clone-graph",
+  "title": "Clone Graph",
+  "difficulty": "Medium",
+  "topics": [
+    "Graphs"
+  ],
+  "description": "You are given a reference to one node of a **connected, undirected** graph. Each `Node` holds an integer `val` and a list of its `neighbors`. Return a **deep copy** of the whole graph: a new node for every original node, with the same values and the same connections, and no references back into the original graph.\n\n**Test format:** the graph is given as an adjacency list `adjList`, where the nodes have values `1` to `n` and `adjList[i]` lists the neighbours of the node with value `i + 1`. The judge passes the node with value `1` to `cloneGraph` (or null for an empty graph), checks that the returned graph shares no nodes with the original, and prints the clone's adjacency list in the same format (each neighbour list sorted, so neighbour order does not matter).",
+  "constraints": [
+    "The number of nodes is between 0 and 100",
+    "Node values are 1..n and unique",
+    "The graph is connected, with no repeated edges and no self-loops"
+  ],
+  "examples": [
+    {
+      "input": "adjList = [[2,4],[1,3],[2,4],[1,3]]",
+      "output": "[[2,4],[1,3],[2,4],[1,3]]",
+      "explanation": "Four nodes in a cycle 1-2-3-4-1. The copy has the same connections."
+    },
+    {
+      "input": "adjList = []",
+      "output": "[]",
+      "explanation": "An empty graph: the input node is null and so is the answer."
+    },
+    {
+      "input": "adjList = [[]]",
+      "output": "[[]]",
+      "explanation": "A single node with no neighbours."
+    }
+  ],
+  "visibleTestCase": {
+    "input": "[[2,4],[1,3],[2,4],[1,3]]",
+    "expectedOutput": "[[2,4],[1,3],[2,4],[1,3]]"
+  },
+  "hiddenTestCases": [
+    {
+      "input": "[[2,4],[1,3],[2,4],[1,3]]",
+      "expectedOutput": "[[2,4],[1,3],[2,4],[1,3]]"
+    },
+    {
+      "input": "[]",
+      "expectedOutput": "[]"
+    },
+    {
+      "input": "[[]]",
+      "expectedOutput": "[[]]"
+    },
+    {
+      "input": "[[2],[1]]",
+      "expectedOutput": "[[2],[1]]"
+    },
+    {
+      "input": "[[2,3],[1,3],[1,2]]",
+      "expectedOutput": "[[2,3],[1,3],[1,2]]"
+    },
+    {
+      "input": "[[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1]]",
+      "expectedOutput": "[[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[1]]"
+    },
+    {
+      "input": "[[2],[1,3],[2,4],[3,5],[4,6],[5,7],[6,8],[7,9],[8,10],[9,11],[10,12],[11,13],[12,14],[13,15],[14,16],[15,17],[16,18],[17,19],[18,20],[19,21],[20,22],[21,23],[22,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[29,31],[30,32],[31,33],[32,34],[33,35],[34,36],[35,37],[36,38],[37,39],[38,40],[39,41],[40,42],[41,43],[42,44],[43,45],[44,46],[45,47],[46,48],[47,49],[48,50],[49,51],[50,52],[51,53],[52,54],[53,55],[54,56],[55,57],[56,58],[57,59],[58,60],[59,61],[60,62],[61,63],[62,64],[63,65],[64,66],[65,67],[66,68],[67,69],[68,70],[69,71],[70,72],[71,73],[72,74],[73,75],[74,76],[75,77],[76,78],[77,79],[78,80],[79,81],[80,82],[81,83],[82,84],[83,85],[84,86],[85,87],[86,88],[87,89],[88,90],[89,91],[90,92],[91,93],[92,94],[93,95],[94,96],[95,97],[96,98],[97,99],[98,100],[99]]",
+      "expectedOutput": "[[2],[1,3],[2,4],[3,5],[4,6],[5,7],[6,8],[7,9],[8,10],[9,11],[10,12],[11,13],[12,14],[13,15],[14,16],[15,17],[16,18],[17,19],[18,20],[19,21],[20,22],[21,23],[22,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[29,31],[30,32],[31,33],[32,34],[33,35],[34,36],[35,37],[36,38],[37,39],[38,40],[39,41],[40,42],[41,43],[42,44],[43,45],[44,46],[45,47],[46,48],[47,49],[48,50],[49,51],[50,52],[51,53],[52,54],[53,55],[54,56],[55,57],[56,58],[57,59],[58,60],[59,61],[60,62],[61,63],[62,64],[63,65],[64,66],[65,67],[66,68],[67,69],[68,70],[69,71],[70,72],[71,73],[72,74],[73,75],[74,76],[75,77],[76,78],[77,79],[78,80],[79,81],[80,82],[81,83],[82,84],[83,85],[84,86],[85,87],[86,88],[87,89],[88,90],[89,91],[90,92],[91,93],[92,94],[93,95],[94,96],[95,97],[96,98],[97,99],[98,100],[99]]"
+    },
+    {
+      "input": "[[5,60],[84,37],[86],[45],[1,71],[17,50,66,98],[35],[84],[48,50,54,55],[36,34],[46],[88],[51,23,89],[18],[45,50,70,39],[88],[6],[14,55],[88],[37],[53,43,44],[37,92],[13,57,24],[23],[91,31],[35,58],[57],[94,98],[49],[85],[37,25],[34],[73,46],[32,83,76,10,42,82,81,37],[7,36,26],[10,61,35],[2,20,31,34,22],[56],[15],[45],[86],[34],[21,52],[21],[65,53,4,40,15],[33,11,68],[59],[93,9],[85,29],[15,6,9],[13],[43],[57,77,90,69,45,68,21],[9],[9,78,18],[38,100,99],[27,53,64,23,80],[26,75],[62,47],[99,1],[36],[68,59],[69],[97,57],[45],[6],[96],[86,62,46,53,95],[63,53],[15],[5],[83],[33],[90],[58],[90,34],[53],[55],[83],[57,85],[34,99],[34],[34,79,72],[8,2],[49,80,30],[3,68,41],[96],[16,12,19,95],[13],[76,74,53,96],[25],[22],[48],[28],[68,88],[87,90,67],[64],[6,28],[56,81,60],[56]]",
+      "expectedOutput": "[[5,60],[37,84],[86],[45],[1,71],[17,50,66,98],[35],[84],[48,50,54,55],[34,36],[46],[88],[23,51,89],[18],[39,45,50,70],[88],[6],[14,55],[88],[37],[43,44,53],[37,92],[13,24,57],[23],[31,91],[35,58],[57],[94,98],[49],[85],[25,37],[34],[46,73],[10,32,37,42,76,81,82,83],[7,26,36],[10,35,61],[2,20,22,31,34],[56],[15],[45],[86],[34],[21,52],[21],[4,15,40,53,65],[11,33,68],[59],[9,93],[29,85],[6,9,15],[13],[43],[21,45,57,68,69,77,90],[9],[9,18,78],[38,99,100],[23,27,53,64,80],[26,75],[47,62],[1,99],[36],[59,68],[69],[57,97],[45],[6],[96],[46,53,62,86,95],[53,63],[15],[5],[83],[33],[90],[58],[34,90],[53],[55],[83],[57,85],[34,99],[34],[34,72,79],[2,8],[30,49,80],[3,41,68],[96],[12,16,19,95],[13],[53,74,76,96],[25],[22],[48],[28],[68,88],[67,87,90],[64],[6,28],[56,60,81],[56]]"
+    },
+    {
+      "input": "[[35,73,79,92],[61,67,64,91],[91,77,53,4],[84,3],[99,92,68,47,30,51],[95,74,62],[58,65,97,18,42,60],[12,23],[12,50,10,30,21,38],[58,9,86,61],[46,34,14,89],[13,8,71,91,9],[12,97,83,30,58],[11,25,19],[84,94,44,43,97,41,60],[55,81,44,18,21,67],[49,86,61,76],[20,27,50,16,7],[42,57,74,14,43,86,63,61,53,24,92,88],[41,18,94,35],[45,48,9,88,16,34],[62,23,45,68],[52,22,38,8,85,47],[67,51,81,19],[64,95,38,14,50,87,91],[48,96,67],[47,18,73,51],[99,73],[72,66,43,71,89],[9,5,13],[35,61,97,87],[55,90],[82,59,93,45,63],[41,81,11,64,97,71,96,21,98],[31,78,20,65,1,89,95],[40,68,75],[97,77,100],[77,25,23,63,9,60,86,78],[98,78],[36],[34,15,20],[65,19,95,7],[80,77,100,15,29,19],[15,67,69,53,89,16],[33,82,22,66,21],[11,82,80],[72,27,70,23,76,5,71,84],[91,21,55,75,100,90,26],[65,17,85,58,92],[25,18,9],[24,5,27],[57,23,69,99,86,62],[65,3,19,68,44,95],[100,78,83,63],[82,79,97,32,48,16,86],[68,86,79],[19,52,70,76],[10,71,13,7,49,64],[33,87,60],[38,59,7,99,15],[2,17,31,19,75,10],[65,22,52,88,87,6,89],[90,19,33,54,38],[34,2,77,25,58],[7,53,68,49,42,62,35],[29,45,98],[90,16,69,2,26,24,80,44],[36,92,53,5,82,56,65,98,99,22],[93,82,70,86,67,44,52],[47,69,75,57],[58,12,47,29,34,80,96],[47,29],[89,77,1,27,28,74],[19,6,73],[61,48,89,77,70,36],[47,17,57],[64,3,43,90,73,38,75,37],[35,54,38,39],[55,56,93,1],[43,67,99,46,71],[86,34,24,16],[46,88,33,69,45,68,55],[54,13],[4,47,15,89],[23,49],[55,93,10,69,56,81,38,52,17,90,19],[31,62,25,59],[82,19,21,62],[75,73,44,62,11,84,29,35],[77,48,63,96,67,32,86],[25,12,2,48,3],[94,68,5,49,19,1],[86,33,79,69],[15,92,20],[35,42,6,25,53],[90,71,26,34],[13,37,7,31,15,34,55],[34,66,68,39],[60,5,80,28,52,68],[37,48,43,54]]",
+      "expectedOutput": "[[35,73,79,92],[61,64,67,91],[4,53,77,91],[3,84],[30,47,51,68,92,99],[62,74,95],[18,42,58,60,65,97],[12,23],[10,12,21,30,38,50],[9,58,61,86],[14,34,46,89],[8,9,13,71,91],[12,30,58,83,97],[11,19,25],[41,43,44,60,84,94,97],[18,21,44,55,67,81],[49,61,76,86],[7,16,20,27,50],[14,24,42,43,53,57,61,63,74,86,88,92],[18,35,41,94],[9,16,34,45,48,88],[23,45,62,68],[8,22,38,47,52,85],[19,51,67,81],[14,38,50,64,87,91,95],[48,67,96],[18,47,51,73],[73,99],[43,66,71,72,89],[5,9,13],[35,61,87,97],[55,90],[45,59,63,82,93],[11,21,41,64,71,81,96,97,98],[1,20,31,65,78,89,95],[40,68,75],[77,97,100],[9,23,25,60,63,77,78,86],[78,98],[36],[15,20,34],[7,19,65,95],[15,19,29,77,80,100],[15,16,53,67,69,89],[21,22,33,66,82],[11,80,82],[5,23,27,70,71,72,76,84],[21,26,55,75,90,91,100],[17,58,65,85,92],[9,18,25],[5,24,27],[23,57,62,69,86,99],[3,19,44,65,68,95],[63,78,83,100],[16,32,48,79,82,86,97],[68,79,86],[19,52,70,76],[7,10,13,49,64,71],[33,60,87],[7,15,38,59,99],[2,10,17,19,31,75],[6,22,52,65,87,88,89],[19,33,38,54,90],[2,25,34,58,77],[7,35,42,49,53,62,68],[29,45,98],[2,16,24,26,44,69,80,90],[5,22,36,53,56,65,82,92,98,99],[44,52,67,70,82,86,93],[47,57,69,75],[12,29,34,47,58,80,96],[29,47],[1,27,28,74,77,89],[6,19,73],[36,48,61,70,77,89],[17,47,57],[3,37,38,43,64,73,75,90],[35,38,39,54],[1,55,56,93],[43,46,67,71,99],[16,24,34,86],[33,45,46,55,68,69,88],[13,54],[4,15,47,89],[23,49],[10,17,19,38,52,55,56,69,81,90,93],[25,31,59,62],[19,21,62,82],[11,29,35,44,62,73,75,84],[32,48,63,67,77,86,96],[2,3,12,25,48],[1,5,19,49,68,94],[33,69,79,86],[15,20,92],[6,25,35,42,53],[26,34,71,90],[7,13,15,31,34,37,55],[34,39,66,68],[5,28,52,60,68,80],[37,43,48,54]]"
+    },
+    {
+      "input": "[[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]]",
+      "expectedOutput": "[[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,27,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,28,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]]"
+    }
+  ],
+  "codeSnippets": [
+    {
+      "language": "cpp",
+      "userSnippet": "/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val;\n    vector<Node*> neighbors;\n    Node() { val = 0; neighbors = vector<Node*>(); }\n    Node(int _val) { val = _val; neighbors = vector<Node*>(); }\n    Node(int _val, vector<Node*> _neighbors) { val = _val; neighbors = _neighbors; }\n};\n*/\n\nclass Solution {\npublic:\n    Node* cloneGraph(Node* node) {\n        // Write your solution here\n        return nullptr;\n    }\n};",
+      "driverCode": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Node {\npublic:\n    int val;\n    vector<Node*> neighbors;\n    Node() { val = 0; neighbors = vector<Node*>(); }\n    Node(int _val) { val = _val; neighbors = vector<Node*>(); }\n    Node(int _val, vector<Node*> _neighbors) { val = _val; neighbors = _neighbors; }\n};\n\n{{USER_CODE}}\n\n// ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n// Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\nnamespace oncode {\n\n// Nullable int, for level-order tree arrays such as [1,null,2].\nstruct Opt {\n    bool has = false;\n    int v = 0;\n};\n\nstruct Reader {\n    std::string s;\n    size_t p = 0;\n    Reader() {\n        std::ios::sync_with_stdio(false);\n        s.assign(std::istreambuf_iterator<char>(std::cin), std::istreambuf_iterator<char>());\n    }\n    [[noreturn]] void fail(const char* what) {\n        std::cerr << \"driver input error: \" << what << \" at byte \" << p << \"\\n\";\n        std::exit(3);\n    }\n    void ws() {\n        while (p < s.size() && std::isspace(static_cast<unsigned char>(s[p]))) p++;\n    }\n    bool peek(char c) {\n        ws();\n        return p < s.size() && s[p] == c;\n    }\n    void expect(char c) {\n        if (!peek(c)) fail(\"unexpected character\");\n        p++;\n    }\n    long long integer(long long lo, long long hi) {\n        ws();\n        bool neg = false;\n        if (p < s.size() && s[p] == '-') { neg = true; p++; }\n        size_t start = p;\n        long long v = 0;\n        while (p < s.size() && std::isdigit(static_cast<unsigned char>(s[p]))) {\n            if (p - start >= 18) fail(\"integer too long\");\n            v = v * 10 + (s[p++] - '0');\n        }\n        if (p == start) fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) fail(\"integer out of range\");\n        return v;\n    }\n    void read(int& x) { x = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    void read(long long& x) { x = integer(-999999999999999999LL, 999999999999999999LL); }\n    void read(bool& x) {\n        ws();\n        if (s.compare(p, 4, \"true\") == 0) { x = true; p += 4; }\n        else if (s.compare(p, 5, \"false\") == 0) { x = false; p += 5; }\n        else fail(\"expected true or false\");\n    }\n    void read(std::string& x) {\n        expect('\"');\n        x.clear();\n        while (p < s.size() && s[p] != '\"') {\n            if (s[p] == '\\\\') {\n                p++;\n                if (p >= s.size()) break;\n            }\n            x += s[p++];\n        }\n        if (p >= s.size()) fail(\"unterminated string\");\n        p++;\n    }\n    void read(Opt& o) {\n        ws();\n        if (s.compare(p, 4, \"null\") == 0) { o.has = false; p += 4; }\n        else { o.has = true; o.v = static_cast<int>(integer(INT_MIN, INT_MAX)); }\n    }\n    void read(char& x) {\n        std::string t;\n        read(t);\n        if (t.size() != 1) fail(\"expected one-character string\");\n        x = t[0];\n    }\n    template <class T> void read(std::vector<T>& v) {\n        v.clear();\n        expect('[');\n        if (peek(']')) { p++; return; }\n        for (;;) {\n            T e;\n            read(e);\n            v.push_back(std::move(e));\n            if (peek(',')) { p++; continue; }\n            expect(']');\n            return;\n        }\n    }\n    void end() {\n        ws();\n        if (p != s.size()) fail(\"unexpected trailing input\");\n    }\n};\n\nstruct Writer {\n    std::string out;\n    void write(int x) { out += std::to_string(x); }\n    void write(long long x) { out += std::to_string(x); }\n    void write(bool x) { out += x ? \"true\" : \"false\"; }\n    void write(const std::string& x) {\n        out += '\"';\n        for (char c : x) {\n            if (c == '\"' || c == '\\\\') out += '\\\\';\n            out += c;\n        }\n        out += '\"';\n    }\n    void write(char c) { write(std::string(1, c)); }\n    void write(const Opt& o) {\n        if (o.has) write(o.v);\n        else out += \"null\";\n    }\n    template <class T> void write(const std::vector<T>& v) {\n        out += '[';\n        for (size_t i = 0; i < v.size(); i++) {\n            if (i) out += ',';\n            write(v[i]);\n        }\n        out += ']';\n    }\n    void line() { out += '\\n'; }\n    void flush() {\n        std::fwrite(out.data(), 1, out.size(), stdout);\n        std::fflush(stdout);\n    }\n};\n\n}  // namespace oncode\n\nint main() {\n    oncode::Reader oc_in;\n    vector<vector<int>> adjList;\n    oc_in.read(adjList);\n    oc_in.end();\n    int n = (int)adjList.size();\n    vector<Node*> oc_orig(n);\n    for (int i = 0; i < n; i++) oc_orig[i] = new Node(i + 1);\n    for (int i = 0; i < n; i++)\n        for (int v : adjList[i]) oc_orig[i]->neighbors.push_back(oc_orig[v - 1]);\n    unordered_set<Node*> oc_originals(oc_orig.begin(), oc_orig.end());\n    Solution oc_sol;\n    Node* oc_res = oc_sol.cloneGraph(n ? oc_orig[0] : nullptr);\n    oncode::Writer oc_out;\n    string oc_problem;\n    vector<vector<int>> oc_adj(n);\n    vector<Node*> oc_byVal(n + 1, nullptr);\n    vector<Node*> oc_queue;\n    if (oc_res) oc_queue.push_back(oc_res);\n    unordered_set<Node*> oc_seen(oc_queue.begin(), oc_queue.end());\n    for (size_t h = 0; h < oc_queue.size() && oc_problem.empty(); h++) {\n        Node* x = oc_queue[h];\n        if (oc_originals.count(x)) { oc_problem = \"returned graph shares nodes with the original\"; break; }\n        if (x->val < 1 || x->val > n || (oc_byVal[x->val] && oc_byVal[x->val] != x)) { oc_problem = \"clone has missing, extra or duplicate node values\"; break; }\n        oc_byVal[x->val] = x;\n        for (Node* y : x->neighbors) {\n            oc_adj[x->val - 1].push_back(y ? y->val : 0);\n            if (y && !oc_seen.count(y)) { oc_seen.insert(y); oc_queue.push_back(y); }\n        }\n    }\n    if (oc_problem.empty() && (int)oc_queue.size() != n) oc_problem = \"clone has missing, extra or duplicate node values\";\n    for (auto& oc_l : oc_adj) sort(oc_l.begin(), oc_l.end());  // neighbour order does not matter\n    if (oc_problem.empty()) oc_out.write(oc_adj);\n    else oc_out.write(oc_problem);\n    oc_out.line();\n    oc_out.flush();\n    return 0;\n}"
+    },
+    {
+      "language": "java",
+      "userSnippet": "/*\n// Definition for a Node.\nclass Node {\n    public int val;\n    public List<Node> neighbors;\n    public Node() { val = 0; neighbors = new ArrayList<Node>(); }\n    public Node(int _val) { val = _val; neighbors = new ArrayList<Node>(); }\n    public Node(int _val, ArrayList<Node> _neighbors) { val = _val; neighbors = _neighbors; }\n}\n*/\n\nclass Solution {\n    public Node cloneGraph(Node node) {\n        // Write your solution here\n        return null;\n    }\n}",
+      "driverCode": "import java.util.*;\nimport java.io.*;\n\n{{USER_CODE}}\n\nclass Node {\n    public int val;\n    public List<Node> neighbors;\n    public Node() { val = 0; neighbors = new ArrayList<Node>(); }\n    public Node(int _val) { val = _val; neighbors = new ArrayList<Node>(); }\n    public Node(int _val, ArrayList<Node> _neighbors) { val = _val; neighbors = _neighbors; }\n}\n\npublic class Main {\n    // ===== Oncode driver I/O (inlined by backend/seed/tools/lib/codegen.js) =====\n    // Input: one value per line in canonical form (see backend/seed/FORMAT.md). Output: canonical form.\n    static byte[] inBuf;\n    static int inPos;\n    static final StringBuilder OUT = new StringBuilder();\n\n    interface ElemReader<T> { T read(); }\n\n    static void initInput() throws IOException {\n        inBuf = System.in.readAllBytes();\n        inPos = 0;\n    }\n    static RuntimeException fail(String what) {\n        return new IllegalStateException(\"driver input error: \" + what + \" at byte \" + inPos);\n    }\n    static void ws() {\n        while (inPos < inBuf.length && (inBuf[inPos] == ' ' || inBuf[inPos] == '\\n' || inBuf[inPos] == '\\r' || inBuf[inPos] == '\\t')) inPos++;\n    }\n    static boolean peek(char c) {\n        ws();\n        return inPos < inBuf.length && inBuf[inPos] == c;\n    }\n    static void expect(char c) {\n        if (!peek(c)) throw fail(\"expected '\" + c + \"'\");\n        inPos++;\n    }\n    static long readInteger(long lo, long hi) {\n        ws();\n        boolean neg = false;\n        if (inPos < inBuf.length && inBuf[inPos] == '-') { neg = true; inPos++; }\n        int start = inPos;\n        long v = 0;\n        while (inPos < inBuf.length && inBuf[inPos] >= '0' && inBuf[inPos] <= '9') {\n            if (inPos - start >= 18) throw fail(\"integer too long\");\n            v = v * 10 + (inBuf[inPos++] - '0');\n        }\n        if (inPos == start) throw fail(\"expected integer\");\n        if (neg) v = -v;\n        if (v < lo || v > hi) throw fail(\"integer out of range\");\n        return v;\n    }\n    static int readInt() { return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE); }\n    static long readLong() { return readInteger(-999999999999999999L, 999999999999999999L); }\n    static boolean matchWord(String w) {\n        if (inPos + w.length() > inBuf.length) return false;\n        for (int i = 0; i < w.length(); i++) if (inBuf[inPos + i] != w.charAt(i)) return false;\n        inPos += w.length();\n        return true;\n    }\n    static boolean readBool() {\n        ws();\n        if (matchWord(\"true\")) return true;\n        if (matchWord(\"false\")) return false;\n        throw fail(\"expected true or false\");\n    }\n    static String readString() {\n        expect('\"');\n        StringBuilder sb = new StringBuilder();\n        while (inPos < inBuf.length && inBuf[inPos] != '\"') {\n            if (inBuf[inPos] == '\\\\') {\n                inPos++;\n                if (inPos >= inBuf.length) break;\n            }\n            sb.append((char) inBuf[inPos++]);\n        }\n        if (inPos >= inBuf.length) throw fail(\"unterminated string\");\n        inPos++;\n        return sb.toString();\n    }\n    static char readChar() {\n        String t = readString();\n        if (t.length() != 1) throw fail(\"expected one-character string\");\n        return t.charAt(0);\n    }\n    static <T> List<T> readList(ElemReader<T> r) {\n        List<T> list = new ArrayList<>();\n        expect('[');\n        if (peek(']')) { inPos++; return list; }\n        while (true) {\n            list.add(r.read());\n            if (peek(',')) { inPos++; continue; }\n            expect(']');\n            return list;\n        }\n    }\n    static List<Integer> readIntList() { return readList(Main::readInt); }\n    static List<Long> readLongList() { return readList(Main::readLong); }\n    static List<String> readStringList() { return readList(Main::readString); }\n    static List<List<Integer>> readIntListList() { return readList(Main::readIntList); }\n    static List<List<String>> readStringListList() { return readList(Main::readStringList); }\n    static int[] readIntArray() {\n        List<Integer> l = readIntList();\n        int[] a = new int[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static long[] readLongArray() {\n        List<Long> l = readLongList();\n        long[] a = new long[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static String[] readStringArray() { return readStringList().toArray(new String[0]); }\n    static int[][] readIntMatrix() { return readList(Main::readIntArray).toArray(new int[0][]); }\n    static char[] readCharArray() {\n        List<Character> l = readList(Main::readChar);\n        char[] a = new char[l.size()];\n        for (int i = 0; i < a.length; i++) a[i] = l.get(i);\n        return a;\n    }\n    static char[][] readCharMatrix() { return readList(Main::readCharArray).toArray(new char[0][]); }\n    static Integer readNullableInt() {\n        ws();\n        if (matchWord(\"null\")) return null;\n        return readInt();\n    }\n    static List<Integer> readNullableIntList() { return readList(Main::readNullableInt); }\n\n    // Normalisers for problems where any order is accepted. Copies, so immutable results work too.\n    static <T extends Comparable<T>> int compareLists(List<T> a, List<T> b) {\n        for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n            int c = a.get(i).compareTo(b.get(i));\n            if (c != 0) return c;\n        }\n        return Integer.compare(a.size(), b.size());\n    }\n    static <T extends Comparable<T>> List<List<T>> sortLists(List<List<T>> x, boolean sortInner) {\n        List<List<T>> r = new ArrayList<>();\n        for (List<T> v : x) {\n            List<T> c = new ArrayList<>(v);\n            if (sortInner) Collections.sort(c);\n            r.add(c);\n        }\n        r.sort(Main::compareLists);\n        return r;\n    }\n    static <T extends Comparable<T>> List<T> sortList(List<T> x) {\n        List<T> r = new ArrayList<>(x);\n        Collections.sort(r);\n        return r;\n    }\n    static int[][] sortRows(int[][] x) {\n        int[][] r = x.clone();\n        Arrays.sort(r, (a, b) -> {\n            for (int i = 0; i < Math.min(a.length, b.length); i++) if (a[i] != b[i]) return Integer.compare(a[i], b[i]);\n            return Integer.compare(a.length, b.length);\n        });\n        return r;\n    }\n    static void endInput() {\n        ws();\n        if (inPos != inBuf.length) throw fail(\"unexpected trailing input\");\n    }\n\n    static void writeString(String s) {\n        OUT.append('\"');\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            if (c == '\"' || c == '\\\\') OUT.append('\\\\');\n            OUT.append(c);\n        }\n        OUT.append('\"');\n    }\n    static void write(Object o) {\n        if (o == null) { OUT.append(\"null\"); return; }\n        if (o instanceof Boolean || o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte) { OUT.append(o); return; }\n        if (o instanceof String) { writeString((String) o); return; }\n        if (o instanceof Character) { writeString(String.valueOf(o)); return; }\n        OUT.append('[');\n        if (o instanceof int[]) {\n            int[] a = (int[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof long[]) {\n            long[] a = (long[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof boolean[]) {\n            boolean[] a = (boolean[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); OUT.append(a[i]); }\n        } else if (o instanceof char[]) {\n            char[] a = (char[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); writeString(String.valueOf(a[i])); }\n        } else if (o instanceof Object[]) {\n            Object[] a = (Object[]) o;\n            for (int i = 0; i < a.length; i++) { if (i > 0) OUT.append(','); write(a[i]); }\n        } else if (o instanceof Iterable) {\n            boolean first = true;\n            for (Object e : (Iterable<?>) o) { if (!first) OUT.append(','); write(e); first = false; }\n        } else {\n            throw new IllegalStateException(\"driver cannot print \" + o.getClass().getName());\n        }\n        OUT.append(']');\n    }\n    static void flushOutput() {\n        System.out.print(OUT);\n        System.out.flush();\n    }\n\n    public static void main(String[] oc_args) throws IOException {\n        initInput();\n        List<List<Integer>> adjList = readIntListList();\n        endInput();\n        int n = adjList.size();\n        Node[] oc_orig = new Node[n];\n        for (int i = 0; i < n; i++) oc_orig[i] = new Node(i + 1);\n        for (int i = 0; i < n; i++) for (int v : adjList.get(i)) oc_orig[i].neighbors.add(oc_orig[v - 1]);\n        Set<Node> oc_originals = Collections.newSetFromMap(new IdentityHashMap<>());\n        oc_originals.addAll(Arrays.asList(oc_orig));\n        Node oc_res = new Solution().cloneGraph(n > 0 ? oc_orig[0] : null);\n        String oc_problem = null;\n        List<List<Integer>> oc_adj = new ArrayList<>();\n        for (int i = 0; i < n; i++) oc_adj.add(new ArrayList<>());\n        Node[] oc_byVal = new Node[n + 1];\n        List<Node> oc_queue = new ArrayList<>();\n        Set<Node> oc_seen = Collections.newSetFromMap(new IdentityHashMap<>());\n        if (oc_res != null) { oc_queue.add(oc_res); oc_seen.add(oc_res); }\n        for (int h = 0; h < oc_queue.size() && oc_problem == null; h++) {\n            Node x = oc_queue.get(h);\n            if (oc_originals.contains(x)) { oc_problem = \"returned graph shares nodes with the original\"; break; }\n            if (x.val < 1 || x.val > n || (oc_byVal[x.val] != null && oc_byVal[x.val] != x)) { oc_problem = \"clone has missing, extra or duplicate node values\"; break; }\n            oc_byVal[x.val] = x;\n            for (Node y : x.neighbors) {\n                oc_adj.get(x.val - 1).add(y == null ? 0 : y.val);\n                if (y != null && oc_seen.add(y)) oc_queue.add(y);\n            }\n        }\n        if (oc_problem == null && oc_queue.size() != n) oc_problem = \"clone has missing, extra or duplicate node values\";\n        for (List<Integer> oc_l : oc_adj) Collections.sort(oc_l); // neighbour order does not matter\n        if (oc_problem == null) write(oc_adj);\n        else write(oc_problem);\n        OUT.append('\\n');\n        flushOutput();\n    }\n}"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "language": "cpp",
+      "code": "class Solution {\npublic:\n    Node* cloneGraph(Node* node) {\n        if (!node) return nullptr;\n        unordered_map<Node*, Node*> copy;  // original -> clone\n        copy[node] = new Node(node->val);\n        vector<Node*> queue = {node};\n        for (size_t h = 0; h < queue.size(); h++) {\n            Node* cur = queue[h];\n            for (Node* nb : cur->neighbors) {\n                if (!copy.count(nb)) {\n                    copy[nb] = new Node(nb->val);\n                    queue.push_back(nb);\n                }\n                copy[cur]->neighbors.push_back(copy[nb]);\n            }\n        }\n        return copy[node];\n    }\n};"
+    },
+    {
+      "language": "java",
+      "code": "class Solution {\n    // Recursive DFS with a memo map (the C++ reference is BFS).\n    private final Map<Node, Node> copies = new HashMap<>();\n\n    public Node cloneGraph(Node node) {\n        if (node == null) return null;\n        Node existing = copies.get(node);\n        if (existing != null) return existing;\n        Node clone = new Node(node.val);\n        copies.put(node, clone);\n        for (Node nb : node.neighbors) clone.neighbors.add(cloneGraph(nb));\n        return clone;\n    }\n}"
+    }
+  ],
+  "seedMeta": {
+    "order": 43,
+    "neetcodeSlug": "clone-graph",
+    "limits": {
+      "timeLimitMs": 5000,
+      "memoryLimitMb": 256
+    },
+    "signature": {
+      "method": "cloneGraph",
+      "params": [
+        {
+          "name": "adjList",
+          "type": "List<List<int>>"
+        }
+      ],
+      "returns": "List<List<int>>"
+    },
+    "expectedOutputsFrom": "reference/clone-graph/solution.cpp on Judge0",
+    "tests": [
+      {
+        "n": 1,
+        "kind": "sample",
+        "note": "example 1",
+        "inputBytes": 25,
+        "outputBytes": 25
+      },
+      {
+        "n": 2,
+        "kind": "sample",
+        "note": "example 2",
+        "inputBytes": 2,
+        "outputBytes": 2
+      },
+      {
+        "n": 3,
+        "kind": "sample",
+        "note": "example 3",
+        "inputBytes": 4,
+        "outputBytes": 4
+      },
+      {
+        "n": 4,
+        "kind": "hidden",
+        "note": "two nodes",
+        "inputBytes": 9,
+        "outputBytes": 9
+      },
+      {
+        "n": 5,
+        "kind": "hidden",
+        "note": "triangle",
+        "inputBytes": 19,
+        "outputBytes": 19
+      },
+      {
+        "n": 6,
+        "kind": "hidden",
+        "note": "star with centre 1",
+        "inputBytes": 689,
+        "outputBytes": 689
+      },
+      {
+        "n": 7,
+        "kind": "hidden",
+        "note": "path of 100",
+        "inputBytes": 779,
+        "outputBytes": 779
+      },
+      {
+        "n": 8,
+        "kind": "hidden",
+        "note": "random tree of 100",
+        "inputBytes": 778,
+        "outputBytes": 778
+      },
+      {
+        "n": 9,
+        "kind": "hidden",
+        "note": "random graph of 100 with cycles",
+        "inputBytes": 1644,
+        "outputBytes": 1644
+      },
+      {
+        "n": 10,
+        "kind": "hidden",
+        "note": "complete graph of 30",
+        "inputBytes": 2410,
+        "outputBytes": 2410
+      }
+    ],
+    "notes": "Custom driver: builds the graph, checks the clone is a deep copy, prints its adjacency list."
+  }
+}

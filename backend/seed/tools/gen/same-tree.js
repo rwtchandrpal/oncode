@@ -23,7 +23,7 @@ module.exports = {
       { note: "99 nodes identical", args: { p: big, q: big.slice() } },
       { note: "99 nodes, last value differs", args: { p: big, q: changedValue } },
       { note: "99 vs 100 nodes, one extra leaf", args: { p: big, q: T.toLevel(extraLeaf) } },
-      { note: "identical chains of 100", args: { p: T.toLevel(T.chain(100, (i) => i, "left")), q: T.toLevel(T.chain(100, (i) => i, "left")) } },
+      { note: "same in-order values, different shape", args: { p: [2, 1], q: [1, null, 2] } },
     ];
   },
 

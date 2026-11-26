@@ -2711,5 +2711,831 @@
     "notes": [],
     "ok": true,
     "verifiedAt": "2026-11-26T04:21:29.191Z"
+  },
+  "invert-binary-tree": {
+    "slug": "invert-binary-tree",
+    "title": "Invert Binary Tree",
+    "hash": "2bdb9f957bd808611335df1fed855c34e1c486d23b18553d6bd8a2d7163dc480",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 14,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 157,
+        "maxMemoryKb": 34816,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-root-only.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:23:44.339Z"
+  },
+  "maximum-depth-of-binary-tree": {
+    "slug": "maximum-depth-of-binary-tree",
+    "title": "Maximum Depth of Binary Tree",
+    "hash": "3a84321ff006106570363f0cae2164d9b7485a014511a9817549c72348e038d8",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 27,
+        "maxMemoryKb": 3840,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 282,
+        "maxMemoryKb": 37760,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "slow-recursive.java",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Runtime Error (NZEC) x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-left-only.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:24:52.777Z"
+  },
+  "same-tree": {
+    "slug": "same-tree",
+    "title": "Same Tree",
+    "hash": "035d6fe28087a81ed6e5573902fdb06cd48a8610af715f642120bf357d70a29b",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 19,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 247,
+        "maxMemoryKb": 35200,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      },
+      {
+        "label": "wrong-inorder.cpp",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": false
+      }
+    ],
+    "errors": [
+      "wrong-inorder.cpp passed every test: the tests cannot reject it"
+    ],
+    "notes": [],
+    "ok": false,
+    "verifiedAt": "2026-11-26T04:26:02.178Z"
+  },
+  "subtree-of-another-tree": {
+    "slug": "subtree-of-another-tree",
+    "title": "Subtree of Another Tree",
+    "hash": "8e528a9640f0fa57f26f96ed9c4469fefa589269ff7652f5c100933ff57b8e3d",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 51,
+        "maxMemoryKb": 3456,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 257,
+        "maxMemoryKb": 36456,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "wrong-top-only.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Wrong Answer x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:26:54.498Z"
+  },
+  "lowest-common-ancestor-of-a-binary-search-tree": {
+    "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+    "title": "Lowest Common Ancestor of a Binary Search Tree",
+    "hash": "7d4bd2bdd8fe6fbde650b9a36ad64129797f7b4e77eca50dcb432a8a7dfa24c1",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 38,
+        "maxMemoryKb": 4076,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 262,
+        "maxMemoryKb": 38280,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-parent-of-p.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:27:52.190Z"
+  },
+  "binary-tree-level-order-traversal": {
+    "slug": "binary-tree-level-order-traversal",
+    "title": "Binary Tree Level Order Traversal",
+    "hash": "4647af46de6409d4cb9abf2c10ec4bfb3c44cdacc44abeda9f5a382dc07d7851",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 20,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 302,
+        "maxMemoryKb": 35712,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-right-first.cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:28:50.388Z"
+  },
+  "validate-binary-search-tree": {
+    "slug": "validate-binary-search-tree",
+    "title": "Validate Binary Search Tree",
+    "hash": "d5a92d6c8a40b8511f8c72546a32ffd90abe1b104d5fec3fdffe23e2f2836699",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 36,
+        "maxMemoryKb": 3968,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 250,
+        "maxMemoryKb": 39928,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "slow-recursive.java",
+        "rejected": 0,
+        "total": 10,
+        "summary": "Accepted x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-int-bounds.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      },
+      {
+        "label": "wrong-local.cpp",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Wrong Answer x1",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:29:58.013Z"
+  },
+  "kth-smallest-element-in-a-bst": {
+    "slug": "kth-smallest-element-in-a-bst",
+    "title": "Kth Smallest Element In a BST",
+    "hash": "21ca0a9b0e3ef19ab64f0b56c77d5fe622d8f94edf98c2f1316a84f3b2fa7b69",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 26,
+        "maxMemoryKb": 3840,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 227,
+        "maxMemoryKb": 36864,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-level-order.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:30:46.414Z"
+  },
+  "construct-binary-tree-from-preorder-and-inorder-traversal": {
+    "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
+    "title": "Construct Binary Tree From Preorder And Inorder Traversal",
+    "hash": "9c37eec9fb098cc2d749fc6d40b24cc8320b2b01f403d94839116bc69f1cdf67",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 26,
+        "maxMemoryKb": 3968,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 250,
+        "maxMemoryKb": 37484,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-all-left.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:31:43.681Z"
+  },
+  "binary-tree-maximum-path-sum": {
+    "slug": "binary-tree-maximum-path-sum",
+    "title": "Binary Tree Maximum Path Sum",
+    "hash": "735f5e3c44a2fd4e54954e8a4afdec5c2cc50e320e2fb030d0b57d1623c7ef99",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 65,
+        "maxMemoryKb": 5720,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 323,
+        "maxMemoryKb": 40160,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "slow-recursive.java",
+        "rejected": 1,
+        "total": 10,
+        "summary": "Accepted x9, Runtime Error (NZEC) x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-through-root.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Accepted x6, Wrong Answer x4",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:32:56.083Z"
+  },
+  "clone-graph": {
+    "slug": "clone-graph",
+    "title": "Clone Graph",
+    "hash": "2a736b24618cf24cb45bd56bf2e58ffa6825d0805d483960205451f066ccb901",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 44,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 195,
+        "maxMemoryKb": 35328,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-shallow.cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:35:02.921Z"
+  },
+  "alien-dictionary": {
+    "slug": "alien-dictionary",
+    "title": "Alien Dictionary",
+    "hash": "ec2c507ad4f8d2dab4945519e2c3efb7df1b3277b377825b79fae796022acc0f",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 19,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 191,
+        "maxMemoryKb": 34944,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "wrong-no-prefix-check.cpp",
+        "rejected": 2,
+        "total": 10,
+        "summary": "Accepted x8, Wrong Answer x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:35:59.232Z"
+  },
+  "word-search-ii": {
+    "slug": "word-search-ii",
+    "title": "Word Search II",
+    "hash": "2eb0ed0e91d680555bb2e98cdc280436cca5982311d55f25687b4857ec8c1dd8",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 124,
+        "maxMemoryKb": 10344,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 590,
+        "maxMemoryKb": 72872,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-duplicates.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:36:49.549Z"
+  },
+  "encode-and-decode-strings": {
+    "slug": "encode-and-decode-strings",
+    "title": "Encode and Decode Strings",
+    "hash": "8b54a2d393be8026f823fc10d5699f8aee4575c021148c2751dfdbe92ba9b3df",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 23,
+        "maxMemoryKb": 3584,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 148,
+        "maxMemoryKb": 36352,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-separator.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:37:30.495Z"
+  },
+  "implement-trie-prefix-tree": {
+    "slug": "implement-trie-prefix-tree",
+    "title": "Implement Trie Prefix Tree",
+    "hash": "383ff2ca4935520d57ee41713addd7bd6da1b5dbad8515aa19698a70f466d125",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 36,
+        "maxMemoryKb": 5628,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 428,
+        "maxMemoryKb": 43380,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-no-end-mark.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:38:12.529Z"
+  },
+  "design-add-and-search-words-data-structure": {
+    "slug": "design-add-and-search-words-data-structure",
+    "ok": false,
+    "errors": [
+      "not built (run build.js)"
+    ]
+  },
+  "find-median-from-data-stream": {
+    "slug": "find-median-from-data-stream",
+    "title": "Find Median From Data Stream",
+    "hash": "fa94ae3b97fcceaebdcb60b25a0d75fd4b6bff70a465a1e600bdf457e15df08f",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 48,
+        "maxMemoryKb": 3872,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 343,
+        "maxMemoryKb": 41388,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-integer-division.cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:39:00.331Z"
+  },
+  "serialize-and-deserialize-binary-tree": {
+    "slug": "serialize-and-deserialize-binary-tree",
+    "title": "Serialize And Deserialize Binary Tree",
+    "hash": "47e509dc1008855e98a1d3f8bcf0fb30f8216766222b88cb526c9439fb37b54e",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 49,
+        "maxMemoryKb": 5316,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 563,
+        "maxMemoryKb": 44268,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-reuse.cpp",
+        "rejected": 9,
+        "total": 10,
+        "summary": "Wrong Answer x9, Accepted x1",
+        "ok": true
+      },
+      {
+        "label": "wrong-values-only.cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T04:40:29.295Z"
   }
 }

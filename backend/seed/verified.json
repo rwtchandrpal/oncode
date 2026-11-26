@@ -226,5 +226,69 @@
   "merge-k-sorted-lists": {
     "sha256": "cca96129ccfbf63cad2ccc0692e6d9988e1bdb4af5b7db7b1fd6360c8c465ee3",
     "verifiedAt": "2026-11-26T04:21:29.191Z"
+  },
+  "invert-binary-tree": {
+    "sha256": "2bdb9f957bd808611335df1fed855c34e1c486d23b18553d6bd8a2d7163dc480",
+    "verifiedAt": "2026-11-26T04:23:44.339Z"
+  },
+  "maximum-depth-of-binary-tree": {
+    "sha256": "3a84321ff006106570363f0cae2164d9b7485a014511a9817549c72348e038d8",
+    "verifiedAt": "2026-11-26T04:24:52.777Z"
+  },
+  "subtree-of-another-tree": {
+    "sha256": "8e528a9640f0fa57f26f96ed9c4469fefa589269ff7652f5c100933ff57b8e3d",
+    "verifiedAt": "2026-11-26T04:26:54.498Z"
+  },
+  "lowest-common-ancestor-of-a-binary-search-tree": {
+    "sha256": "7d4bd2bdd8fe6fbde650b9a36ad64129797f7b4e77eca50dcb432a8a7dfa24c1",
+    "verifiedAt": "2026-11-26T04:27:52.190Z"
+  },
+  "binary-tree-level-order-traversal": {
+    "sha256": "4647af46de6409d4cb9abf2c10ec4bfb3c44cdacc44abeda9f5a382dc07d7851",
+    "verifiedAt": "2026-11-26T04:28:50.388Z"
+  },
+  "validate-binary-search-tree": {
+    "sha256": "d5a92d6c8a40b8511f8c72546a32ffd90abe1b104d5fec3fdffe23e2f2836699",
+    "verifiedAt": "2026-11-26T04:29:58.013Z"
+  },
+  "kth-smallest-element-in-a-bst": {
+    "sha256": "21ca0a9b0e3ef19ab64f0b56c77d5fe622d8f94edf98c2f1316a84f3b2fa7b69",
+    "verifiedAt": "2026-11-26T04:30:46.414Z"
+  },
+  "construct-binary-tree-from-preorder-and-inorder-traversal": {
+    "sha256": "9c37eec9fb098cc2d749fc6d40b24cc8320b2b01f403d94839116bc69f1cdf67",
+    "verifiedAt": "2026-11-26T04:31:43.681Z"
+  },
+  "binary-tree-maximum-path-sum": {
+    "sha256": "735f5e3c44a2fd4e54954e8a4afdec5c2cc50e320e2fb030d0b57d1623c7ef99",
+    "verifiedAt": "2026-11-26T04:32:56.083Z"
+  },
+  "clone-graph": {
+    "sha256": "2a736b24618cf24cb45bd56bf2e58ffa6825d0805d483960205451f066ccb901",
+    "verifiedAt": "2026-11-26T04:35:02.921Z"
+  },
+  "alien-dictionary": {
+    "sha256": "ec2c507ad4f8d2dab4945519e2c3efb7df1b3277b377825b79fae796022acc0f",
+    "verifiedAt": "2026-11-26T04:35:59.232Z"
+  },
+  "word-search-ii": {
+    "sha256": "2eb0ed0e91d680555bb2e98cdc280436cca5982311d55f25687b4857ec8c1dd8",
+    "verifiedAt": "2026-11-26T04:36:49.549Z"
+  },
+  "encode-and-decode-strings": {
+    "sha256": "8b54a2d393be8026f823fc10d5699f8aee4575c021148c2751dfdbe92ba9b3df",
+    "verifiedAt": "2026-11-26T04:37:30.495Z"
+  },
+  "implement-trie-prefix-tree": {
+    "sha256": "383ff2ca4935520d57ee41713addd7bd6da1b5dbad8515aa19698a70f466d125",
+    "verifiedAt": "2026-11-26T04:38:12.529Z"
+  },
+  "find-median-from-data-stream": {
+    "sha256": "fa94ae3b97fcceaebdcb60b25a0d75fd4b6bff70a465a1e600bdf457e15df08f",
+    "verifiedAt": "2026-11-26T04:39:00.331Z"
+  },
+  "serialize-and-deserialize-binary-tree": {
+    "sha256": "47e509dc1008855e98a1d3f8bcf0fb30f8216766222b88cb526c9439fb37b54e",
+    "verifiedAt": "2026-11-26T04:40:29.295Z"
   }
 }
