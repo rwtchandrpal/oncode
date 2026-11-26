@@ -11,7 +11,7 @@ const axiosClient = axios.create({
     }
 });
 
-// Run/Submit wait on the code runner; give up after 60 s with a clear message (BUG-18).
+// Run/Submit wait on the code runner; give up after 60 s with a clear message.
 export const EXECUTION_TIMEOUT_MS = 60000;
 const EXECUTION_TIMEOUT_MESSAGE = "The code runner took too long to respond. Please try again in a moment.";
 
@@ -44,7 +44,7 @@ export const setupInterceptors = (store, { sessionCleared, openAuthModal, guestS
 };
 
 // Response interceptor: a 401 means the session is gone (expired, revoked or account deleted).
-// Clear it everywhere, not only in localStorage, and ask the user to sign in again (BUG-07).
+// Clear it everywhere, not only in localStorage, and ask the user to sign in again.
 // For a guest it means the guest session ended: offer a new one (or sign up / log in).
 axiosClient.interceptors.response.use(
     (response) => {

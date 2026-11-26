@@ -4,7 +4,7 @@ const { SLUG_PATTERN, MAX_SLUG_LENGTH, isUsable } = require("../utils/slug");
 const text = (max, label) => z.string({ error: `${label} must be text.` }).max(max, `${label} is too long (max ${max} characters).`);
 const requiredText = (max, label) => text(max, label).min(1, `${label} is required.`);
 
-// 200 KB per test input/output, the same cap the seed tooling uses (backend/seed/FORMAT.md).
+// 200 KB per test input/output, the same cap the seed data uses.
 const MAX_TEST_CHARS = 200 * 1024;
 const testCase = z.object({
   input: requiredText(MAX_TEST_CHARS, "Test input"),
@@ -82,7 +82,7 @@ const listProblemsQuery = z.object({
   topic: text(60, "Topic"),
   status: lowerEnum(STATUSES, "Status must be all, solved or unsolved."),
   page: z.coerce.number({ error: "Page must be a positive integer." }).int("Page must be a positive integer.").min(1, "Page must be a positive integer.").max(100000, "Page is too large."),
-  // Always paginated (PERF-01): no "all" / unbounded mode
+  // Always paginated: no "all" / unbounded mode
   limit: z.coerce.number({ error: "Limit must be an integer between 1 and 100." }).int("Limit must be an integer between 1 and 100.").min(1, "Limit must be an integer between 1 and 100.").max(100, "Limit must be an integer between 1 and 100."),
 }).partial();
 

@@ -1,15 +1,10 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createRequire } from 'node:module';
-import { execFileSync } from 'node:child_process';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import mongoose from 'mongoose';
 import { connect, disconnect, resetData, seed, api, login, auth, PASSWORDS, Problem } from './helpers/app.js';
 
 const require = createRequire(import.meta.url);
 const { slugify } = require('../src/utils/slug.js');
-
-const BACKEND = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 describe('slugify', () => {
   it.each([
@@ -22,13 +17,12 @@ describe('slugify', () => {
 });
 
 describe('problem slugs', () => {
-  let fx, userToken, adminToken;
+  let fx, userToken;
   beforeAll(async () => {
     await connect();
     await resetData();
     fx = await seed();
     userToken = await login('user@test.local', PASSWORDS.user);
-    adminToken = await login('admin@test.local', PASSWORDS.admin);
   });
   afterAll(disconnect);
 
@@ -108,57 +102,5 @@ describe('problem slugs', () => {
     const bySlug = await api().post('/submission/run/double-it').set(auth(userToken)).send({ code: '// ok', language: 'cpp' });
     expect(bySlug.status).toBe(400);
   });
-
-  it('an admin metadata edit gives a slug-less (pre-migration) problem a slug', async () => {
-    const { insertedId } = await mongoose.connection.db.collection('problems').insertOne({ ...base(), title: 'Legacy Problem', number: 900 });
-    const res = await api().put(`/problem/${insertedId}`).set(auth(adminToken)).send({ difficulty: 'Medium' });
-    expect(res.status).toBe(200);
-    expect(res.body.problem.slug).toBe('legacy-problem');
-    await Problem.deleteOne({ _id: insertedId });
-  });
 });
 
-describe('scripts/addSlugsToProblems.js', () => {
-  let fx;
-  beforeAll(async () => {
-    await connect();
-    await resetData();
-    fx = await seed();
-  });
-  afterAll(disconnect);
-
-  const runScript = (...args) =>
-    execFileSync(process.execPath, ['scripts/addSlugsToProblems.js', ...args], {
-      cwd: BACKEND,
-      env: { PATH: process.env.PATH, MONGO_URI: process.env.MONGO_URI },
-      encoding: 'utf8',
-    });
-
-  it('dry-runs by default, then adds unique slugs with --apply, and is idempotent', async () => {
-    const problems = mongoose.connection.db.collection('problems');
-    const { _id: fixtureId, ...doc } = fx.problem.toObject();
-    delete doc.slug;
-    // Legacy documents: one clashes with the existing "double-it", two share a title shape
-    await problems.insertMany([
-      { ...doc, title: 'Double It!', number: 10 },
-      { ...doc, title: 'Two Sum', number: 11 },
-      { ...doc, title: 'Two  Sum?', number: 12, slug: null },
-    ]);
-
-    const dry = runScript();
-    expect(dry).toMatch(/without: 3/);
-    expect(dry).toMatch(/Dry run only/);
-    expect(await problems.countDocuments({ slug: { $type: 'string' } })).toBe(1);
-
-    const applied = runScript('--apply');
-    expect(applied).toMatch(/Added a slug to 3 problem/);
-    const slugs = (await problems.find({}, { projection: { title: 1, slug: 1 } }).sort({ number: 1 }).toArray()).map((p) => p.slug);
-    expect(slugs).toEqual(['double-it', 'double-it-2', 'two-sum', 'two-sum-2']);
-    expect(slugs[0]).toBe(fx.problem.slug);
-    expect(await problems.countDocuments({ _id: fixtureId, slug: 'double-it' })).toBe(1);
-
-    const again = runScript('--apply');
-    expect(again).toMatch(/without: 0/);
-    expect(again).toMatch(/Added a slug to 0 problem/);
-  });
-});

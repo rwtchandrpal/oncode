@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { loadDraft, saveDraft, clearDraft, purgeLegacyDrafts } from '../utils/editorStorage';
+import { loadDraft, saveDraft, clearDraft } from '../utils/editorStorage';
 
 const PID = '6b08156c71be629dc459be3a';
 
@@ -25,16 +25,6 @@ describe('editor drafts are scoped to the account that wrote them', () => {
     clearDraft('user-a', PID, 'cpp');
     expect(loadDraft('user-a', PID, 'cpp')).toBeNull();
     expect(loadDraft('user-b', PID, 'cpp')).toBe('b');
-  });
-
-  it('purges unscoped drafts from before scoping, keeps scoped ones and other keys', () => {
-    localStorage.setItem(`oncode:code:${PID}:cpp`, 'legacy');
-    localStorage.setItem('token', 't');
-    saveDraft('user-a', PID, 'java', 'kept');
-    purgeLegacyDrafts();
-    expect(localStorage.getItem(`oncode:code:${PID}:cpp`)).toBeNull();
-    expect(localStorage.getItem('token')).toBe('t');
-    expect(loadDraft('user-a', PID, 'java')).toBe('kept');
   });
 });
 

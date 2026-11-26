@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Named sequence counters, e.g. { _id: 'problemNumber', seq: 42 } (BUG-16).
+// Named sequence counters, e.g. { _id: 'problemNumber', seq: 42 }.
 const counterSchema = new mongoose.Schema(
     {
         _id: { type: String, required: true },

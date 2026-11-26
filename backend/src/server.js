@@ -7,7 +7,7 @@ const connectDB = require("./config/db");
 const client = require("./config/redis");
 const logger = require("./utils/logger");
 
-// Boot policy (BUG-03): MongoDB is required, so a failed connect exits non-zero and a supervisor can
+// Boot policy: MongoDB is required, so a failed connect exits non-zero and a supervisor can
 // restart us. Redis is degradable (token blocklist, rate limits; guest mode pauses): we start listening right away and
 // connect Redis in the background; node-redis keeps retrying with backoff until it is reachable.
 const initializeConnection = async () => {
@@ -30,7 +30,7 @@ const initializeConnection = async () => {
   registerShutdown(server);
 };
 
-// Graceful shutdown (OPS-02): stop accepting connections, let in-flight requests finish, close Redis
+// Graceful shutdown: stop accepting connections, let in-flight requests finish, close Redis
 // and MongoDB, exit 0. A 10 s watchdog forces exit 1 if something hangs.
 const SHUTDOWN_TIMEOUT_MS = 10000;
 const registerShutdown = (server) => {

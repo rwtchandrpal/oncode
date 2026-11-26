@@ -1,7 +1,7 @@
 const { z } = require("./common");
 
 // bcrypt only uses the first 72 bytes of a password, so longer ones are rejected rather than
-// silently truncated (SEC-11).
+// silently truncated.
 const PASSWORD_MAX_BYTES = 72;
 const byteLength = (s) => Buffer.byteLength(s, "utf8");
 

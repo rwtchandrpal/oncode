@@ -1,6 +1,0 @@
-missing problemId: {"details":[{"location":"body","path":"problemId","message":"Invalid id."}],"error":{"code":"VALIDATION_ERROR","message":"Invalid id."}} [400]
-unknown problemId: {"error":{"code":"NOT_FOUND","message":"Problem not found."}} [404]
-demo AI #1: {"reply":"Double It"} [200]
-demo AI #2: {"error":{"code":"INTERNAL_ERROR","message":"Failed to generate AI response."}} [500]
-demo AI #3: {"reply":"Double It"} [200]
-demo AI #4: {"error":{"code":"RATE_LIMITED","message":"Demo sessions can ask the AI tutor 3 questions per day. Create a free account to keep going."}} [

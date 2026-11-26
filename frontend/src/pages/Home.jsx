@@ -93,7 +93,7 @@ const Home = () => {
   
   const [problems, setProblems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // BUG-15: a failed fetch is shown as an error with Retry, not as "No problems found"
+  // A failed fetch is shown as an error with Retry, not as "No problems found"
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -101,7 +101,7 @@ const Home = () => {
   const [allTopics, setAllTopics] = useState([]);
   const limit = 10;
 
-  // Page and filters live in the URL, so reload / back / shared links keep the view (UX-06)
+  // Page and filters live in the URL, so reload / back / shared links keep the view
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Math.max(1, parseInt(searchParams.get('page'), 10) || 1);
   const debouncedSearch = searchParams.get('search') || '';
@@ -151,7 +151,7 @@ const Home = () => {
   // Effective status filter (guest visitors cannot filter by solved status)
   const effectiveStatus = user ? filters.status : 'all';
 
-  // Fetch paginated problems (each row carries isSolved for the signed-in user, PERF-05)
+  // Fetch paginated problems (each row carries isSolved for the signed-in user)
   useEffect(() => {
     let isMounted = true;
 

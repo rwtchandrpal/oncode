@@ -7,8 +7,9 @@
 //   ... --only <slug>[,<slug>...]                       limit to some problems
 //
 // Safety: refuses any problem whose problems/<slug>.json does not match the sha256 recorded in
-// verified.json by verify.js; validates every document against the Problem model before writing;
-// writes nothing without --yes. MONGO_URI is read from backend/.env (never printed).
+// verified.json (each file was checked on Judge0 against correct, wrong and slow solutions); validates
+// every document against the Problem model before writing; writes nothing without --yes.
+// MONGO_URI is read from the environment or backend/.env (never printed).
 // Run from backend/.
 const path = require("path");
 const fs = require("fs");
@@ -16,7 +17,12 @@ const fs = require("fs");
 const BACKEND = path.join(__dirname, "..");
 require(path.join(BACKEND, "node_modules", "dotenv")).config({ path: path.join(BACKEND, ".env"), quiet: true });
 const mongoose = require(path.join(BACKEND, "node_modules", "mongoose"));
-const P = require("./tools/lib/problems");
+const crypto = require("crypto");
+
+const SEED = __dirname;
+const problemFile = (slug) => path.join(SEED, "problems", `${slug}.json`);
+const readJson = (file, fallback) => (fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : fallback);
+const fileHash = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 
 // Fields of src/models/problem.js that the seed writes. seedMeta is never stored.
 const FIELDS = ["slug", "title", "difficulty", "topics", "description", "constraints", "examples", "visibleTestCase", "hiddenTestCases", "codeSnippets", "referenceSolutions"];
@@ -43,12 +49,12 @@ const describeTarget = (uri) => {
 
 // Loads, checks the verification hash, and validates one problem. Returns { slug, doc } or { slug, error }.
 const prepare = async (slug, verified, Problem) => {
-  const file = P.paths.problem(slug);
-  if (!fs.existsSync(file)) return { slug, error: "not built" };
+  const file = problemFile(slug);
+  if (!fs.existsSync(file)) return { slug, error: "file missing" };
   const v = verified[slug];
-  if (!v) return { slug, error: "not verified (run verify.js)" };
-  if (P.fileHash(file) !== v.sha256) return { slug, error: "file changed since it was verified (re-run verify.js)" };
-  const problem = P.readJson(file);
+  if (!v) return { slug, error: "not in verified.json" };
+  if (fileHash(file) !== v.sha256) return { slug, error: "file changed since it was verified" };
+  const problem = readJson(file);
   const doc = Object.fromEntries(FIELDS.map((f) => [f, problem[f]]));
   try {
     await new Problem({ ...doc, problemCreator: new mongoose.Types.ObjectId() }).validate();
@@ -62,15 +68,14 @@ const main = async () => {
   const args = parseArgs(process.argv.slice(2));
   const Problem = require(path.join(BACKEND, "src", "models", "problem"));
   const User = require(path.join(BACKEND, "src", "models", "user"));
-  const hasSlugPath = Boolean(Problem.schema.path("slug"));
 
-  const list = P.loadList();
+  const list = readJson(path.join(SEED, "blind75-list.json")).problems;
   const known = new Set(list.map((p) => p.slug));
   const slugs = args.only || list.map((p) => p.slug);
   const unknown = slugs.filter((s) => !known.has(s));
   if (unknown.length) throw new Error(`Unknown slug(s): ${unknown.join(", ")}`);
 
-  const verified = P.readJson(P.paths.verified, {});
+  const verified = readJson(path.join(SEED, "verified.json"), {});
   const prepared = [];
   for (const slug of slugs) prepared.push(await prepare(slug, verified, Problem));
   const ready = prepared.filter((p) => p.doc);
@@ -78,7 +83,6 @@ const main = async () => {
 
   console.log(`Problems selected: ${slugs.length}; ready: ${ready.length}; refused: ${refused.length}`);
   for (const r of refused) console.log(`  REFUSED ${r.slug}: ${r.error}`);
-  if (!hasSlugPath) console.log("  NOTE: the Problem schema has no 'slug' path; existing problems are matched by title.");
 
   const offline = args.dryRun && !args.connect;
   if (offline) {
@@ -89,7 +93,7 @@ const main = async () => {
 
   if (!args.creator) throw new Error("--creator <admin email> is required to read or write the database");
   if (!args.dryRun && !args.yes) throw new Error("Refusing to write without --yes (use --dry-run to preview)");
-  if (!process.env.MONGO_URI) throw new Error("MONGO_URI is not set in backend/.env");
+  if (!process.env.MONGO_URI) throw new Error("MONGO_URI is not set");
 
   console.log(`\nDatabase: ${describeTarget(process.env.MONGO_URI)}`);
   await mongoose.connect(process.env.MONGO_URI);
@@ -100,18 +104,7 @@ const main = async () => {
 
     const counts = { inserted: 0, updated: 0, failed: 0 };
     for (const { slug, doc } of ready) {
-      // Match by slug; otherwise adopt an existing problem with the same title that has no slug yet
-      // (only before scripts/addSlugsToProblems.js has run; it gives such problems this same slug).
-      let existing = hasSlugPath ? await Problem.findOne({ slug }).select("_id title slug").lean() : null;
-      if (!existing) {
-        const byTitle = await Problem.findOne({ title: doc.title }).select("_id title slug").lean();
-        if (byTitle && byTitle.slug && byTitle.slug !== slug) {
-          console.log(`  FAILED  ${slug}: title already used by problem with slug ${byTitle.slug}`);
-          counts.failed++;
-          continue;
-        }
-        existing = byTitle;
-      }
+      const existing = await Problem.findOne({ slug }).select("_id").lean();
       const action = existing ? "update" : "insert";
       if (args.dryRun) {
         console.log(`  would ${action} ${slug}`);
@@ -119,12 +112,11 @@ const main = async () => {
         continue;
       }
       try {
-        const fields = hasSlugPath ? doc : Object.fromEntries(Object.entries(doc).filter(([k]) => k !== "slug"));
         if (existing) {
-          await Problem.findByIdAndUpdate(existing._id, { $set: fields }, { runValidators: true });
+          await Problem.findByIdAndUpdate(existing._id, { $set: doc }, { runValidators: true });
           counts.updated++;
         } else {
-          await Problem.create({ ...fields, problemCreator: admin._id });
+          await Problem.create({ ...doc, problemCreator: admin._id });
           counts.inserted++;
         }
         console.log(`  ${action === "insert" ? "inserted" : "updated "} ${slug}`);

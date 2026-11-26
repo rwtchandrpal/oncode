@@ -12,7 +12,7 @@ const ManageProblemsTable = () => {
   const [error, setError] = useState('');
   const [problemToDelete, setProblemToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  // The list endpoint is always paginated (PERF-01)
+  // The list endpoint is always paginated
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProblems, setTotalProblems] = useState(0);

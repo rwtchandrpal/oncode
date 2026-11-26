@@ -1,4 +1,4 @@
-// Distinct problem topics for the filter dropdown, cached in Redis (PERF-01). Admin writes call
+// Distinct problem topics for the filter dropdown, cached in Redis. Admin writes call
 // invalidateTopics(). Redis errors fall back to computing from MongoDB.
 const client = require("../config/redis");
 const logger = require("./logger");

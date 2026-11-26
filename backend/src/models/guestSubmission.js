@@ -1,4 +1,4 @@
-// Submissions made in guest mode (docs/GUEST_MODE_DESIGN.md). Kept apart from `submissions` so guest
+// Submissions made in guest mode. Kept apart from `submissions` so guest
 // work never reaches user stats, solved lists or the admin dashboard, and deleted by a TTL index when
 // the guest session ends. Admin-only diagnostics (failedTestCase, errorDetail) are not stored.
 const mongoose = require("mongoose");

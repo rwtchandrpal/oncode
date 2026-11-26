@@ -1,4 +1,4 @@
-// Guest mode token storage (docs/GUEST_MODE_DESIGN.md). The guest token lives in its own
+// Guest mode token storage. The guest token lives in its own
 // localStorage key, separate from the user `token`, so the two sessions can never be confused.
 // localStorage (not sessionStorage) on purpose: a refresh or a second tab is the same guest session.
 export const GUEST_TOKEN_KEY = 'guestToken';

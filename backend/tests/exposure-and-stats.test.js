@@ -51,7 +51,7 @@ describe('problem list', () => {
   });
 });
 
-describe('stats exclude ungraded submissions (BUG-13)', () => {
+describe('stats exclude ungraded submissions', () => {
   it('Pending and System Error are not counted', async () => {
     const base = { userId: fx.user._id, problemId: fx.problem._id, code: 'x', language: 'cpp' };
     await Submission.insertMany([
@@ -68,7 +68,7 @@ describe('stats exclude ungraded submissions (BUG-13)', () => {
   });
 });
 
-describe('admin problem edits (BUG-09) and numbering (BUG-16)', () => {
+describe('admin problem edits and numbering', () => {
   it('metadata-only edit saves without Judge0; a test-case edit is re-validated', async () => {
     // A reference solution that makes the mock Judge0 "down": any Judge0 call would fail with 503
     await Problem.updateOne({ _id: fx.problem._id }, { $set: { 'referenceSolutions.0.code': '// MOCK_DOWN' } });

@@ -10,6 +10,4 @@ const language = z.preprocess(
   z.enum(LANGUAGES, { error: "Language must be one of: cpp, java." })
 );
 
-const emptyObject = z.object({});
-
-module.exports = { z, objectId, idParams, LANGUAGES, language, emptyObject };
+module.exports = { z, objectId, idParams, LANGUAGES, language };

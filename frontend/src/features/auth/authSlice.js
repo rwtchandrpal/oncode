@@ -138,7 +138,7 @@ const authSlice = createSlice({
         isCheckingAuth: !!localStorage.getItem('token'),
         isLoading: false,
         error: null,
-        // Guest mode (docs/GUEST_MODE_DESIGN.md)
+        // Guest mode
         isGuest: !!initialGuest,
         guest: initialGuest, // { expiresAt } | null
         guestNoticeOpen: false, // the "You're in guest mode" notice shown when a session starts
@@ -186,7 +186,7 @@ const authSlice = createSlice({
             state.guestNoticeOpen = false;
         },
         // Local sign-out with no API call: used when the server says the session is gone (401),
-        // after account deletion, and as the fallback when logout fails (BUG-07, BUG-08).
+        // after account deletion, and as the fallback when logout fails.
         sessionCleared: (state) => {
             state.user = null;
             state.isAuthenticated = false;

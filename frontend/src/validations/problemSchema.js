@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Languages the judge supports. Each problem enables one or more of them, with its own starter
-// snippet, driver code and reference solution (BUG-10).
+// snippet, driver code and reference solution.
 export const LANGUAGES = [
   { id: 'cpp', label: 'C++' },
   { id: 'java', label: 'Java' },

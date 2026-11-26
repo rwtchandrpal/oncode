@@ -1,6 +1,6 @@
 const { errorBody } = require("../utils/AppError");
 
-// validate({ params, query, body }) parses each part with its zod schema (BUG-12, SEC-11).
+// validate({ params, query, body }) parses each part with its zod schema.
 // On success the parsed (trimmed / coerced / stripped) values replace the originals, so controllers
 // only ever see validated input. On failure: 400 { error: { code: 'VALIDATION_ERROR', message }, details }.
 const PARTS = ["params", "query", "body"];

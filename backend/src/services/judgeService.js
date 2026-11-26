@@ -1,4 +1,4 @@
-// Code-execution service (CQ-07): the one place that turns (driver code, user code, test cases) into
+// Code-execution service: the one place that turns (driver code, user code, test cases) into
 // a Judge0 batch and back. Used by submit, run and admin problem validation.
 const { createSubmission, getSubmission, newDeadline, getLanguageId } = require("../utils/judge0Utility");
 const { encodeBase64, decodeBase64 } = require("../utils/base64");
@@ -13,8 +13,8 @@ const buildSource = (driverCode, code) => driverCode.replaceAll("{{USER_CODE}}",
 
 // Per-test time limits sent with every submission (seconds). Without them Judge0 applies its defaults
 // (5 s CPU, 10 s wall), so one infinite loop held 10 workers for ~50 s of CPU and pushed other users'
-// submissions past JUDGE0_DEADLINE_MS (QA-02). Java gets more because its CPU time includes JVM start-up.
-// Headroom over the slowest seed reference (verify-results.json): C++ 110 ms of 2 s, Java 1.5 s of 4 s.
+// submissions past JUDGE0_DEADLINE_MS. Java gets more because its CPU time includes JVM start-up.
+// Headroom over the slowest seed reference solution: C++ 110 ms of 2 s, Java 1.5 s of 4 s.
 // Wall time adds 2 s for process start and I/O. Judge0 caps both (MAX_CPU_TIME_LIMIT 15, MAX_WALL_TIME_LIMIT 20).
 const TIME_LIMITS = {
   cpp: { cpu: 2, wall: 4 },
@@ -38,7 +38,7 @@ const buildPayload = (language, sourceCode, testCases) => {
 };
 
 // Two-step form for callers that must act between "Judge0 accepted the batch" and "results ready"
-// (submit creates its DB record there, BUG-01). Both steps share one deadline (BUG-18).
+// (submit creates its DB record there). Both steps share one deadline.
 const startBatch = async ({ language, driverCode, code, testCases }) => {
   const deadline = newDeadline();
   const accepted = await createSubmission(buildPayload(language, buildSource(driverCode, code), testCases), deadline);

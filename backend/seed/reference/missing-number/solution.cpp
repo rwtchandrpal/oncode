@@ -1,8 +1,0 @@
-class Solution {
-public:
-    int missingNumber(vector<int>& nums) {
-        int x = (int)nums.size();
-        for (int i = 0; i < (int)nums.size(); i++) x ^= i ^ nums[i];
-        return x;
-    }
-};

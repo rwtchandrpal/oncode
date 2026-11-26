@@ -10,7 +10,7 @@ const { sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
 const { decodeBase64 } = require('../utils/base64');
 
-// Largest accepted source file (SEC-08). Checked before any DB write.
+// Largest accepted source file. Checked before any DB write.
 const MAX_CODE_LENGTH = 64000;
 const codeTooLarge = (code) => typeof code === "string" && code.length > MAX_CODE_LENGTH;
 
@@ -37,7 +37,7 @@ const toPublicSubmission = (s) => ({
 
 // Turns Judge0 results for the hidden tests into a verdict. Grading stops at the first failure.
 const gradeResults = (testResult, testCases) => {
-    // Reported runtime is the slowest test, not the sum of all tests (BUG-18)
+    // Reported runtime is the slowest test, not the sum of all tests
     let maxRuntimeSeconds = 0;
     let maxMemoryKb = 0;
     let statusId = 3; // Default to Accepted
@@ -65,7 +65,7 @@ const gradeResults = (testResult, testCases) => {
                 errorMessage = truncateString(decodeBase64(test.compile_output) || "Compilation failed.");
                 errorDetail = errorMessage;
             } else if (test.status_id !== 4) {
-                // Runtime errors / TLE on a hidden test: stderr could echo the hidden input (SEC-03).
+                // Runtime errors / TLE on a hidden test: stderr could echo the hidden input.
                 errorDetail = truncateString(decodeBase64(test.stderr) || decodeBase64(test.compile_output) || "");
                 errorMessage = test.status_id === 5 ? null : `${getstatusById(test.status_id)} on hidden test case ${i + 1}.`;
             }
@@ -89,7 +89,7 @@ const gradeResults = (testResult, testCases) => {
     };
 };
 
-// Guest submit (docs/GUEST_MODE_DESIGN.md): charged to the session quota, graded like a user's, and
+// Guest submit: charged to the session quota, graded like a user's, and
 // stored only in the expiring guestsubmissions collection. Never touches submissions or problemsSolved.
 // The record is written once, after the verdict, so a Judge0 failure leaves nothing behind.
 const submitAsGuest = async (req, res, { problemId, code, language, snippet, testCases }) => {
@@ -158,7 +158,7 @@ const submitCode = async (req, res) => {
         const userId = req.user._id;
 
         // The submission record is created only once Judge0 has accepted the batch, and is marked
-        // 'System Error' if polling then fails, so an outage never leaves a 'Pending' record (BUG-01).
+        // 'System Error' if polling then fails, so an outage never leaves a 'Pending' record.
         let submittedResult = null;
         let testResult;
         try {
@@ -196,7 +196,7 @@ const submitCode = async (req, res) => {
             });
         }
 
-        // Whitelisted response: no hidden input/expected output, no stderr, no driver code (SEC-03).
+        // Whitelisted response: no hidden input/expected output, no stderr, no driver code.
         res.status(201).json({
             message: "Submission completed.",
             submissionResult: toPublicSubmission(submittedResult)
@@ -237,7 +237,7 @@ const runCode = async (req, res) => {
         const testCase = problem.visibleTestCase;
         getLanguageId(language.toLowerCase()); // throws a 400 AppError for unsupported languages
 
-        // The guest quota is charged only for valid requests (BUG-14)
+        // The guest quota is charged only for valid requests
         const guestQuotaKey = req.guest ? await takeGuestExecution(req.guest) : null;
 
         let result;
@@ -266,7 +266,7 @@ const runCode = async (req, res) => {
 };
 
 // ==========================================
-// GET ONE SUBMISSION (owner only, PERF-02)
+// GET ONE SUBMISSION (owner only)
 // ==========================================
 const getSubmissionById = async (req, res) => {
     try {

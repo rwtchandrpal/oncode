@@ -25,7 +25,7 @@ const failWith = (status) => {
     }));
 };
 
-describe('authSlice (BUG-08)', () => {
+describe('authSlice', () => {
   it('sessionCleared signs the user out locally', () => {
     const state = authReducer(signedInState().auth, sessionCleared());
     expect(state.user).toBeNull();
@@ -69,7 +69,7 @@ describe('checkAuth keeps the token unless the server rejects it', () => {
   });
 });
 
-describe('axios 401 interceptor (BUG-07)', () => {
+describe('axios 401 interceptor', () => {
   let store;
   beforeEach(() => {
     store = makeStore();

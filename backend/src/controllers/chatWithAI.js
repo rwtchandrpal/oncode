@@ -10,13 +10,13 @@ const chatWithAI = async (req, res) => {
         // Validated by validation/ai.js
         const { problemId, userLanguage, userCode, userQuestion } = req.body;
 
-        // Title and description come from the database, not the client (SEC-06)
+        // Title and description come from the database, not the client
         const problem = await Problem.findById(problemId).select('title description').lean();
         if (!problem) {
             return res.status(404).json(errorBody(404, "Problem not found."));
         }
 
-        // Guests: 5 questions per guest session (SEC-06); fails closed when Redis is down (throws 429 / 503).
+        // Guests: 5 questions per guest session; fails closed when Redis is down (throws 429 / 503).
         // A Gemini failure refunds the question below.
         if (req.guest) {
             guestQuotaKey = await takeGuestAiQuestion(req.guest);

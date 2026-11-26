@@ -19,7 +19,7 @@ const ProblemSubmissions = ({ problemId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedId, setExpandedId] = useState(null);
-  // The list has no code (PERF-02); details are fetched once per row on first expand
+  // The list has no code; details are fetched once per row on first expand
   const [details, setDetails] = useState({});
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);

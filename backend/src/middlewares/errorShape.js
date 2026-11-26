@@ -1,6 +1,6 @@
 const { codeForStatus } = require("../utils/AppError");
 
-// Normalizes every error response to { error: { code, message } } (CQ-04).
+// Normalizes every error response to { error: { code, message } }.
 // Controllers, middlewares and rate limiters that still answer with { message } or { error: "..." }
 // are converted here, so the contract holds for every route without touching each call site.
 // Extra fields (e.g. `isLocked`, `details`) are kept next to `error`.

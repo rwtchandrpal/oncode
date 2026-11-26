@@ -8,7 +8,6 @@ const GuestSubmission = require('../models/guestSubmission');
 const { AppError, Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
 const { getAllTopics, invalidateTopics } = require('../utils/topicsCache');
-const { uniqueSlug } = require('../utils/slug');
 
 // ==========================================
 // HELPER FUNCTION: Validation & Judge0 Testing
@@ -16,7 +15,7 @@ const { uniqueSlug } = require('../utils/slug');
 const lower = (v) => String(v || "").toLowerCase();
 
 // Structural checks plus a Judge0 run of EVERY reference solution against its own language's driver
-// code (BUG-10). Every language that has a reference solution needs exactly one snippet. (A snippet
+// code. Every language that has a reference solution needs exactly one snippet. (A snippet
 // without a reference solution is still allowed, as in existing data; that driver is then unverified.)
 const validateAndTestProblem = async (problemData) => {
     const { title, description, referenceSolutions, hiddenTestCases, codeSnippets } = problemData;
@@ -56,7 +55,7 @@ const validateAndTestProblem = async (problemData) => {
         }
         const snippet = codeSnippets.find((s) => lower(s.language) === language);
         try {
-            // Same compile settings as user submissions, via the shared judge service (CQ-07)
+            // Same compile settings as user submissions, via the shared judge service
             const testResult = await judgeService.runBatch({ language, driverCode: snippet.driverCode, code: solution.code, testCases });
 
             const failed = testResult.find((test) => test.status_id !== 3); // 3 is "Accepted"
@@ -76,7 +75,7 @@ const validateAndTestProblem = async (problemData) => {
     return { isValid: true };
 };
 
-// Fields whose change can alter what Judge0 must verify (BUG-09). Compared by content only
+// Fields whose change can alter what Judge0 must verify. Compared by content only
 // (subdocument _ids and key order ignored).
 const JUDGE_FIELDS = {
     hiddenTestCases: (v) => (v || []).map((t) => [t.input, t.expectedOutput]),
@@ -151,7 +150,7 @@ const updateProblem = async (req, res) => {
             return res.status(404).json({ message: "Problem not found." });
         }
 
-        // Metadata-only edits (title, statement, topics...) do not need Judge0 (BUG-09)
+        // Metadata-only edits (title, statement, topics...) do not need Judge0
         const existing = existingProblem.toObject();
         const judgeChanges = changedJudgeFields(existing, req.body);
         if (judgeChanges.length > 0) {
@@ -161,11 +160,9 @@ const updateProblem = async (req, res) => {
             }
         }
 
-        // Slugs are kept on title edits. "" means "unchanged"; a problem still without a slug (created
-        // before slugs were required, see scripts/addSlugsToProblems.js) gets one from its title.
+        // Slugs are kept on title edits; "" means "unchanged".
         const { slug, ...fields } = req.body;
         if (slug) fields.slug = slug;
-        else if (!existingProblem.slug) fields.slug = await uniqueSlug(Problem, fields.title || existingProblem.title, existingProblem._id);
         const change = { $set: fields };
         const updatedProblem = await Problem.findByIdAndUpdate(id, change, { runValidators: true, returnDocument: 'after' });
         await invalidateTopics();
@@ -252,7 +249,7 @@ const getProblem = async (req, res) => {
             return sendError(res, new AppError(404, "Problem not found."));
         }
 
-        // Authenticated response: browser-only cache, short lifetime (SEC-13)
+        // Authenticated response: browser-only cache, short lifetime
         res.set({
             'Cache-Control': 'private, max-age=60',
             'Vary': 'Accept-Encoding, Authorization'
@@ -347,7 +344,7 @@ const getAllProblems = async (req, res) => {
             query.title = mongoose.trusted({ $regex: sanitized, $options: 'i' });
         }
 
-        // Difficulty: exact match on the stored canonical value, so the index can be used (PERF-01)
+        // Difficulty: exact match on the stored canonical value, so the index can be used
         const difficulty = CANONICAL_DIFFICULTY[req.query.difficulty];
         if (difficulty) {
             query.difficulty = difficulty;
@@ -358,7 +355,7 @@ const getAllProblems = async (req, res) => {
             query.topics = mongoose.trusted({ $in: [new RegExp(`^${escapeRegex(req.query.topic)}$`, 'i')] });
         }
 
-        // The signed-in user's solved set: used for the status filter and the per-row isSolved flag (PERF-05)
+        // The signed-in user's solved set: used for the status filter and the per-row isSolved flag
         let solvedIds = [];
         if (req.user) {
             const userDoc = await User.findById(req.user._id).select('problemsSolved').lean();
@@ -370,7 +367,7 @@ const getAllProblems = async (req, res) => {
             }
         }
 
-        // Always paginated (PERF-01): default 20, max 100
+        // Always paginated: default 20, max 100
         const page = req.query.page || 1;
         const limit = Math.min(MAX_PAGE_SIZE, req.query.limit || DEFAULT_PAGE_SIZE);
         const skip = (page - 1) * limit;
@@ -436,7 +433,7 @@ const getAllSubmissions = async (req, res) => {
     try {
         const problemId = req.params.id;
 
-        // Paginated summary rows without code/errorMessage (PERF-02); GET /submission/:id has the details
+        // Paginated summary rows without code/errorMessage; GET /submission/:id has the details
         const page = req.query.page || 1;
         const limit = req.query.limit || 20;
         // A guest sees only the unexpired submissions of the current guest session

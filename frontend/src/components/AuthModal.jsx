@@ -26,7 +26,7 @@ const AuthModal = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Focus management (UX-02): move focus into the dialog, keep Tab inside it, and give focus back
+  // Focus management: move focus into the dialog, keep Tab inside it, and give focus back
   // to whatever opened it (e.g. "Get Started") when it closes.
   const dialogRef = useRef(null);
   const returnFocusRef = useRef(null);

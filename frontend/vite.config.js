@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 // `vite preview` serves the production build with the same security headers as vercel.json, so the
-// CSP is exercised locally before deploy (SEC-12). The local API origin (VITE_API_URL, usually plain
+// CSP is exercised locally before deploy. The local API origin (VITE_API_URL, usually plain
 // http://localhost) is added to connect-src for preview only.
 const vercelHeaders = () => {
   const config = JSON.parse(readFileSync(new URL('./vercel.json', import.meta.url), 'utf8'));

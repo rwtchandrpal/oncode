@@ -38,7 +38,7 @@ describe('seed data (backend/seed)', () => {
     const parsed = createProblemBody.safeParse(doc);
     expect(parsed.success, JSON.stringify(parsed.error?.issues?.slice(0, 2))).toBe(true);
     expect(parsed.data.slug).toBe(slug);
-    // So an admin-created problem with the same title gets this slug from the migration (FORMAT.md)
+    // So an admin-created problem with the same title gets the same slug
     expect(slugify(doc.title)).toBe(slug);
     expect(doc.hiddenTestCases.length).toBeGreaterThanOrEqual(1);
     expect(doc.hiddenTestCases.length).toBeLessThanOrEqual(10);

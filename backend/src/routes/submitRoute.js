@@ -10,7 +10,7 @@ const { idParams } = require('../validation/common');
 const { executeBody } = require('../validation/submission');
 
 
-// Judge0 diagnostic: admin-only, and the payload carries no host/port details (SEC-05)
+// Judge0 diagnostic: admin-only, and the payload carries no host/port details
 submitRouter.get("/health", requireAdmin, async (req, res) => {
   const health = await checkJudge0Health();
   const statusCode = health.isOnline ? 200 : 503;

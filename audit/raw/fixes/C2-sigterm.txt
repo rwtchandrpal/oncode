@@ -1,7 +1,0 @@
-14:06:09.786 MongoDB connected 
-14:06:09.796 Server in listening at port : 3000 
-14:06:09.807 [redis] ready 
-14:06:09.808 Redis connected 
-14:06:15.574 Shutting down SIGTERM
-14:06:15.582 Shutdown complete 
-exit code: 0

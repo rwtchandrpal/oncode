@@ -6,7 +6,7 @@ import ProblemForm from '../../components/admin/ProblemForm';
 import { problemToFormValues } from '../../validations/problemSchema';
 import { getApiErrorMessage } from '../../utils/apiError';
 
-// Edits every part of a problem (BUG-09). Prefilled from the admin-only GET /problem/:id/admin,
+// Edits every part of a problem. Prefilled from the admin-only GET /problem/:id/admin,
 // which includes hidden test cases, driver code and reference solutions. The backend only re-runs
 // Judge0 validation when tests, snippets or solutions actually changed.
 const UpdateProblem = () => {

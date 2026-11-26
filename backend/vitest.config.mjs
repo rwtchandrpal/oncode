@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
-// Integration tests run against real MongoDB (replica set) and Redis: locally the disposable Docker
-// containers from audit/harness, in CI service containers. Override with TEST_* variables.
+// Integration tests run against a real MongoDB (single-node replica set) and Redis: locally disposable
+// Docker containers on 127.0.0.1:27018 / :6380 (see README), in CI service containers. Override with TEST_* variables.
 const env = process.env;
 export default defineConfig({
   test: {

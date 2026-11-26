@@ -54,14 +54,14 @@ describe('login', () => {
     expect(wrong.body).toEqual(unknown.body);
   });
 
-  // SEC-01 regression: query operators in the login body must never reach MongoDB
+  // Regression: query operators in the login body must never reach MongoDB
   it.each([
     ['$ne email with the real admin password', { email: { $ne: null }, password: PASSWORDS.admin }],
     ['$ne on both fields', { email: { $ne: null }, password: { $ne: null } }],
     ['$regex email', { email: { $regex: '^adm' }, password: 'x' }],
     ['$gt email', { email: { $gt: '' }, password: PASSWORDS.admin }],
     ['array email', { email: ['admin@test.local'], password: PASSWORDS.admin }],
-  ])('SEC-01: %s -> 400 and no token', async (_name, body) => {
+  ])('%s -> 400 and no token', async (_name, body) => {
     const res = await api().post('/user/login').send(body);
     expect(res.status).toBe(400);
     expect(res.body.token).toBeUndefined();

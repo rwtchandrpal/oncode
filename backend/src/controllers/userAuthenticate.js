@@ -78,7 +78,7 @@ const register = async (req, res) => {
 };
 
 // bcrypt hash of a random throwaway value. Compared against when the email is unknown so that
-// "no such user" and "wrong password" take the same time (SEC-10).
+// "no such user" and "wrong password" take the same time.
 const DUMMY_PASSWORD_HASH = bcrypt.hashSync(crypto.randomBytes(16).toString("hex"), 10);
 
 const login = async (req, res) => {
@@ -86,7 +86,7 @@ const login = async (req, res) => {
     const { email, password } = req.body || {};
 
     // Only plain strings are accepted. Objects such as {"$ne": null} would otherwise reach the
-    // MongoDB filter as query operators (SEC-01).
+    // MongoDB filter as query operators.
     if (typeof email !== "string" || typeof password !== "string" || !email.trim() || !password) {
       return res
         .status(400)
@@ -225,16 +225,7 @@ const getUserStats = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Defensive check: filter out nulls caused by legacy deleted problems
-    const rawSolved = user.problemsSolved || [];
-    const validProblems = rawSolved.filter(Boolean);
-
-    // Self-healing: if dangling nulls were found, clean the user's array in the background
-    if (validProblems.length !== rawSolved.length) {
-      const validIds = validProblems.map(p => p._id);
-      User.updateOne({ _id: userId }, { $set: { problemsSolved: validIds } })
-        .catch(err => logger.error({ err }, "Self-healing cleanup error"));
-    }
+    const validProblems = (user.problemsSolved || []).filter(Boolean);
 
     let easySolved = 0;
     let mediumSolved = 0;
@@ -258,7 +249,7 @@ const getUserStats = async (req, res) => {
     const totalHard = platformCounts.find(p => p._id === 'hard')?.count || 0;
     const totalPlatformProblems = totalEasy + totalMedium + totalHard;
 
-    // Only graded submissions count; Pending / System Error never had a verdict (BUG-13)
+    // Only graded submissions count; Pending / System Error never had a verdict
     const totalSubmissions = await Submission.countDocuments({ userId, status: mongoose.trusted({ $nin: UNGRADED_STATUSES }) });
     const acceptedSubmissions = await Submission.countDocuments({
       userId,

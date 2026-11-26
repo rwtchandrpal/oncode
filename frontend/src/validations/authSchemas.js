@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Mirrors backend/src/validation/auth.js (BUG-17). bcrypt only uses 72 bytes, so the backend rejects longer passwords.
+// Mirrors backend/src/validation/auth.js. bcrypt only uses 72 bytes, so the backend rejects longer passwords.
 export const PASSWORD_MAX_BYTES = 72;
 
 export const passwordSchema = z

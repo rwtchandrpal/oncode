@@ -52,7 +52,6 @@ vi.mock('../utils/axiosClient', () => ({
 }));
 
 const { default: ProblemWorkSpace } = await import('../pages/problemWorkspace/problemWorkspace');
-const { LegacyProblemRedirect } = await import('../App');
 const { default: axiosClient } = await import('../utils/axiosClient');
 
 const Where = () => <span data-testid="where">{useLocation().pathname}</span>;
@@ -69,7 +68,6 @@ const renderWorkspace = (url = '/problems/double-it', userId = 'u1') => {
       <MemoryRouter initialEntries={[url]}>
         <Routes>
           <Route path="/problems/:slug" element={<><Where /><ProblemWorkSpace /></>} />
-          <Route path="/problem/:problemId" element={<LegacyProblemRedirect />} />
         </Routes>
       </MemoryRouter>
     </Provider>
@@ -80,14 +78,14 @@ const editor = () => screen.getByTestId('editor');
 const type = (value) => fireEvent.change(editor(), { target: { value } });
 const pickLanguage = (lang) => fireEvent.change(screen.getByLabelText('Select programming language'), { target: { value: lang } });
 
-describe('workspace language buffers (BUG-05) and drafts (UX-05)', () => {
+describe('workspace language buffers and drafts', () => {
   beforeEach(() => {
     models.clear();
     localStorage.clear();
   });
   afterEach(cleanup);
 
-  it('offers only the languages the problem has (BUG-10)', async () => {
+  it('offers only the languages the problem has', async () => {
     renderWorkspace();
     await screen.findByTestId('editor');
     const options = Array.from(screen.getByLabelText('Select programming language').options).map((o) => o.value);
@@ -148,14 +146,6 @@ describe('workspace slug URLs', () => {
     expect(axiosClient.get).toHaveBeenCalledTimes(1);
     expect(axiosClient.get).toHaveBeenCalledWith('/problem/double-it');
     expect(screen.getByTestId('where').textContent).toBe('/problems/double-it');
-  });
-
-  it('an old /problem/<_id> link lands on /problems/<slug> without a second fetch', async () => {
-    renderWorkspace('/problem/p1');
-    await screen.findByTestId('editor');
-    await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/problems/double-it'));
-    expect(axiosClient.get).toHaveBeenCalledTimes(1);
-    expect(axiosClient.get).toHaveBeenCalledWith('/problem/p1');
   });
 
   it('run and submit send the _id, not the slug', async () => {

@@ -66,7 +66,7 @@ const UserProfile = () => {
     try {
       await axiosClient.delete('/user/profile');
       setIsDeleteModalOpen(false);
-      // The account no longer exists, so a logout API call would only 401. Clear locally (BUG-08).
+      // The account no longer exists, so a logout API call would only 401. Clear locally.
       // A hard redirect (rather than dispatch + navigate) avoids ProtectedRoute briefly seeing the
       // cleared session and reopening the sign-in modal; the reload starts signed out.
       localStorage.removeItem('token');

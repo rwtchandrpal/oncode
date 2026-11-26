@@ -1,4 +1,4 @@
-// All rate limiters in one place (SEC-09, SEC-06). Counters live in Redis (rate-limit-redis), so they
+// All rate limiters in one place. Counters live in Redis (rate-limit-redis), so they
 // survive restarts and are shared by every instance. If Redis is down the limiters fail OPEN
 // (passOnStoreError) rather than blocking all traffic; the outage is logged by the Redis client.
 const { rateLimit, ipKeyGenerator } = require("express-rate-limit");
@@ -30,7 +30,7 @@ const limiter = (name, options) =>
   });
 
 // Guest limiters fail CLOSED: when Redis is down the request gets 503 instead of passing unlimited.
-// Anonymous one-click sessions have no other abuse control (see docs/GUEST_MODE_DESIGN.md).
+// Anonymous one-click sessions have no other abuse control.
 // express-rate-limit does not throw a store error: it catches it and calls next(error), so the callback's
 // argument must be checked. Ignoring it treated "Redis down" as "allowed" (guest sessions failed open).
 const failClosed = (middleware) => async (req, res, next) => {
@@ -107,7 +107,7 @@ const aiUserLimiter = limiter("ai-user", {
   message: { message: "Too many AI Tutor requests. You have reached the limit of 10 questions per 10 minutes. Please take a moment to review the hints before asking again." },
 });
 
-// ...and per IP, so minting many accounts from one IP does not multiply the Gemini budget (SEC-06)
+// ...and per IP, so minting many accounts from one IP does not multiply the Gemini budget
 const aiIpLimiter = limiter("ai-ip", {
   windowMs: 10 * 60 * 1000,
   limit: 20,

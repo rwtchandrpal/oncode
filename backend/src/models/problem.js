@@ -17,9 +17,8 @@ const problemSchema = new Schema({
   },
   // URL key (/problems/<slug>) and the seed scripts' upsert key (backend/seed). Generated from the
   // title when missing (pre-validate hook below) and never regenerated on title edits.
-  // Problems created before slugs were required get one from scripts/addSlugsToProblems.js.
-  // `sparse` only keeps the index options identical to the existing slug_1 index (slugs used to be
-  // optional), so Mongoose does not hit an index conflict; `required` keeps every new document slugged.
+  // `sparse` keeps the index options identical to the slug_1 index already in the deployed database,
+  // so Mongoose does not hit an index conflict; `required` keeps every document slugged.
   slug: {
     type: String,
     required: true,
@@ -97,7 +96,7 @@ problemSchema.pre('validate', async function() {
     }
 });
 
-// Atomic numbering (BUG-16): reading max(number)+1 raced under concurrent creates (E11000).
+// Atomic numbering: reading max(number)+1 raced under concurrent creates (E11000).
 problemSchema.pre('save', async function() {
     if (this.isNew && this.number == null) {
         const Problem = this.constructor;

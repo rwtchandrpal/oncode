@@ -1,4 +1,4 @@
-# Production image for the Oncode API (OPS-04).
+# Production image for the Oncode API.
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./

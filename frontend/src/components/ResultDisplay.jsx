@@ -132,7 +132,7 @@ const SubmitResult = ({ result }) => {
         </div>
       )}
 
-      {/* Hidden test failures: the failing input/expected output is never sent to the client (SEC-03) */}
+      {/* Hidden test failures: the failing input/expected output is never sent to the client */}
       {!isAccepted && !result.errorMessage && (
         <div className="max-w-3xl mt-2 bg-base-200 border border-base-content/10 rounded-lg p-4 text-sm text-base-content/70">
           {result.status === "Wrong Answer"

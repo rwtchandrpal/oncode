@@ -46,7 +46,7 @@ const submissionSchema = new Schema(
             default: 0
         },
         // Hidden-test diagnostics. Admin/debug use only: never selected by default and never sent to
-        // the submitting user (SEC-03). `errorMessage` above holds only the user-safe text.
+        // the submitting user. `errorMessage` above holds only the user-safe text.
         failedTestCase: {
             type: new Schema({
                 input: { type: String },
@@ -69,5 +69,5 @@ submissionSchema.index({ userId: 1, problemId: 1, createdAt: -1 });
 const Submission = mongoose.model('Submission', submissionSchema);
 
 module.exports = Submission;
-// Statuses that never produced a verdict. They are excluded from every statistic (BUG-13).
+// Statuses that never produced a verdict. They are excluded from every statistic.
 module.exports.UNGRADED_STATUSES = ['Pending', 'System Error'];

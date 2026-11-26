@@ -5,7 +5,7 @@ const logger = require('./logger');
 const JUDGE0_BASE_URL = process.env.JUDGE0_BASE_URL;
 // Per-HTTP-request timeout (a stopped EC2 drops packets, so each call would otherwise hang).
 const JUDGE0_TIMEOUT_MS = parseInt(process.env.JUDGE0_TIMEOUT_MS) || 5000;
-// Overall budget for one execution (batch create + all polls), BUG-18.
+// Overall budget for one execution (batch create + all polls).
 const JUDGE0_DEADLINE_MS = parseInt(process.env.JUDGE0_DEADLINE_MS) || 30000;
 const POLL_INTERVAL_MS = 2000;
 // Result fields fetched when polling a batch (see getSubmission).
@@ -40,7 +40,7 @@ const checkJudge0Health = async () => {
       status: response.status
     };
   } catch (error) {
-    // Never return error.message: it contains the Judge0 host and port (SEC-05).
+    // Never return error.message: it contains the Judge0 host and port.
     logger.warn({ code: error.code || error.message }, 'Judge0 health check failed');
     return {
       isOnline: false,
@@ -114,7 +114,7 @@ const getSubmission = async (resultTokens, deadline = newDeadline()) => {
     }
   };
 
-  // Poll until every test has a terminal status or the overall deadline passes (BUG-18).
+  // Poll until every test has a terminal status or the overall deadline passes.
   // A poll that merely times out (Judge0 busy compiling a large batch) is retried within the deadline;
   // other failures (connection refused, bad responses) still end the execution at once.
   for (;;) {

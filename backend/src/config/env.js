@@ -1,4 +1,4 @@
-// Loads and validates environment variables before anything else runs (CQ-02).
+// Loads and validates environment variables before anything else runs.
 // On failure it prints the offending variable NAMES (never values) and exits 1.
 const dotenv = require("dotenv");
 const { z } = require("zod");

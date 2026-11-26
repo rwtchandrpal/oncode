@@ -1,4 +1,4 @@
-// Guest mode (docs/GUEST_MODE_DESIGN.md): stateless guest sessions, isolation from user data,
+// Guest mode: stateless guest sessions, isolation from user data,
 // per-session quotas and the kill switch.
 import { describe, it, expect, beforeAll, afterAll, afterEach, vi } from "vitest";
 import { createRequire } from "node:module";

@@ -1,4 +1,4 @@
-// Structured JSON logging (CQ-06). Authorization headers, cookies, passwords and tokens are redacted
+// Structured JSON logging. Authorization headers, cookies, passwords and tokens are redacted
 // wherever they appear in a log object.
 const pino = require("pino");
 const env = require("../config/env");

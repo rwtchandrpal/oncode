@@ -1,4 +1,4 @@
-// Per-account, per-problem, per-language editor drafts in localStorage (UX-05). Storage can be unavailable
+// Per-account, per-problem, per-language editor drafts in localStorage. Storage can be unavailable
 // (private mode, quota, blocked site data), so every access is guarded and failures are ignored.
 //
 // Drafts are scoped to the account that wrote them (`owner`: the user's _id, or `guest-<id>` for a guest
@@ -6,8 +6,6 @@
 // problem and see the previous user's code.
 const PREFIX = 'oncode:code:';
 const keyFor = (owner, problemId, language) => `${PREFIX}${owner}:${problemId}:${language}`;
-// Pre-scoping format: oncode:code:<problemId>:<language>
-const LEGACY_KEY = /^oncode:code:[a-f0-9]{24}:[a-z]+$/i;
 
 export const loadDraft = (owner, problemId, language) => {
   if (!owner) return null;
@@ -49,17 +47,6 @@ export const adoptDrafts = (fromOwner, toOwner) => {
         if (localStorage.getItem(target) === null) localStorage.setItem(target, localStorage.getItem(k));
         localStorage.removeItem(k);
       });
-  } catch {
-    // ignore
-  }
-};
-
-// Removes drafts saved before they were scoped to an account: nobody can tell whose they are.
-export const purgeLegacyDrafts = () => {
-  try {
-    Object.keys(localStorage)
-      .filter((k) => LEGACY_KEY.test(k))
-      .forEach((k) => localStorage.removeItem(k));
   } catch {
     // ignore
   }

@@ -19,7 +19,7 @@ const getDashboardStats = async (req, res) => {
                 { $group: { _id: "$difficulty", count: { $sum: 1 } } }
             ]),
 
-            // Pipeline C: Submission metrics, graded only (BUG-13). Guest submissions live in a
+            // Pipeline C: Submission metrics, graded only. Guest submissions live in a
             // separate collection and are never counted.
             Submission.countDocuments({ status: mongoose.trusted({ $nin: UNGRADED_STATUSES }) }),
             

@@ -1,9 +1,9 @@
-// Error contract (CQ-04): every error response body is { error: { code, message } } (plus, rarely,
+// Error contract: every error response body is { error: { code, message } } (plus, rarely,
 // extra machine-readable fields such as `isLocked` or `details`).
 //
 // AppError messages are safe to show to the client. Anything else is logged server-side and answered
 // with a fixed message, so internal details (hosts, ports, stack traces, driver messages) never reach
-// the browser (SEC-05).
+// the browser.
 
 const CODE_FOR_STATUS = {
   400: "BAD_REQUEST",

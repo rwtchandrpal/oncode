@@ -1,11 +1,11 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, Navigate, useLocation, useParams, Link } from "react-router";
+import { Routes, Route, Navigate, useLocation, Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth, openAuthModal, guestSessionEnded, syncAuthFromStorage } from "./features/auth/authSlice";
 import { clearGuestToken } from "./utils/guestSession";
 import ServerWakeBanner from "./components/ServerWakeBanner";
 
-// Loaded on first open, so react-hook-form + zod stay out of the initial bundle (PERF-03)
+// Loaded on first open, so react-hook-form + zod stay out of the initial bundle
 const AuthModal = lazy(() => import("./components/AuthModal"));
 const GuestNotice = lazy(() => import("./components/GuestNotice"));
 
@@ -50,12 +50,6 @@ export const SolveRoute =({ isAuthenticated, isGuest, children }) => {
   return children;
 };
 
-// Old problem URLs (/problem/<_id>) go to /problems/<_id>; the page then swaps in the slug URL
-export const LegacyProblemRedirect = () => {
-  const { problemId } = useParams();
-  return <Navigate to={`/problems/${encodeURIComponent(problemId)}`} replace />;
-};
-
 const AdminRoute = ({ user, isAuthenticated, children }) => {
   const location = useLocation();
   if (!isAuthenticated) {
@@ -63,16 +57,6 @@ const AdminRoute = ({ user, isAuthenticated, children }) => {
   }
   if (user?.role !== "admin") return <Navigate to="/" replace />;
   return children;
-};
-
-// /login and /signup used to be standalone pages duplicating AuthModal (CQ-03). They now open the
-// modal in the matching mode on the problem list.
-const AuthEntryRedirect = ({ mode, isAuthenticated }) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (!isAuthenticated) dispatch(openAuthModal({ mode, redirectPath: "/" }));
-  }, [dispatch, mode, isAuthenticated]);
-  return <Navigate to="/" replace />;
 };
 
 const App = () => {
@@ -132,8 +116,6 @@ const App = () => {
       )}
       <Suspense fallback={<PageLoader />}>
         <Routes>
-        <Route path="/login" element={<AuthEntryRedirect mode="login" isAuthenticated={isAuthenticated} />} />
-        <Route path="/signup" element={<AuthEntryRedirect mode="signup" isAuthenticated={isAuthenticated} />} />
 
         <Route 
           path="/" 
@@ -147,7 +129,6 @@ const App = () => {
           path="/problems/:slug"
           element={<SolveRoute isAuthenticated={isAuthenticated} isGuest={isGuest}><ProblemWorkSpace /></SolveRoute>}
         />
-        <Route path="/problem/:problemId" element={<LegacyProblemRedirect />} />
 
         <Route
           path="/admin"

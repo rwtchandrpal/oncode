@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router";
 import { Maximize2, Minimize2, Play, Send } from "lucide-react";
 import axiosClient from "../../utils/axiosClient";
 import { useSelector } from "react-redux";
-import { loadDraft, saveDraft, clearDraft, purgeLegacyDrafts } from "../../utils/editorStorage";
+import { loadDraft, saveDraft, clearDraft } from "../../utils/editorStorage";
 import { readGuestId } from "../../utils/guestSession";
 
 import GlobalNavbar from "../../components/GlobalNavbar";
@@ -42,9 +42,6 @@ const ProblemWorkSpace = () => {
   const userId = useSelector((state) => state.auth.user?._id);
   const isGuest = useSelector((state) => state.auth.isGuest);
   const draftOwner = userId || (isGuest ? `guest-${readGuestId() || "session"}` : null);
-  useEffect(() => {
-    purgeLegacyDrafts();
-  }, []);
 
   // --- Core State ---
   const [problem, setProblem] = useState(null);
@@ -52,14 +49,14 @@ const ProblemWorkSpace = () => {
   const problemId = problem?._id;
   // Set when this page itself rewrote the URL to the canonical slug, so that change is not refetched
   const canonicalSlugRef = useRef(null);
-  // null | "not-found" | "error"  (BUG-06: never spin forever)
+  // null | "not-found" | "error" (never spin forever)
   const [loadError, setLoadError] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(PLACEHOLDER_CODE);
   // Starter snippet per language (what "Reset" restores)
   const [starterCodes, setStarterCodes] = useState({});
-  // Initial value of each language's Monaco model: the saved draft if any, else the starter (UX-05)
+  // Initial value of each language's Monaco model: the saved draft if any, else the starter
   const [initialCodes, setInitialCodes] = useState({});
   
   // Changed loading to a string to track which button is spinning ('run' | 'submit' | null)
@@ -105,7 +102,7 @@ const ProblemWorkSpace = () => {
   const editorRef = useRef(null);
   const codeRef = useRef(PLACEHOLDER_CODE);
   const userCodesRef = useRef({});
-  // Read by the editor change handler, so it never writes into the wrong language (BUG-05)
+  // Read by the editor change handler, so it never writes into the wrong language
   const selectedLanguageRef = useRef("cpp");
   // Pending debounced draft saves, per language
   const saveTimersRef = useRef({});
@@ -118,7 +115,7 @@ const ProblemWorkSpace = () => {
 
   const leftTabs = ["Description", "Solution", "Submissions", "ChatAI"];
   const rightTabs = ["Code", "Testcase", "Result"];
-  // Only the languages this problem has driver code for (BUG-10)
+  // Only the languages this problem has driver code for
   const languages = problem?.codeSnippets?.length
     ? problem.codeSnippets.map((s) => s.language.toLowerCase())
     : ["cpp"];
@@ -137,7 +134,7 @@ const ProblemWorkSpace = () => {
         const { data } = await axiosClient.get(`/problem/${encodeURIComponent(slug)}`);
         if (!isMounted) return;
         setProblem(data.problem);
-        // Old _id link or different letter case: show the canonical /problems/<slug> URL
+        // Different letter case: show the canonical /problems/<slug> URL
         if (data.problem?.slug && data.problem.slug !== slug) {
           canonicalSlugRef.current = data.problem.slug;
           navigate(`/problems/${data.problem.slug}`, { replace: true });
@@ -179,7 +176,7 @@ const ProblemWorkSpace = () => {
     const lang = selectedLanguageRef.current;
     codeRef.current = newCode || "";
     userCodesRef.current[lang] = newCode || "";
-    // Save the draft 500 ms after the last keystroke (UX-05)
+    // Save the draft 500 ms after the last keystroke
     clearTimeout(saveTimersRef.current[lang]);
     saveTimersRef.current[lang] = setTimeout(() => saveDraft(draftOwner, problemId, lang, newCode || ""), 500);
   };

@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const client = require("../config/redis");
 
-// Liveness / readiness probes (OPS-01). Neither depends on Judge0, which is often switched off; the
+// Liveness / readiness probes. Neither depends on Judge0, which is often switched off; the
 // Judge0 diagnostic stays admin-only at GET /submission/health.
 const healthRouter = express.Router();
 

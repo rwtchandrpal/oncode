@@ -12,7 +12,7 @@ const labelClass = 'text-xs font-semibold text-base-content/70';
 
 const FieldError = ({ error }) => (error ? <p className="text-xs text-error mt-1">{error.message}</p> : null);
 
-// Shared create/edit form for admin problem authoring (BUG-09, BUG-10).
+// Shared create/edit form for admin problem authoring.
 // mode: 'create' | 'edit'. onSubmit receives the API payload and should throw on failure.
 const ProblemForm = ({ mode, defaultValues, onSubmit, heading, subheading, submitError }) => {
   const isCreate = mode === 'create';

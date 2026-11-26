@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import Editor from "@monaco-editor/react";
-// Bundled Monaco instead of the jsDelivr CDN (SEC-07); must run before the first <Editor> mounts.
+// Bundled Monaco instead of the jsDelivr CDN; must run before the first <Editor> mounts.
 import "../utils/monacoSetup";
 import { Settings, RotateCcw } from "lucide-react";
 
@@ -83,7 +83,7 @@ const ProblemCodeEditor = memo(({
           theme="daisyui-dark"
           beforeMount={handleEditorWillMount}
           // One Monaco model per path (problem + language): switching language swaps models
-          // instead of overwriting text, so each language keeps its own code and undo history (BUG-05).
+          // instead of overwriting text, so each language keeps its own code and undo history.
           path={path}
           defaultValue={defaultValue}
           onChange={onCodeChange}

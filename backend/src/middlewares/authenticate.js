@@ -1,4 +1,4 @@
-// Single JWT authentication module (CQ-03), replacing userMiddleware, adminMiddleware and
+// Single JWT authentication module, replacing userMiddleware, adminMiddleware and
 // optionalUserMiddleware, which were near-identical copies.
 //
 //   requireUser        - 401 unless a valid, non-revoked token for an existing user.
@@ -40,7 +40,7 @@ const loadUser = async (token, payload) => {
     throw new AuthFailure(401, "Invalid token payload.");
   }
 
-  // Fails open when Redis is down (BUG-04); see utils/tokenBlocklist.js
+  // Fails open when Redis is down; see utils/tokenBlocklist.js
   if (await isTokenBlocked(token)) {
     throw new AuthFailure(401, "Session expired. Please log in again.");
   }

@@ -1,4 +1,4 @@
-// Guest mode settings in one place (see docs/GUEST_MODE_DESIGN.md).
+// Guest mode settings in one place.
 // A guest is a short-lived signed token with a random id: no user document, no saved progress.
 // The object is intentionally not frozen so tests can flip `enabled`; nothing else writes to it.
 const env = require("./env");

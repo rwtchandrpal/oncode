@@ -1,4 +1,4 @@
-// Guest mode on the client (docs/GUEST_MODE_DESIGN.md): state, token storage, interceptors,
+// Guest mode on the client: state, token storage, interceptors,
 // the auth modal's guest option, the guest notice, the navbar reminder and route guards.
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
