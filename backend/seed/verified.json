@@ -130,5 +130,37 @@
   "minimum-window-substring": {
     "sha256": "a50b177e831de240831b8f422fcfe2cd3ae80e901b840ff4daa1ec9d3d5b0585",
     "verifiedAt": "2026-11-25T19:43:39.934Z"
+  },
+  "meeting-rooms": {
+    "sha256": "cccebafacaf7af9c7ca9c408dc4d657048fe2592e829fffcb2e15445efb98d01",
+    "verifiedAt": "2026-11-25T19:45:04.267Z"
+  },
+  "meeting-rooms-ii": {
+    "sha256": "09158d20b753d693be80cc2946e0a5eb8ff243f2b9d0470727635c615560c8f3",
+    "verifiedAt": "2026-11-26T03:50:32.694Z"
+  },
+  "non-overlapping-intervals": {
+    "sha256": "31c65331ba1df3b673b189ff67f2fc80a04f682232a2398c12602eb8965c368d",
+    "verifiedAt": "2026-11-26T03:51:27.806Z"
+  },
+  "merge-intervals": {
+    "sha256": "96f78668109d81af8349dfae3ab6eca6536aff26abb444e052622151f948f6ed",
+    "verifiedAt": "2026-11-26T03:52:12.455Z"
+  },
+  "insert-interval": {
+    "sha256": "4de1b1533f8e6249700e95f0b05d56f3e2d5a577619c710e4a326956ce5b9437",
+    "verifiedAt": "2026-11-26T03:52:53.784Z"
+  },
+  "spiral-matrix": {
+    "sha256": "04078312d2c13e71a5e8b86dc82877fa560d990c1676c7822e9a9915b0bafe26",
+    "verifiedAt": "2026-11-26T03:53:42.514Z"
+  },
+  "rotate-image": {
+    "sha256": "6496ff1293dc2434535b09420710056287be57ebe766050caebbe0f1bfd23278",
+    "verifiedAt": "2026-11-26T03:54:31.017Z"
+  },
+  "set-matrix-zeroes": {
+    "sha256": "a52d72f6b915d85d99593ed0b4f76808af4a832a2390b11e77e8cefeb4808150",
+    "verifiedAt": "2026-11-26T03:55:24.011Z"
   }
 }

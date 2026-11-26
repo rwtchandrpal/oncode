@@ -47,5 +47,17 @@
     "spiral-matrix",
     "rotate-image",
     "set-matrix-zeroes"
+  ],
+  "5": [
+    "group-anagrams",
+    "top-k-frequent-elements",
+    "3sum",
+    "combination-sum",
+    "word-search",
+    "number-of-islands",
+    "pacific-atlantic-water-flow",
+    "course-schedule",
+    "graph-valid-tree",
+    "number-of-connected-components-in-an-undirected-graph"
   ]
 }

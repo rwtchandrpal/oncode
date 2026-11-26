@@ -1593,5 +1593,366 @@
     "notes": [],
     "ok": true,
     "verifiedAt": "2026-11-25T19:43:39.934Z"
+  },
+  "meeting-rooms": {
+    "slug": "meeting-rooms",
+    "title": "Meeting Rooms",
+    "hash": "cccebafacaf7af9c7ca9c408dc4d657048fe2592e829fffcb2e15445efb98d01",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 43,
+        "maxMemoryKb": 3952,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 367,
+        "maxMemoryKb": 41216,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      },
+      {
+        "label": "wrong-touching.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Wrong Answer x3, Accepted x7",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-25T19:45:04.267Z"
+  },
+  "meeting-rooms-ii": {
+    "slug": "meeting-rooms-ii",
+    "title": "Meeting Rooms II",
+    "hash": "09158d20b753d693be80cc2946e0a5eb8ff243f2b9d0470727635c615560c8f3",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 99,
+        "maxMemoryKb": 3712,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 284,
+        "maxMemoryKb": 43684,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-touching.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:50:32.694Z"
+  },
+  "non-overlapping-intervals": {
+    "slug": "non-overlapping-intervals",
+    "title": "Non Overlapping Intervals",
+    "hash": "31c65331ba1df3b673b189ff67f2fc80a04f682232a2398c12602eb8965c368d",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 82,
+        "maxMemoryKb": 3860,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 295,
+        "maxMemoryKb": 43564,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 7,
+        "total": 10,
+        "summary": "Wrong Answer x7, Accepted x3",
+        "ok": true
+      },
+      {
+        "label": "wrong-keep-first.cpp",
+        "rejected": 4,
+        "total": 10,
+        "summary": "Wrong Answer x4, Accepted x6",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:51:27.806Z"
+  },
+  "merge-intervals": {
+    "slug": "merge-intervals",
+    "title": "Merge Intervals",
+    "hash": "96f78668109d81af8349dfae3ab6eca6536aff26abb444e052622151f948f6ed",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 76,
+        "maxMemoryKb": 4156,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 230,
+        "maxMemoryKb": 43808,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-strict.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Accepted x5, Wrong Answer x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:52:12.455Z"
+  },
+  "insert-interval": {
+    "slug": "insert-interval",
+    "title": "Insert Interval",
+    "hash": "4de1b1533f8e6249700e95f0b05d56f3e2d5a577619c710e4a326956ce5b9437",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 51,
+        "maxMemoryKb": 4608,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 441,
+        "maxMemoryKb": 47632,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:52:53.784Z"
+  },
+  "spiral-matrix": {
+    "slug": "spiral-matrix",
+    "title": "Spiral Matrix",
+    "hash": "04078312d2c13e71a5e8b86dc82877fa560d990c1676c7822e9a9915b0bafe26",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 18,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 218,
+        "maxMemoryKb": 34944,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 10,
+        "total": 10,
+        "summary": "Wrong Answer x10",
+        "ok": true
+      },
+      {
+        "label": "wrong-no-guard.cpp",
+        "rejected": 3,
+        "total": 10,
+        "summary": "Accepted x7, Wrong Answer x3",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:53:42.514Z"
+  },
+  "rotate-image": {
+    "slug": "rotate-image",
+    "title": "Rotate Image",
+    "hash": "6496ff1293dc2434535b09420710056287be57ebe766050caebbe0f1bfd23278",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 32,
+        "maxMemoryKb": 3328,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 309,
+        "maxMemoryKb": 34944,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      },
+      {
+        "label": "wrong-counterclockwise.cpp",
+        "rejected": 8,
+        "total": 10,
+        "summary": "Wrong Answer x8, Accepted x2",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:54:31.017Z"
+  },
+  "set-matrix-zeroes": {
+    "slug": "set-matrix-zeroes",
+    "title": "Set Matrix Zeroes",
+    "hash": "a52d72f6b915d85d99593ed0b4f76808af4a832a2390b11e77e8cefeb4808150",
+    "langs": {
+      "cpp": {
+        "pass": true,
+        "maxTimeMs": 40,
+        "maxMemoryKb": 3840,
+        "summary": "Accepted x10"
+      },
+      "java": {
+        "pass": true,
+        "maxTimeMs": 217,
+        "maxMemoryKb": 39024,
+        "summary": "Accepted x10"
+      }
+    },
+    "negatives": [
+      {
+        "label": "starter cpp",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "starter java",
+        "rejected": 6,
+        "total": 10,
+        "summary": "Wrong Answer x6, Accepted x4",
+        "ok": true
+      },
+      {
+        "label": "wrong-cascade.cpp",
+        "rejected": 5,
+        "total": 10,
+        "summary": "Wrong Answer x5, Accepted x5",
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "notes": [],
+    "ok": true,
+    "verifiedAt": "2026-11-26T03:55:24.011Z"
   }
 }
