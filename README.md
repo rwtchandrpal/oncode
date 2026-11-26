@@ -2,6 +2,7 @@
 
 A online coding platform for practicing interview problems: solve the Blind 75 in C++ or Java in the browser, run your code against real tests, and get hints from an AI tutor.
 
+
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
@@ -11,9 +12,9 @@ A online coding platform for practicing interview problems: solve the Blind 75 i
 
 
 <p align="center">
-  <a href="URL_PLACEHOLDER"><img src="https://img.shields.io/badge/%20Live%20Demo-Open%20Oncode-6366F1?style=for-the-badge" alt="Live Demo"></a>
-  &nbsp;
-  <a href="URL_PLACEHOLDER"><img src="https://img.shields.io/badge/▶%20Demo%20Video-Watch-FF0000?style=for-the-badge" alt="Demo video"></a>
+  <a href="https://oncode-self.vercel.app">
+    <img src="https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge" alt="Live Demo" />
+  </a>
 </p>
 
 
