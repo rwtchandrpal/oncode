@@ -5,6 +5,8 @@ const logger = require('../utils/logger');
 const Problem = require('../models/problem');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Model used by the AI tutor
+const GEMINI_MODEL = 'gemini-3.5-flash-lite';
 
 const chatWithAI = async (req, res) => {
     let guestQuotaKey = null;
@@ -48,7 +50,7 @@ const chatWithAI = async (req, res) => {
 
         // The API Call
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: GEMINI_MODEL,
             config: {
                 // The Control Plane
                 systemInstruction: `You are an expert programming tutor. 
