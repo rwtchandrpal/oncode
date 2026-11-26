@@ -49,7 +49,7 @@ const ChatAI = ({ problem, getCode, code, language, isVisible }) => {
         userQuestion: userQuestion
       };
 
-      const { data } = await axiosClient.post('/chatAI/doubt', payload);
+      const { data } = await axiosClient.post('/chatAI/doubt', payload, { skipWakeBanner: true });
 
       setMessages(prev => [...prev, { role: 'ai', content: data.reply }]);
     } catch (error) {

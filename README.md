@@ -172,7 +172,8 @@ frontend build / backend Docker image build.
 ---
 
 ## Operations
-- **Health:** `GET /healthz` (process up) and `GET /readyz` (MongoDB + Redis ping; 503 when not ready). The Judge0
+- **Health:** `GET /healthz` (process up), `GET /api/health` (process up, plus `uptime` and `timestamp`; the SPA
+  pings it to show its "server waking up" banner during free-tier cold starts) and `GET /readyz` (MongoDB + Redis ping; 503 when not ready). The Judge0
   diagnostic `GET /submission/health` is admin-only.
 - **Degraded mode:** the API starts and keeps serving if Redis is down (logout revocation and rate limits fail
   open with warnings; guest mode pauses with a 503 because its quotas fail closed); it exits if MongoDB is

@@ -37,7 +37,7 @@ const UpdateProblem = () => {
   const handleSubmit = async (payload) => {
     setSubmitError('');
     try {
-      await axiosClient.put(`/problem/${problemId}`, payload);
+      await axiosClient.put(`/problem/${problemId}`, payload, { skipWakeBanner: true }); // validates on Judge0
       navigate('/admin/problems');
     } catch (err) {
       console.error('Failed to update problem:', err);

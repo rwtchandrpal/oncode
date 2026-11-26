@@ -107,4 +107,14 @@ describe('error contract', () => {
     expect(res.headers['x-content-type-options']).toBe('nosniff');
     expect(fx.admin).toBeTruthy();
   });
+
+  it('GET /api/health answers without auth, uncached, with CORS for the SPA origin', async () => {
+    const res = await api().get('/api/health').set('Origin', process.env.CLIENT_URL || 'http://localhost:5173');
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe('ok');
+    expect(typeof res.body.uptime).toBe('number');
+    expect(Number.isNaN(Date.parse(res.body.timestamp))).toBe(false);
+    expect(res.headers['cache-control']).toBe('no-store');
+    expect(res.headers['access-control-allow-origin']).toBeTruthy();
+  });
 });

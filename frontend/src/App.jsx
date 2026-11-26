@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation, Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth, openAuthModal, guestSessionEnded, syncAuthFromStorage } from "./features/auth/authSlice";
 import { clearGuestToken } from "./utils/guestSession";
+import ServerWakeBanner from "./components/ServerWakeBanner";
 
 // Loaded on first open, so react-hook-form + zod stay out of the initial bundle (PERF-03)
 const AuthModal = lazy(() => import("./components/AuthModal"));
@@ -100,12 +101,19 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [guestExpiresAt, dispatch]);
 
+  // The wake-up banner sits above everything, including the boot-time auth check
   if (isCheckingAuth) {
-    return <PageLoader />;
+    return (
+      <>
+        <ServerWakeBanner />
+        <PageLoader />
+      </>
+    );
   }
 
   return (
     <>
+      <ServerWakeBanner />
       {authModal.isOpen && (
         <Suspense fallback={null}>
           <AuthModal />

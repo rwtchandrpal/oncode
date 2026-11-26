@@ -1,9 +1,11 @@
 import axios from 'axios'
 import { clearGuestToken, readGuestToken } from './guestSession';
 import { getApiErrorCode } from './apiError';
+import { API_BASE_URL } from './apiBase';
+import { trackRequestStart, trackRequestEnd } from './serverWake';
 
 const axiosClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+    baseURL: API_BASE_URL,
     headers :{
         'Content-Type': 'application/json'
     }
@@ -26,6 +28,8 @@ axiosClient.interceptors.request.use((config) => {
     if (config.url?.startsWith('/submission/') && !config.timeout) {
         config.timeout = EXECUTION_TIMEOUT_MS;
     }
+    // Show the "server waking up" banner if this request hangs (opt out with skipWakeBanner: true)
+    trackRequestStart(config);
     return config;
 }, (error) => {
     return Promise.reject(error);
@@ -43,8 +47,12 @@ export const setupInterceptors = (store, { sessionCleared, openAuthModal, guestS
 // Clear it everywhere, not only in localStorage, and ask the user to sign in again (BUG-07).
 // For a guest it means the guest session ended: offer a new one (or sign up / log in).
 axiosClient.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        trackRequestEnd(response.config);
+        return response;
+    },
     (error) => {
+        trackRequestEnd(error.config);
         const url = error.config?.url || '';
         if (error.response?.status === 401 && !isAuthEndpoint(url)) {
             const hadToken = !!localStorage.getItem('token');

@@ -24,6 +24,13 @@ healthRouter.get("/healthz", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+// Wake-up ping for the SPA's "server waking up" banner (free hosting sleeps when idle). No DB or Redis
+// calls, so it answers as soon as the process is listening. CORS comes from the app-wide config.
+healthRouter.get("/api/health", (req, res) => {
+  res.set("Cache-Control", "no-store");
+  res.status(200).json({ status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
+});
+
 // Dependencies needed to serve real traffic are reachable.
 healthRouter.get("/readyz", async (req, res) => {
   const [mongo, redis] = await Promise.all([

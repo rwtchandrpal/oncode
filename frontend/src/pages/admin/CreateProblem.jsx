@@ -82,7 +82,7 @@ const CreateProblem = () => {
   const handleSubmit = async (payload) => {
     setSubmitError('');
     try {
-      await axiosClient.post('/problem/', payload);
+      await axiosClient.post('/problem/', payload, { skipWakeBanner: true }); // validates on Judge0
       navigate('/admin/problems');
     } catch (err) {
       console.error('Problem creation failed:', err);

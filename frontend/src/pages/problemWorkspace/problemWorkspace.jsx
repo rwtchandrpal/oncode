@@ -274,7 +274,7 @@ const ProblemWorkSpace = () => {
         language: selectedLanguage,
       };
 
-      const { data } = await axiosClient.post(`/submission/run/${problemId}`, payload);
+      const { data } = await axiosClient.post(`/submission/run/${problemId}`, payload, { skipWakeBanner: true });
       
       setRunResult(data);
       setActiveRightTab("Result"); 
@@ -310,7 +310,7 @@ const ProblemWorkSpace = () => {
         language: selectedLanguage,
       };
 
-      const { data } = await axiosClient.post(`/submission/submit/${problemId}`, payload);
+      const { data } = await axiosClient.post(`/submission/submit/${problemId}`, payload, { skipWakeBanner: true });
       
       
       setSubmitResult(data.submissionResult);

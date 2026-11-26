@@ -37,7 +37,7 @@ app.use(errorShape);
 app.use(pinoHttp({
   logger,
   // Probes hit these every few seconds; keep them out of the request log
-  autoLogging: { ignore: (req) => req.url === "/healthz" || req.url === "/readyz" },
+  autoLogging: { ignore: (req) => ["/healthz", "/readyz", "/api/health"].includes(req.url) },
   customLogLevel: (req, res, err) => (err || res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info"),
   serializers: {
     req: (req) => ({ id: req.id, method: req.method, url: req.url, headers: { authorization: req.headers.authorization } }),
