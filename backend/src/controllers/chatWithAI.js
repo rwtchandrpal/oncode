@@ -1,12 +1,8 @@
-const { GoogleGenAI } = require('@google/genai');
 const { errorBody, AppError, sendError } = require('../utils/AppError');
 const { takeGuestAiQuestion, refundGuestQuota } = require('../utils/guestSession');
+const { generateContent, isRetryableGeminiError } = require('../utils/geminiClient');
 const logger = require('../utils/logger');
 const Problem = require('../models/problem');
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-// Model used by the AI tutor
-const GEMINI_MODEL = 'gemini-3.5-flash-lite';
 
 const chatWithAI = async (req, res) => {
     let guestQuotaKey = null;
@@ -48,9 +44,8 @@ const chatWithAI = async (req, res) => {
             ${safeQuestion}
         `;
 
-        // The API Call
-        const response = await ai.models.generateContent({
-            model: GEMINI_MODEL,
+        // The API Call (model + retry on temporary Gemini errors: utils/geminiClient.js)
+        const response = await generateContent({
             config: {
                 // The Control Plane
                 systemInstruction: `You are an expert programming tutor. 
@@ -73,8 +68,8 @@ const chatWithAI = async (req, res) => {
         if (error instanceof AppError) return sendError(res, error);
         logger.error({ err: error }, "Error generating AI response");
         await refundGuestQuota(guestQuotaKey);
-        // Upstream overload / rate limit is temporary: say so instead of a generic 500
-        if (error?.status === 503 || error?.status === 429) {
+        // Upstream overload / rate limit is temporary (and was already retried): say so instead of a generic 500
+        if (isRetryableGeminiError(error) || error?.status === 429) {
             return res.status(503).json(errorBody(503, "The AI tutor is busy right now. Please try again in a moment."));
         }
         res.status(500).json(errorBody(500, "Failed to generate AI response."));
