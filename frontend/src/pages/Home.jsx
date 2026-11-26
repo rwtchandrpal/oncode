@@ -170,6 +170,19 @@ const Home = () => {
 
         const problemRes = await axiosClient.get('/problem/', { params });
 
+        // A page past the end (old link, or the list shrank): go to the last page instead of showing
+        // "No problems found" and "Showing 981 to 75 of 75"
+        const lastPage = problemRes.data.totalPages || 1;
+        if (isMounted && problemRes.data.totalProblems > 0 && currentPage > lastPage) {
+          setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            if (lastPage <= 1) next.delete('page');
+            else next.set('page', String(lastPage));
+            return next;
+          }, { replace: true });
+          return;
+        }
+
         if (isMounted) {
           setProblems(problemRes.data.allProblems || []);
           setTotalProblems(problemRes.data.totalProblems || 0);
@@ -196,7 +209,7 @@ const Home = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentPage, debouncedSearch, filters.difficulty, filters.topic, effectiveStatus, user, reloadKey]);
+  }, [currentPage, debouncedSearch, filters.difficulty, filters.topic, effectiveStatus, user, reloadKey, setSearchParams]);
 
   const handleFilterChange = (e) => {
     updateParams({ [e.target.name]: e.target.value, page: 1 });
