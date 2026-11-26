@@ -59,15 +59,6 @@ const submissionSchema = new Schema(
             type: String,
             select: false
         },
-        isDemo: {
-            type: Boolean,
-            default: false,
-            index: true
-        },
-        expiresAt: {
-            type: Date,
-            default: null
-        },
     },
      {timestamps: true}
 )
@@ -75,7 +66,6 @@ const submissionSchema = new Schema(
 submissionSchema.index({ status: 1 });
 submissionSchema.index({ userId: 1, status: 1 });
 submissionSchema.index({ userId: 1, problemId: 1, createdAt: -1 });
-submissionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, sparse: true });
 const Submission = mongoose.model('Submission', submissionSchema);
 
 module.exports = Submission;

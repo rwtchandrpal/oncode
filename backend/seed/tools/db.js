@@ -70,7 +70,8 @@ const inspect = async () => {
   }
   if (counts.users !== undefined) {
     const users = await db.collection("users").find({}, { projection: { role: 1, isDemo: 1, problemsSolved: 1 } }).toArray();
-    console.log("\nUsers:", users.map((u) => `${u.role}${u.isDemo ? " (demo)" : ""} solved=${(u.problemsSolved || []).length}`).join("; "));
+    // "legacy demo": accounts from the removed demo feature, deleted by their TTL index within 24 h
+    console.log("\nUsers:", users.map((u) => `${u.role}${u.isDemo ? " (legacy demo)" : ""} solved=${(u.problemsSolved || []).length}`).join("; "));
   }
   const userFields = new Set();
   for (const u of await db.collection("users").find({}).toArray()) Object.keys(u).forEach((k) => userFields.add(k));
@@ -78,7 +79,7 @@ const inspect = async () => {
   try {
     const r = await redisClient();
     console.log("\nRedis key counts by app prefix:");
-    for (const p of ["topics:*", "token:*", "rl:*", "demo_runs:*", "demo_ai:*"]) console.log(`  ${p.padEnd(14)} ${await countKeys(r, p)}`);
+    for (const p of ["topics:*", "token:*", "rl:*", "guest_exec:*", "guest_ai:*"]) console.log(`  ${p.padEnd(14)} ${await countKeys(r, p)}`);
     console.log(`  (all keys)     ${await r.dbSize()}`);
     await r.quit();
   } catch (e) {

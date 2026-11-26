@@ -4,43 +4,11 @@ const User = require('../models/user');
 const Submission = require('../models/submission');
 const GuestSubmission = require('../models/guestSubmission');
 const { takeGuestExecution, refundGuestQuota } = require('../utils/guestSession');
-const client = require('../config/redis');
 const { getLanguageId, getstatusById } = require('../utils/judge0Utility');
 const judgeService = require('../services/judgeService');
 const { sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
 const { decodeBase64 } = require('../utils/base64');
-
-const checkDemoExecutionLimit = async (user) => {
-    if (!user || !user.isDemo) return { allowed: true };
-    const key = `demo_runs:${user._id}`;
-    try {
-        const count = await client.incr(key);
-        if (count === 1) {
-            await client.expire(key, 24 * 60 * 60);
-        }
-        if (count > 20) {
-            return {
-                allowed: false,
-                message: "Demo session code execution limit reached (20/20). Please create a free account to continue practicing."
-            };
-        }
-        return { allowed: true, remaining: 20 - count, key };
-    } catch (err) {
-        logger.warn({ err }, "Redis error checking demo execution limit");
-        return { allowed: true };
-    }
-};
-
-// Gives a demo execution back when the run never reached a verdict (Judge0 down, BUG-14).
-const refundDemoExecution = async (key) => {
-    if (!key) return;
-    try {
-        await client.decr(key);
-    } catch (err) {
-        logger.warn({ err }, "Redis error refunding demo execution");
-    }
-};
 
 // Largest accepted source file (SEC-08). Checked before any DB write.
 const MAX_CODE_LENGTH = 64000;
@@ -188,16 +156,6 @@ const submitCode = async (req, res) => {
         }
         const userId = req.user._id;
 
-        // Demo quota is charged only for valid requests (BUG-14)
-        let demoQuotaKey = null;
-        if (req.user.isDemo) {
-            const limitCheck = await checkDemoExecutionLimit(req.user);
-            if (!limitCheck.allowed) {
-                return res.status(429).json({ message: limitCheck.message });
-            }
-            demoQuotaKey = limitCheck.key;
-        }
-
         // The submission record is created only once Judge0 has accepted the batch, and is marked
         // 'System Error' if polling then fails, so an outage never leaves a 'Pending' record (BUG-01).
         let submittedResult = null;
@@ -208,13 +166,10 @@ const submitCode = async (req, res) => {
                 userId, problemId, code, language,
                 testCasesPassed: 0,
                 status: 'Pending',
-                testCasesTotal: testCases.length,
-                isDemo: req.user.isDemo || false,
-                expiresAt: req.user.isDemo ? req.user.expiresAt : null
+                testCasesTotal: testCases.length
             });
             testResult = await judgeService.awaitBatch(batch);
         } catch (execErr) {
-            await refundDemoExecution(demoQuotaKey);
             if (submittedResult) {
                 submittedResult.status = 'System Error';
                 submittedResult.errorMessage = 'Execution service unavailable';
@@ -280,16 +235,8 @@ const runCode = async (req, res) => {
         const testCase = problem.visibleTestCase;
         getLanguageId(language.toLowerCase()); // throws a 400 AppError for unsupported languages
 
-        // Guest and demo quotas are charged only for valid requests (BUG-14)
+        // The guest quota is charged only for valid requests (BUG-14)
         const guestQuotaKey = req.guest ? await takeGuestExecution(req.guest) : null;
-        let demoQuotaKey = null;
-        if (req.user?.isDemo) {
-            const limitCheck = await checkDemoExecutionLimit(req.user);
-            if (!limitCheck.allowed) {
-                return res.status(429).json({ message: limitCheck.message });
-            }
-            demoQuotaKey = limitCheck.key;
-        }
 
         let result;
         try {
@@ -297,7 +244,6 @@ const runCode = async (req, res) => {
             result = first;
         } catch (execErr) {
             await refundGuestQuota(guestQuotaKey);
-            await refundDemoExecution(demoQuotaKey);
             throw execErr;
         }
         

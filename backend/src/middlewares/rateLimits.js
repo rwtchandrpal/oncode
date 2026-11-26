@@ -70,12 +70,6 @@ const loginIpLimiter = limiter("login-ip", {
   message: { message: "Too many sign-in attempts from this network. Please try again later." },
 });
 
-const demoLimiter = limiter("demo", {
-  windowMs: 15 * 60 * 1000,
-  limit: 5,
-  message: { message: "Too many demo accounts created from this IP. Please try again in 15 minutes." },
-});
-
 // New guest sessions per IP
 const guestSessionLimiter = failClosed(limiter("guest-session", {
   windowMs: 60 * 60 * 1000,
@@ -119,7 +113,6 @@ module.exports = {
   registerLimiter,
   loginEmailLimiter,
   loginIpLimiter,
-  demoLimiter,
   guestSessionLimiter,
   guestGlobalExecutionLimiter,
   submitLimiter,

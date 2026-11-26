@@ -1,7 +1,7 @@
 // Single JWT authentication module (CQ-03), replacing userMiddleware, adminMiddleware and
 // optionalUserMiddleware, which were near-identical copies.
 //
-//   requireUser        - 401 unless a valid, non-revoked token for an existing (non-expired demo) user.
+//   requireUser        - 401 unless a valid, non-revoked token for an existing user.
 //                        A guest token gets 403 GUEST_NOT_ALLOWED (not 401, so the client keeps its guest session).
 //   requireAdmin       - requireUser + the user's CURRENT role in MongoDB must be admin (403 otherwise)
 //   requireUserOrGuest - a user (as requireUser) or a guest session. Guests get req.guest, never req.user.
@@ -46,12 +46,9 @@ const loadUser = async (token, payload) => {
   }
 
   // Re-read the user (and role) on every request instead of trusting the token's claims
-  const user = await User.findById(payload._id).select("_id email role firstName lastName isDemo expiresAt");
+  const user = await User.findById(payload._id).select("_id email role firstName lastName");
   if (!user) {
     throw new AuthFailure(401, "User account no longer exists.");
-  }
-  if (user.isDemo && user.expiresAt && new Date() > user.expiresAt) {
-    throw new AuthFailure(401, "Demo session expired. Please start a new demo session or sign up.");
   }
   return user;
 };

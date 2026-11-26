@@ -49,6 +49,20 @@ afterEach(() => {
   guestConfig.enabled = true;
 });
 
+describe("demo accounts are gone", () => {
+  it("POST /user/demo no longer exists", async () => {
+    const users = await User.countDocuments();
+    expect((await api().post("/user/demo")).status).toBe(404);
+    expect(await User.countDocuments()).toBe(users);
+  });
+
+  it("/user/check returns no demo fields", async () => {
+    const res = await api().get("/user/check").set(auth(userToken));
+    expect(res.body.user).not.toHaveProperty("isDemo");
+    expect(res.body.user).not.toHaveProperty("expiresAt");
+  });
+});
+
 describe("POST /user/guest", () => {
   it("returns a 4-hour guest token and creates no user document", async () => {
     const users = await User.countDocuments();

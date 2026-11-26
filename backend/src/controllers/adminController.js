@@ -9,9 +9,8 @@ const getDashboardStats = async (req, res) => {
     try {
         const [userStats, problemStats, totalSubmissions, acceptedSubmissions] = await Promise.all([
             
-            // Pipeline A: Group persistent users by role (exclude temporary demo users)
+            // Pipeline A: Group users by role (guests have no user document)
             User.aggregate([
-                { $match: { isDemo: { $ne: true } } },
                 { $group: { _id: "$role", count: { $sum: 1 } } }
             ]),
         
@@ -20,11 +19,11 @@ const getDashboardStats = async (req, res) => {
                 { $group: { _id: "$difficulty", count: { $sum: 1 } } }
             ]),
 
-            // Pipeline C: Submission metrics (persistent submissions)
-            // graded only (BUG-13)
-            Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }), status: mongoose.trusted({ $nin: UNGRADED_STATUSES }) }),
+            // Pipeline C: Submission metrics, graded only (BUG-13). Guest submissions live in a
+            // separate collection and are never counted.
+            Submission.countDocuments({ status: mongoose.trusted({ $nin: UNGRADED_STATUSES }) }),
             
-            Submission.countDocuments({ isDemo: mongoose.trusted({ $ne: true }), status: "Accepted" }) 
+            Submission.countDocuments({ status: "Accepted" }) 
         ]);
 
         // --- Data Formatting & Transformation ---

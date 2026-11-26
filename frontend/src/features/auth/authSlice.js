@@ -47,21 +47,6 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-export const loginDemoUser = createAsyncThunk(
-    'auth/demo',
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await axiosClient.post('/user/demo');
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-            }
-            return response.data.user;
-        } catch (error) {
-            return handleAxiosError(error, rejectWithValue);
-        }
-    }
-);
-
 // Guest mode: a one-click session without an account. Nothing is saved to a profile.
 export const startGuestSession = createAsyncThunk(
     'auth/guestStart',
@@ -251,24 +236,6 @@ const authSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload || 'Login failed';
-                state.isAuthenticated = false;
-                state.user = null;
-            })
-
-            // --- Demo Login ---
-            .addCase(loginDemoUser.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
-            })
-            .addCase(loginDemoUser.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isAuthenticated = !!action.payload;
-                state.user = action.payload;
-                state.authModal.isOpen = false;
-            })
-            .addCase(loginDemoUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.payload || 'Demo session creation failed';
                 state.isAuthenticated = false;
                 state.user = null;
             })

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router'; 
-import { LogOut, Trash2, Shield, Calendar, Mail, Zap } from 'lucide-react';
+import { LogOut, Trash2, Shield, Calendar, Mail } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
 import { logoutUser } from '../features/auth/authSlice';
 import GlobalNavbar from '../components/GlobalNavbar'; 
@@ -106,11 +106,7 @@ const UserProfile = () => {
                 <div>
                   <h2 className="text-xl font-bold text-base-content">{user.firstName} {user.lastName}</h2>
                   <div className="flex items-center gap-2 mt-1">
-                    {user.isDemo ? (
-                      <span className="badge badge-warning badge-sm gap-1 bg-warning/10 text-warning border-warning/20 font-medium">
-                        <Zap className="w-3 h-3" /> Demo Session (24h)
-                      </span>
-                    ) : user.role === 'admin' ? (
+                    {user.role === 'admin' ? (
                       <span className="badge badge-error badge-sm gap-1 bg-error/10 text-error border-error/20 font-medium">
                         <Shield className="w-3 h-3" /> Admin
                       </span>
@@ -146,28 +142,15 @@ const UserProfile = () => {
                 Log Out
               </button>
 
-              {user.isDemo ? (
-                <div className="bg-warning/10 border border-warning/20 text-warning text-xs p-3 rounded-xl space-y-1">
-                  <div className="font-semibold flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5" /> Temporary Guest Session
-                  </div>
-                  <p className="text-warning/80">
-                    This account and its submissions expire automatically after 24 hours. Sign up for a permanent account to keep your stats forever.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className="divider border-base-content/10 my-2"></div>
+              <div className="divider border-base-content/10 my-2"></div>
 
-                  <button 
-                    onClick={() => setIsDeleteModalOpen(true)}
-                    className="btn w-full bg-error/10 hover:bg-error/20 text-error border-error/20 hover:border-error/50 flex justify-start gap-3"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Delete Account
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="btn w-full bg-error/10 hover:bg-error/20 text-error border-error/20 hover:border-error/50 flex justify-start gap-3"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete Account
+              </button>
             </div>
           </div>
 

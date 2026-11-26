@@ -32,58 +32,6 @@ const startGuestSession = (req, res) => {
   });
 };
 
-// handler for temporary isolated demo session
-const demoLogin = async (req, res) => {
-  try {
-    const timestamp = Date.now();
-    const entropy = crypto.randomBytes(4).toString("hex");
-    const uniqueEmail = `demo_${timestamp}_${entropy}@guest.oncode.local`;
-    const randomPassword = crypto.randomBytes(16).toString("hex");
-    const hashedPassword = await bcrypt.hash(randomPassword, 10);
-    const expiresAt = new Date(timestamp + 24 * 60 * 60 * 1000); // 24-hour expiration
-
-    const demoUser = await User.create({
-      firstName: "Demo",
-      lastName: "Guest",
-      email: uniqueEmail,
-      password: hashedPassword,
-      role: "user",
-      isDemo: true,
-      expiresAt: expiresAt
-    });
-
-    const token = jwt.sign(
-      { _id: demoUser._id, email: demoUser.email, role: "user", isDemo: true },
-      process.env.JWT_KEY,
-      { expiresIn: "24h" }
-    );
-
-    const userData = {
-      _id: demoUser._id,
-      firstName: demoUser.firstName,
-      lastName: demoUser.lastName,
-      email: demoUser.email,
-      role: demoUser.role,
-      isDemo: true,
-      expiresAt: demoUser.expiresAt
-    };
-
-    res.set({
-      'Cache-Control': 'no-store, no-cache, must-revalidate, private',
-      'Pragma': 'no-cache'
-    });
-
-    res.status(201).json({
-      message: "Demo session initialized successfully.",
-      user: userData,
-      token
-    });
-  } catch (err) {
-    sendError(res, err, "Failed to start a demo session. Please try again.");
-  }
-};
-
-
 // handler for authentication register, login, logout
 const register = async (req, res) => {
   try {
@@ -227,12 +175,6 @@ const adminRegister = async (req, res) => {
 
 const deleteProfile = async (req, res) => {
   try {
-    if (req.user.isDemo) {
-      return res.status(403).json({
-        message: "Demo sessions are temporary and cannot be manually deleted. They expire automatically after 24 hours."
-      });
-    }
-
     const userId = req.user._id;
 
     await User.findByIdAndDelete(userId);
@@ -252,8 +194,6 @@ const checkAuth = async (req, res) => {
     email: req.user.email,
     _id: req.user._id,
     role: req.user.role,
-    isDemo: req.user.isDemo || false,
-    expiresAt: req.user.expiresAt || null
   };
   res.set({
     'Cache-Control': 'no-store, no-cache, must-revalidate, private',
@@ -362,7 +302,6 @@ module.exports = {
   register,
   login,
   logout,
-  demoLogin,
   startGuestSession,
   adminRegister,
   deleteProfile,

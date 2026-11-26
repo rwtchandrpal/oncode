@@ -14,7 +14,7 @@ export const EXECUTION_TIMEOUT_MS = 60000;
 const EXECUTION_TIMEOUT_MESSAGE = "The code runner took too long to respond. Please try again in a moment.";
 
 // 401s on these endpoints mean "wrong credentials" or "already signed out", not "session expired".
-const AUTH_ENDPOINTS = ['/user/login', '/user/register', '/user/demo', '/user/guest', '/user/logout'];
+const AUTH_ENDPOINTS = ['/user/login', '/user/register', '/user/guest', '/user/logout'];
 const isAuthEndpoint = (url = '') => AUTH_ENDPOINTS.some((p) => url.startsWith(p));
 
 // Interceptor to attach token to every request: the user's token, otherwise the guest session's
