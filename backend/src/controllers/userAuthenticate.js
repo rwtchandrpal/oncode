@@ -177,6 +177,12 @@ const deleteProfile = async (req, res) => {
   try {
     const userId = req.user._id;
 
+    // The last admin deleting their own account would leave nobody able to reach the admin area
+    // (only a direct database edit could fix it). Promote another admin first.
+    if (req.user.role === "admin" && (await User.countDocuments({ role: "admin" })) <= 1) {
+      return res.status(409).json({ message: "You are the only admin. Make another user an admin before deleting this account." });
+    }
+
     await User.findByIdAndDelete(userId);
 
     // Token should ideally be blacklisted here too, but frontend will clear localStorage

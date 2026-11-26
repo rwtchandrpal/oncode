@@ -69,3 +69,17 @@ describe('authorization matrix', () => {
     }
   });
 });
+
+describe('deleting the last admin account', () => {
+  it('is refused while it is the only admin, allowed once there is another', async () => {
+    const res = await call('DELETE', '/user/profile', null, adminToken);
+    expect(res.status).toBe(409);
+    expect(JSON.stringify(res.body)).toMatch(/only admin/);
+    expect((await call('GET', '/admin/dashboard', null, adminToken)).status).toBe(200);
+
+    const made = await call('POST', '/user/admin/register', { firstName: 'Second', email: 'admin2@test.local', password: 'GoodPass#123', role: 'admin' }, adminToken);
+    expect(made.status).toBe(201);
+    const second = await login('admin2@test.local', 'GoodPass#123');
+    expect((await call('DELETE', '/user/profile', null, second)).status).toBe(200);
+  });
+});
