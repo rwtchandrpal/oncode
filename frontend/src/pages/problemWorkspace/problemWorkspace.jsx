@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { Maximize2, Minimize2, Play, Send } from "lucide-react";
 import axiosClient from "../../utils/axiosClient";
@@ -14,11 +14,20 @@ import ProblemSolution from "../../components/ProblemSolution";
 import ChatAI from "../../components/ProblemChatAI";
 import ProblemSubmissions from "../../components/ProblemSubmissions";
 
-// RIGHT-PANE TABS
-import ProblemCodeEditor from "../../components/ProblemCodeEditor";
+// RIGHT-PANE TABS (the code editor is lazy, see below)
 import ProblemTestcase from "../../components/ProblemTestcase";
 import ProblemResult from "../../components/ProblemResult";
 import { getApiErrorMessage } from '../../utils/apiError';
+
+// Monaco is ~720 KB gzip: loaded as its own chunk so the problem statement renders before the editor arrives.
+// The download starts as soon as this module loads (in parallel with the problem fetch), not on first render.
+const editorChunk = import("../../components/ProblemCodeEditor");
+const ProblemCodeEditor = lazy(() => editorChunk);
+const EditorFallback = () => (
+  <div className="flex flex-1 items-center justify-center" role="status" aria-label="Loading editor">
+    <span className="loading loading-spinner text-primary"></span>
+  </div>
+);
 
 const DEFAULT_SPLIT_RATIO = 40;
 const MIN_SPLIT_RATIO = 20;
@@ -593,6 +602,7 @@ const ProblemWorkSpace = () => {
           <div className="flex-1 flex flex-col min-h-0 min-w-0">
             {/* Persistent ProblemCodeEditor Container to preserve editor state, undo history, and cursor */}
             <div className={`flex-1 flex flex-col min-h-0 min-w-0 ${activeRightTab === "Code" ? "flex" : "hidden"}`}>
+              <Suspense fallback={<EditorFallback />}>
               <ProblemCodeEditor
                 key={problemId}
                 path={`${problemId}-${selectedLanguage}`}
@@ -607,6 +617,7 @@ const ProblemWorkSpace = () => {
                 fontSizes={fontSizes}
                 handleEditorDidMount={handleEditorDidMount}
               />
+              </Suspense>
             </div>
 
             {activeRightTab === "Testcase" && (
