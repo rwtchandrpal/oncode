@@ -89,11 +89,11 @@ const GlobalNavbar = () => {
               <div
                 tabIndex={0}
                 role="button"
-                aria-label="Guest mode: progress not saved. Open guest menu"
+                aria-label="Guest mode. Open guest menu"
                 className="badge badge-warning badge-soft gap-1 h-8 px-2 sm:px-3 cursor-pointer text-xs font-medium"
               >
                 <UserRound className="w-3.5 h-3.5" aria-hidden="true" />
-                Guest<span className="hidden sm:inline"> · progress not saved</span>
+                Guest
               </div>
               <ul tabIndex={0} className="mt-3 z-1 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 border border-base-content/10 rounded-box w-52 sm:w-60">
                 <li className="px-4 py-2 border-b border-base-content/10 text-base-content/70 text-xs cursor-default">

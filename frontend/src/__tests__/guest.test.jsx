@@ -213,7 +213,8 @@ describe('guest notice and navbar reminder', () => {
   it('the navbar shows a guest badge with sign-up and log-in', () => {
     const store = makeStore(guestAuth());
     renderWithStore(<GlobalNavbar />, store);
-    expect(screen.getByRole('button', { name: /guest mode: progress not saved/i })).toBeTruthy();
+    const badge = screen.getByRole('button', { name: /open guest menu/i });
+    expect(badge.textContent.trim()).toBe('Guest');
     expect(screen.queryByRole('button', { name: /get started/i })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /^log in$/i }));
     expect(store.getState().auth.authModal).toMatchObject({ isOpen: true, mode: 'login' });

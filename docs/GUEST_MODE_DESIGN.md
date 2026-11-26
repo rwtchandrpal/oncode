@@ -216,9 +216,9 @@ an explicit `if (req.guest)` branch in the four controllers that need one.
 - New component `frontend/src/components/GuestNotice.jsx`, rendered once at app level and driven by a flag set by `startGuestSession`.
 
 ### Persistent reminder (requirement 6) and easy upgrade (requirement 7)
-- **`GlobalNavbar`** (rendered on Home, Workspace and Profile): while `isGuest`, show a subtle **"Guest · progress
-  not saved"** badge (with time remaining in a tooltip) plus **Sign up** and **Log in** buttons and a small
-  menu holding **Exit guest mode**. It takes no extra vertical space, which matters in the full-height workspace.
+- **`GlobalNavbar`** (rendered on Home, Workspace and Profile): while `isGuest`, show a subtle **"Guest"** badge
+  plus **Sign up** and **Log in** buttons. The badge opens a small menu with "Your progress won't be saved", the
+  session end time and **Exit guest mode**. It takes no extra vertical space, which matters in the full-height workspace.
 - ⇄ Alternative: a full-width strip under the navbar. It's more visible, but it costs about 32px in the workspace layout.
 
 ### Route guards (`frontend/src/App.jsx`)
