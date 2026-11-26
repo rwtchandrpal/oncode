@@ -11,15 +11,29 @@ const CPP_COMPILER_OPTIONS = "-Wall -Werror=return-type";
 // patterns in the code are not interpreted.
 const buildSource = (driverCode, code) => driverCode.replaceAll("{{USER_CODE}}", () => code);
 
+// Per-test time limits sent with every submission (seconds). Without them Judge0 applies its defaults
+// (5 s CPU, 10 s wall), so one infinite loop held 10 workers for ~50 s of CPU and pushed other users'
+// submissions past JUDGE0_DEADLINE_MS (QA-02). Java gets more because its CPU time includes JVM start-up.
+// Headroom over the slowest seed reference (verify-results.json): C++ 110 ms of 2 s, Java 1.5 s of 4 s.
+// Wall time adds 2 s for process start and I/O. Judge0 caps both (MAX_CPU_TIME_LIMIT 15, MAX_WALL_TIME_LIMIT 20).
+const TIME_LIMITS = {
+  cpp: { cpu: 2, wall: 4 },
+  java: { cpu: 4, wall: 6 },
+};
+
 const buildPayload = (language, sourceCode, testCases) => {
-  const languageId = getLanguageId(String(language).toLowerCase());
+  const lang = String(language).toLowerCase();
+  const languageId = getLanguageId(lang);
   const compilerOptions = languageId === CPP_LANGUAGE_ID ? CPP_COMPILER_OPTIONS : "";
+  const limits = TIME_LIMITS[lang];
   return testCases.map((testCase) => ({
     language_id: languageId,
     source_code: encodeBase64(sourceCode),
     stdin: encodeBase64(testCase.input),
     expected_output: encodeBase64(testCase.expectedOutput),
     compiler_options: compilerOptions,
+    cpu_time_limit: limits.cpu,
+    wall_time_limit: limits.wall,
   }));
 };
 
@@ -47,4 +61,4 @@ const awaitBatch = async ({ tokens, deadline }) => {
 // One-shot form: returns Judge0 results in test-case order.
 const runBatch = async (args) => awaitBatch(await startBatch(args));
 
-module.exports = { buildSource, buildPayload, startBatch, awaitBatch, runBatch, decodeBase64 };
+module.exports = { buildSource, buildPayload, startBatch, awaitBatch, runBatch, decodeBase64, TIME_LIMITS };
