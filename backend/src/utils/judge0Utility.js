@@ -8,6 +8,8 @@ const JUDGE0_TIMEOUT_MS = parseInt(process.env.JUDGE0_TIMEOUT_MS) || 5000;
 // Overall budget for one execution (batch create + all polls), BUG-18.
 const JUDGE0_DEADLINE_MS = parseInt(process.env.JUDGE0_DEADLINE_MS) || 30000;
 const POLL_INTERVAL_MS = 2000;
+// Result fields fetched when polling a batch (see getSubmission).
+const RESULT_FIELDS = 'token,status_id,stdout,stderr,compile_output,message,time,memory';
 
 // Absolute time by which an execution must finish. Pass the same value to createSubmission and
 // getSubmission so the budget covers both.
@@ -95,7 +97,9 @@ const getSubmission = async (resultTokens, deadline = newDeadline()) => {
         params: {
           tokens: resultTokens.join(','),
           base64_encoded: 'true',
-          fields: '*'
+          // Only what the platform reads. "*" also returned every test's source code, stdin and expected
+          // output (base64); with 200 KB tests that is several MB per poll and timed out the 5 s request.
+          fields: RESULT_FIELDS
         },
         headers: {
           'Content-Type': 'application/json',
@@ -111,8 +115,19 @@ const getSubmission = async (resultTokens, deadline = newDeadline()) => {
   };
 
   // Poll until every test has a terminal status or the overall deadline passes (BUG-18).
+  // A poll that merely times out (Judge0 busy compiling a large batch) is retried within the deadline;
+  // other failures (connection refused, bad responses) still end the execution at once.
   for (;;) {
-    const result = await fetchData();
+    let result;
+    try {
+      result = await fetchData();
+    } catch (error) {
+      const slow = error.cause?.code === 'ECONNABORTED' || error.cause?.code === 'ETIMEDOUT';
+      if (!slow || remainingMs(deadline) <= POLL_INTERVAL_MS) throw error;
+      logger.warn({ code: error.cause.code }, 'Judge0 poll timed out, retrying within the deadline');
+      await waiting(POLL_INTERVAL_MS);
+      continue;
+    }
 
     if (!result || !Array.isArray(result.submissions)) {
       throw new Judge0UnavailableError(new Error("Judge0 returned no submissions"));

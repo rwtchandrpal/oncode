@@ -2,6 +2,7 @@
 // a Judge0 batch and back. Used by submit, run and admin problem validation.
 const { createSubmission, getSubmission, newDeadline, getLanguageId } = require("../utils/judge0Utility");
 const { encodeBase64, decodeBase64 } = require("../utils/base64");
+const { Judge0UnavailableError } = require("../utils/AppError");
 
 const CPP_LANGUAGE_ID = 54;
 const CPP_COMPILER_OPTIONS = "-Wall -Werror=return-type";
@@ -30,7 +31,18 @@ const startBatch = async ({ language, driverCode, code, testCases }) => {
   return { tokens: accepted.map((r) => r.token), deadline };
 };
 
-const awaitBatch = ({ tokens, deadline }) => getSubmission(tokens, deadline);
+// An overloaded Judge0 reports compiles starved of CPU as status 6 (Compilation Error) with this
+// message. That is not a verdict about the code, so it is treated like Judge0 being unavailable.
+const COMPILE_STARVED = /^Compilation time limit exceeded/i;
+const isStarvedCompile = (r) => r.status_id === 6 && COMPILE_STARVED.test(decodeBase64(r.compile_output).trim());
+
+const awaitBatch = async ({ tokens, deadline }) => {
+  const results = await getSubmission(tokens, deadline);
+  if (results.some(isStarvedCompile)) {
+    throw new Judge0UnavailableError(new Error("Judge0 compile time limit exceeded (server overloaded)"));
+  }
+  return results;
+};
 
 // One-shot form: returns Judge0 results in test-case order.
 const runBatch = async (args) => awaitBatch(await startBatch(args));
