@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { Eye, EyeOff, X, Zap, UserPlus, LogIn, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, X, UserPlus, LogIn, UserRound, Clock } from 'lucide-react';
 import {
   loginUser,
   registerUser,
-  loginDemoUser,
+  startGuestSession,
   closeAuthModal,
   setAuthModalMode,
   clearError
@@ -21,7 +21,7 @@ const AuthModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { authModal, error, isLoading } = useSelector((state) => state.auth);
-  const { isOpen, mode, redirectPath } = authModal;
+  const { isOpen, mode, redirectPath, notice } = authModal;
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -136,9 +136,11 @@ const AuthModal = () => {
     }
   };
 
-  const onDemoSubmit = async () => {
+  // One click: start a guest session, close the modal and go where the visitor was heading.
+  // The "You're in guest mode" notice is shown by GuestNotice as soon as the session starts.
+  const onGuestSubmit = async () => {
     try {
-      await dispatch(loginDemoUser()).unwrap();
+      await dispatch(startGuestSession()).unwrap();
       handleClose();
       if (redirectPath) {
         navigate(redirectPath);
@@ -149,6 +151,24 @@ const AuthModal = () => {
   };
 
   if (!isOpen) return null;
+
+  const guestOption = (
+    <div className="pt-2">
+      <div className="divider text-xs text-base-content/50 my-2">or</div>
+      <button
+        type="button"
+        onClick={onGuestSubmit}
+        disabled={isLoading}
+        className="btn btn-outline btn-secondary w-full gap-2"
+      >
+        <UserRound className="w-4 h-4" />
+        Continue as Guest
+      </button>
+      <p className="text-[11px] text-base-content/60 text-center mt-2">
+        No account needed. Your progress won&apos;t be saved.
+      </p>
+    </div>
+  );
 
   return (
     <div
@@ -178,16 +198,16 @@ const AuthModal = () => {
           <h2 id="auth-modal-title" className="text-2xl font-bold text-base-content">
             {mode === 'signup' && 'Create Your Account'}
             {mode === 'login' && 'Welcome Back'}
-            {mode === 'demo' && 'Try Instant Demo'}
+            {mode === 'guest-expired' && 'Guest Session Ended'}
           </h2>
           <p className="text-xs sm:text-sm text-base-content/60 mt-1">
             {mode === 'signup' && 'Join Oncode to track your progress and solve problems'}
             {mode === 'login' && 'Sign in to access your saved submissions and statistics'}
-            {mode === 'demo' && 'Explore the full coding platform with a temporary guest session'}
+            {mode === 'guest-expired' && 'Start a new guest session, or sign up to keep your progress'}
           </p>
 
           {/* Mode Switcher Tabs */}
-          <div className="grid grid-cols-3 gap-1 bg-base-200 p-1 rounded-xl mt-5 border border-base-content/10">
+          <div className="grid grid-cols-2 gap-1 bg-base-200 p-1 rounded-xl mt-5 border border-base-content/10">
             <button
               type="button"
               onClick={() => handleModeChange('signup')}
@@ -212,20 +232,15 @@ const AuthModal = () => {
               <LogIn className="w-3.5 h-3.5 mr-1 hidden sm:inline" />
               Log In
             </button>
-            <button
-              type="button"
-              onClick={() => handleModeChange('demo')}
-              className={`btn btn-xs sm:btn-sm border-none shadow-none font-medium transition-all ${
-                mode === 'demo'
-                  ? 'bg-secondary text-secondary-content shadow-sm'
-                  : 'bg-transparent text-base-content/70 hover:text-base-content'
-              }`}
-            >
-              <Zap className="w-3.5 h-3.5 mr-1 text-warning hidden sm:inline" />
-              Demo
-            </button>
           </div>
         </div>
+
+        {/* Why the modal opened (e.g. a guest reaching a members-only page) */}
+        {notice && (
+          <div className="bg-info/10 border border-info/30 text-info p-3 rounded-xl text-xs sm:text-sm mb-4 text-center">
+            {notice}
+          </div>
+        )}
 
         {/* Global Error Banner */}
         {error && (
@@ -310,17 +325,10 @@ const AuthModal = () => {
               >
                 Sign up
               </button>
-              {' · '}
-              <button
-                type="button"
-                onClick={() => handleModeChange('demo')}
-                className="text-secondary hover:underline font-semibold"
-              >
-                Try Demo
-              </button>
             </div>
           </form>
         )}
+        {mode === 'login' && guestOption}
 
         {/* ================= MODE: SIGN UP ================= */}
         {mode === 'signup' && (
@@ -453,64 +461,41 @@ const AuthModal = () => {
               >
                 Log In
               </button>
-              {' · '}
-              <button
-                type="button"
-                onClick={() => handleModeChange('demo')}
-                className="text-secondary hover:underline font-semibold"
-              >
-                Try Demo
-              </button>
             </div>
           </form>
         )}
+        {mode === 'signup' && guestOption}
 
-        {/* ================= MODE: TRY DEMO ================= */}
-        {mode === 'demo' && (
+        {/* ================= MODE: GUEST SESSION ENDED ================= */}
+        {mode === 'guest-expired' && (
           <div className="space-y-4">
-            <div className="bg-base-200/60 border border-base-content/10 rounded-xl p-4 space-y-3">
-              <div className="flex items-center gap-2 text-secondary font-semibold text-sm">
-                <Sparkles className="w-4 h-4" />
-                Instant Guest Experience
-              </div>
-              <ul className="text-xs text-base-content/75 space-y-2">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                  <span>Immediate access — zero email or credentials required</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                  <span>Interactive Monaco code editor with C++ & Java runtimes</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                  <span>Real-time code execution evaluated via Judge0</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                  <span>Isolated 24-hour temporary session; no shared state</span>
-                </li>
-              </ul>
+            <div className="bg-base-200/60 border border-base-content/10 rounded-xl p-4 flex items-start gap-3">
+              <Clock className="w-5 h-5 text-warning shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-xs sm:text-sm text-base-content/75">
+                Guest sessions last 4 hours. That session&apos;s submissions were cleared, but your code drafts are
+                still in this browser.
+              </p>
             </div>
 
             <button
               type="button"
-              onClick={onDemoSubmit}
+              onClick={onGuestSubmit}
               disabled={isLoading}
+              data-autofocus
               className="btn btn-secondary w-full shadow-lg gap-2"
             >
               {isLoading ? (
                 <span className="loading loading-spinner loading-sm"></span>
               ) : (
                 <>
-                  <Zap className="w-4 h-4" />
-                  Start Instant Demo Session
+                  <UserRound className="w-4 h-4" />
+                  Start a New Guest Session
                 </>
               )}
             </button>
 
             <div className="text-center text-xs text-base-content/60 pt-2">
-              Want to save your progress permanently?{' '}
+              Want to keep your progress?{' '}
               <button
                 type="button"
                 onClick={() => handleModeChange('signup')}

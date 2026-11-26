@@ -1,4 +1,6 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircle, XCircle, AlertTriangle, Clock, Cpu, Terminal } from 'lucide-react';
+import { openAuthModal } from '../features/auth/authSlice';
 
 // --- Shared Utility Functions ---
 const getStatusColor = (status) => {
@@ -74,6 +76,8 @@ const RunResult = ({ result }) => {
 // --- 2. Submit Result Display (Metrics & Edge Case Focus) ---
 const SubmitResult = ({ result }) => {
   const isAccepted = result.status === 'Accepted';
+  const isGuest = useSelector((state) => state.auth.isGuest);
+  const dispatch = useDispatch();
 
   return (
     <div className="flex-1 overflow-y-auto p-6 bg-base-300">
@@ -134,6 +138,20 @@ const SubmitResult = ({ result }) => {
           {result.status === "Wrong Answer"
             ? `Your output did not match the expected output on hidden test case ${(result.testCasesPassed ?? 0) + 1}. Hidden test inputs are not shown; try the sample test with Run and think about edge cases.`
             : "Your solution did not pass all hidden test cases."}
+        </div>
+      )}
+
+      {/* Guests: nothing is saved, so point to sign-up at the moment it matters most */}
+      {isAccepted && isGuest && (
+        <div className="max-w-3xl mt-2 flex flex-wrap items-center gap-3 bg-success/10 border border-success/20 rounded-lg p-4 text-sm text-base-content/80">
+          <span className="flex-1 min-w-48">Accepted! Sign up to save this to your profile.</span>
+          <button
+            type="button"
+            onClick={() => dispatch(openAuthModal({ mode: 'signup', redirectPath: window.location.pathname }))}
+            className="btn btn-sm btn-primary"
+          >
+            Sign up
+          </button>
         </div>
       )}
     </div>

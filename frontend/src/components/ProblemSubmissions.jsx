@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Clock, Cpu, FileTerminal, AlertCircle } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { ChevronDown, ChevronUp, Clock, Cpu, FileTerminal, AlertCircle, Info } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
 
 const PAGE_SIZE = 20;
 
+// Guests only see the current guest session; say so wherever the list is shown
+const GuestHistoryNote = () => (
+  <p className="flex items-start gap-2 text-xs text-base-content/60 bg-warning/10 border border-warning/20 rounded-lg p-3 mb-4">
+    <Info className="w-4 h-4 text-warning shrink-0" aria-hidden="true" />
+    This guest session only. Submissions are cleared when the session ends.
+  </p>
+);
+
 const ProblemSubmissions = ({ problemId }) => {
+  const isGuest = useSelector((state) => state.auth.isGuest);
   const [submissions, setSubmissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -90,9 +100,12 @@ const ProblemSubmissions = ({ problemId }) => {
 
   if (submissions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-base-content/50">
-        <FileTerminal className="w-12 h-12 mb-4 opacity-20" />
-        <p>You have not submitted any code for this problem yet.</p>
+      <div className="pb-10">
+        {isGuest && <GuestHistoryNote />}
+        <div className="flex flex-col items-center justify-center py-20 text-base-content/50">
+          <FileTerminal className="w-12 h-12 mb-4 opacity-20" />
+          <p>You have not submitted any code for this problem yet.</p>
+        </div>
       </div>
     );
   }
@@ -100,6 +113,7 @@ const ProblemSubmissions = ({ problemId }) => {
   return (
     <div className="space-y-4 pb-10">
       <h2 className="text-xl font-bold text-base-content border-b border-base-content/10 pb-2 mb-4">Past Submissions</h2>
+      {isGuest && <GuestHistoryNote />}
       
       {submissions.map((sub) => {
         const isExpanded = expandedId === sub._id;

@@ -1,11 +1,24 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router'; 
-import { logoutUser, openAuthModal } from '../features/auth/authSlice';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { UserRound } from 'lucide-react';
+import { endGuestSession, logoutUser, openAuthModal } from '../features/auth/authSlice';
+
+const formatTime = (iso) =>
+  new Date(iso).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
 
 const GlobalNavbar = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isGuest, guest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const openAuth = (mode) => dispatch(openAuthModal({ mode, redirectPath: location.pathname }));
+
+  const handleExitGuest = async () => {
+    closeDropdown();
+    await dispatch(endGuestSession());
+    navigate('/', { replace: true });
+  };
 
   const handleLogout = async () => {
     try {
@@ -72,8 +85,42 @@ const GlobalNavbar = () => {
               </li>
             </ul>
           </div>
+        ) : isGuest ? (
+          // Persistent guest reminder, with sign-up / log-in always one click away
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                aria-label="Guest mode: progress not saved. Open guest menu"
+                className="badge badge-warning badge-soft gap-1 h-8 px-2 sm:px-3 cursor-pointer text-xs font-medium"
+              >
+                <UserRound className="w-3.5 h-3.5" aria-hidden="true" />
+                Guest<span className="hidden sm:inline"> · progress not saved</span>
+              </div>
+              <ul tabIndex={0} className="mt-3 z-1 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 border border-base-content/10 rounded-box w-60">
+                <li className="px-4 py-2 border-b border-base-content/10 text-base-content/70 text-xs cursor-default">
+                  You&apos;re in guest mode. Your progress won&apos;t be saved.
+                  {guest?.expiresAt && (
+                    <span className="block mt-1 text-base-content/60">Session ends at {formatTime(guest.expiresAt)}</span>
+                  )}
+                </li>
+                <li className="mt-1">
+                  <button type="button" onClick={handleExitGuest} className="text-error hover:bg-error/10 hover:text-error">
+                    Exit guest mode
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <button type="button" onClick={() => openAuth('login')} className="btn btn-sm btn-ghost">
+              Log in
+            </button>
+            <button type="button" onClick={() => openAuth('signup')} className="btn btn-sm btn-primary text-primary-content border-none shadow-md">
+              Sign up
+            </button>
+          </div>
         ) : (
-          <button 
+          <button
             type="button"
             onClick={() => dispatch(openAuthModal({ mode: 'login', redirectPath: '/' }))}
             className="btn btn-sm btn-primary text-primary-content border-none shadow-md"

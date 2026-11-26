@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Check, Copy, Lightbulb, Lock } from 'lucide-react';
 import axiosClient from '../utils/axiosClient';
 import { getApiErrorMessage } from '../utils/apiError';
@@ -47,13 +48,18 @@ const SolutionBlock = ({ solution }) => {
   );
 };
 
+const GUEST_LOCK_MESSAGE = 'Sign up and solve this problem to unlock the official solution.';
+
 const ProblemSolution = ({ problemId }) => {
+  // Guests never unlock solutions, so there is nothing to fetch
+  const isGuest = useSelector((state) => state.auth.isGuest);
   const [solutions, setSolutions] = useState([]);
-  const [isLocked, setIsLocked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState('');
+  const [isLocked, setIsLocked] = useState(isGuest);
+  const [isLoading, setIsLoading] = useState(!isGuest);
+  const [message, setMessage] = useState(isGuest ? GUEST_LOCK_MESSAGE : '');
 
   useEffect(() => {
+    if (isGuest) return undefined;
     let isMounted = true;
 
     const fetchSolution = async () => {
@@ -86,7 +92,7 @@ const ProblemSolution = ({ problemId }) => {
     return () => {
       isMounted = false;
     };
-  }, [problemId]);
+  }, [problemId, isGuest]);
 
   if (isLoading) {
     return (
@@ -107,7 +113,7 @@ const ProblemSolution = ({ problemId }) => {
           {message || "Submit an Accepted solution to unlock the official approach!"}
         </p>
         <span className="badge badge-warning badge-outline text-xs">
-          Solve Problem to Unlock
+          {isGuest ? 'Sign Up to Unlock' : 'Solve Problem to Unlock'}
         </span>
       </div>
     );
