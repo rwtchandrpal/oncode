@@ -130,6 +130,12 @@ const ProblemForm = ({ mode, defaultValues, onSubmit, heading, subheading, submi
           </div>
 
           <div className="space-y-1">
+            <label htmlFor="pf-slug" className={labelClass}>Slug (optional, e.g. valid-palindrome-ii)</label>
+            <input id="pf-slug" type="text" placeholder="lowercase-words-with-hyphens" {...register('slug')} className={inputClass} />
+            <FieldError error={errors.slug} />
+          </div>
+
+          <div className="space-y-1">
             <label htmlFor="pf-topics" className={labelClass}>Topics * (Comma-separated)</label>
             <input id="pf-topics" type="text" placeholder="e.g. String, Two Pointers, Greedy" {...register('topics')} className={inputClass} />
             <FieldError error={errors.topics} />

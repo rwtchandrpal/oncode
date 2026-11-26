@@ -3,14 +3,26 @@ const { z, language } = require("./common");
 const text = (max, label) => z.string({ error: `${label} must be text.` }).max(max, `${label} is too long (max ${max} characters).`);
 const requiredText = (max, label) => text(max, label).min(1, `${label} is required.`);
 
+// 200 KB per test input/output, the same cap the seed tooling uses (backend/seed/FORMAT.md).
+const MAX_TEST_CHARS = 200 * 1024;
 const testCase = z.object({
-  input: requiredText(100000, "Test input"),
-  expectedOutput: requiredText(100000, "Expected output"),
+  input: requiredText(MAX_TEST_CHARS, "Test input"),
+  expectedOutput: requiredText(MAX_TEST_CHARS, "Expected output"),
 });
+
+// Optional stable key (kebab-case), as used by backend/seed/seed.js. An empty string means "no slug".
+const slug = z.preprocess(
+  (v) => (typeof v === "string" ? v.trim().toLowerCase() : v),
+  z.union([
+    z.literal(""),
+    z.string().max(100, "Slug is too long (max 100 characters).").regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase words joined by hyphens, e.g. two-sum."),
+  ])
+);
 
 // Strips unknown keys, so clients cannot set number, problemCreator, _id or timestamps.
 const problemShape = {
   title: requiredText(200, "Title").trim(),
+  slug: slug.optional(),
   description: requiredText(50000, "Description"),
   difficulty: z.enum(["Easy", "Medium", "Hard"], { error: "Difficulty must be Easy, Medium or Hard." }),
   topics: z.array(requiredText(50, "Topic").trim()).max(20, "At most 20 topics."),

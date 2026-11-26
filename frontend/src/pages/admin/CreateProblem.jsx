@@ -61,6 +61,7 @@ const DEFAULT_JAVA_SOLUTION = `class Solution {
 
 const DEFAULT_VALUES = {
   title: '',
+  slug: '',
   difficulty: 'Easy',
   topics: '',
   description: '',

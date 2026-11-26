@@ -26,6 +26,12 @@ export const makeProblemFormSchema = ({ requireSolutions }) =>
   z
     .object({
       title: z.string().trim().min(3, 'Title must be at least 3 characters'),
+      // Optional stable key used by the seed scripts; empty means none.
+      slug: z
+        .string()
+        .trim()
+        .regex(/^$|^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use lowercase words joined by hyphens, e.g. two-sum')
+        .default(''),
       difficulty: z.enum(['Easy', 'Medium', 'Hard']),
       topics: z.string().min(1, 'At least one topic is required (comma-separated)'),
       description: z.string().min(10, 'Description must be at least 10 characters'),
@@ -67,6 +73,7 @@ const emptyLanguage = { enabled: false, userSnippet: '', driverCode: '', solutio
 // API problem (from GET /problem/:id/admin) -> form values
 export const problemToFormValues = (problem) => ({
   title: problem.title || '',
+  slug: problem.slug || '',
   difficulty: problem.difficulty || 'Easy',
   topics: (problem.topics || []).join(', '),
   description: problem.description || '',
@@ -96,6 +103,8 @@ export const formValuesToPayload = (values) => {
   const enabled = LANGUAGES.filter((l) => values.languages[l.id]?.enabled).map((l) => l.id);
   return {
     title: values.title,
+    // "" is sent on purpose: on edit it clears an existing slug; on create the backend ignores it
+    slug: (values.slug || '').trim(),
     difficulty: values.difficulty,
     description: values.description,
     topics: values.topics.split(',').map((t) => t.trim()).filter(Boolean),

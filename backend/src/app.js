@@ -58,8 +58,9 @@ app.use(compression({
 }));
 // Body size caps (SEC-08): admin problem create/update carry test cases and code, so they get a
 // larger parser; everything else is limited to 100 KB. The /problem parser runs first, so the global
-// one skips those requests.
-app.use("/problem", express.json({ limit: "2mb" }));
+// one skips those requests. 5 MB fits a problem in the seed format (up to 10 tests of 200 KB input +
+// 200 KB expected output, see backend/seed/FORMAT.md).
+app.use("/problem", express.json({ limit: "5mb" }));
 app.use(express.json({ limit: "100kb" }));
 app.use(healthRouter);
 app.use("/user", authRouter);

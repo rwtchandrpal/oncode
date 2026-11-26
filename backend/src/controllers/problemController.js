@@ -87,19 +87,26 @@ const changedJudgeFields = (existing, update) =>
         (field) => field in update && JSON.stringify(JUDGE_FIELDS[field](update[field])) !== JSON.stringify(JUDGE_FIELDS[field](existing[field]))
     );
 
+// Unique-index violations: say which field clashed (title or the optional seed slug).
+const duplicateMessage = (err) =>
+    err.keyPattern?.slug ? "A problem with this slug already exists." : "A problem with this title already exists.";
+
 // ==========================================
 // ADMIN CONTROLLERS (Create / Update / Delete)
 // ==========================================
 const createProblem = async (req, res) => {
     try {
         const validation = await validateAndTestProblem(req.body);
-        
+
         if (!validation.isValid) {
             return res.status(validation.status || 400).json({ message: validation.error });
         }
 
+        // An empty slug means "none" (the schema's unique index is sparse, so it must be absent, not "").
+        const { slug, ...fields } = req.body;
         const newProblem = await Problem.create({
-            ...req.body,
+            ...fields,
+            ...(slug ? { slug } : {}),
             problemCreator: req.user._id
         });
         await invalidateTopics();
@@ -111,7 +118,7 @@ const createProblem = async (req, res) => {
     } catch (err) {
         if (err.name === 'ValidationError' || err.code === 11000) {
             logger.warn({ err }, "Create problem rejected");
-            return res.status(400).json({ message: err.code === 11000 ? "A problem with this title already exists." : "Invalid problem data." });
+            return res.status(400).json({ message: err.code === 11000 ? duplicateMessage(err) : "Invalid problem data." });
         }
         return sendError(res, err, "Failed to create problem.");
     }
@@ -141,7 +148,12 @@ const updateProblem = async (req, res) => {
             }
         }
 
-        const updatedProblem = await Problem.findByIdAndUpdate(id, { $set: req.body }, { runValidators: true, returnDocument: 'after' });
+        // slug "" clears the slug ($unset), since the sparse unique index must not see an empty string
+        const { slug, ...fields } = req.body;
+        const change = { $set: fields };
+        if (slug === "") change.$unset = { slug: 1 };
+        else if (slug !== undefined) fields.slug = slug;
+        const updatedProblem = await Problem.findByIdAndUpdate(id, change, { runValidators: true, returnDocument: 'after' });
         await invalidateTopics();
 
         res.status(200).json({
@@ -151,7 +163,7 @@ const updateProblem = async (req, res) => {
     } catch (err) {
         if (err.name === 'ValidationError' || err.name === 'CastError' || err.code === 11000) {
             logger.warn({ err }, "Update problem rejected");
-            return res.status(400).json({ message: err.code === 11000 ? "A problem with this title already exists." : "Invalid problem data." });
+            return res.status(400).json({ message: err.code === 11000 ? duplicateMessage(err) : "Invalid problem data." });
         }
         sendError(res, err, "Failed to update problem.");
     }
@@ -215,7 +227,7 @@ const getProblem = async (req, res) => {
         }
 
         const fetchedProblem = await Problem.findById(id)
-            .select('_id number title difficulty topics description constraints examples visibleTestCase codeSnippets.language codeSnippets.userSnippet')
+            .select('_id number slug title difficulty topics description constraints examples visibleTestCase codeSnippets.language codeSnippets.userSnippet')
             .lean();
 
         if (!fetchedProblem) {
@@ -238,7 +250,7 @@ const getProblem = async (req, res) => {
 const getProblemForAdmin = async (req, res) => {
     try {
         const problem = await Problem.findById(req.params.id)
-            .select('_id number title difficulty topics description constraints examples visibleTestCase hiddenTestCases codeSnippets referenceSolutions')
+            .select('_id number slug title difficulty topics description constraints examples visibleTestCase hiddenTestCases codeSnippets referenceSolutions')
             .lean();
         if (!problem) {
             return res.status(404).json({ message: "Problem not found." });
