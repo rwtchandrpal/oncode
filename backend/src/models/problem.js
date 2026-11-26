@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { nextSequence } = require('./counter');
+const GuestSubmission = require('./guestSubmission');
 
 const problemSchema = new Schema({
   title: {
@@ -107,6 +108,7 @@ problemSchema.pre('findOneAndDelete', async function() {
             sessionOpts
         );
         await mongoose.model('Submission').deleteMany({ problemId: docToDelete._id }, sessionOpts);
+        await GuestSubmission.deleteMany({ problemId: docToDelete._id }, sessionOpts);
     }
 });
 

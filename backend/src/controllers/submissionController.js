@@ -1,6 +1,9 @@
+const mongoose = require('mongoose');
 const Problem = require('../models/problem');
 const User = require('../models/user');
 const Submission = require('../models/submission');
+const GuestSubmission = require('../models/guestSubmission');
+const { takeGuestExecution, refundGuestQuota } = require('../utils/guestSession');
 const client = require('../config/redis');
 const { getLanguageId, getstatusById } = require('../utils/judge0Utility');
 const judgeService = require('../services/judgeService');
@@ -64,19 +67,106 @@ const toPublicSubmission = (s) => ({
     createdAt: s.createdAt
 });
 
+// Turns Judge0 results for the hidden tests into a verdict. Grading stops at the first failure.
+const gradeResults = (testResult, testCases) => {
+    // Reported runtime is the slowest test, not the sum of all tests (BUG-18)
+    let maxRuntimeSeconds = 0;
+    let maxMemoryKb = 0;
+    let statusId = 3; // Default to Accepted
+    let testCasesPassed = 0;
+    // User-safe message (compile output, or a generic line for runtime errors)
+    let errorMessage = null;
+    // Full diagnostics, stored for admins only (never returned to the user)
+    let errorDetail = null;
+    let failedTestCase = null;
+
+    for (let i = 0; i < testResult.length; i++) {
+        const test = testResult[i];
+
+        if (test.status_id !== 3) {
+            statusId = test.status_id;
+
+            failedTestCase = {
+                input: truncateString(testCases[i].input),
+                expectedOutput: truncateString(testCases[i].expectedOutput),
+                actualOutput: truncateString(decodeBase64(test.stdout))
+            };
+
+            if (test.status_id === 6) {
+                // Compilation errors do not depend on test input, so the compiler output is safe to show.
+                errorMessage = truncateString(decodeBase64(test.compile_output) || "Compilation failed.");
+                errorDetail = errorMessage;
+            } else if (test.status_id !== 4) {
+                // Runtime errors / TLE on a hidden test: stderr could echo the hidden input (SEC-03).
+                errorDetail = truncateString(decodeBase64(test.stderr) || decodeBase64(test.compile_output) || "");
+                errorMessage = test.status_id === 5 ? null : `${getstatusById(test.status_id)} on hidden test case ${i + 1}.`;
+            }
+            break; // Stop grading after the first failure
+        }
+
+        maxRuntimeSeconds = Math.max(maxRuntimeSeconds, parseFloat(test.time || 0));
+        maxMemoryKb = Math.max(maxMemoryKb, test.memory || 0);
+        testCasesPassed++;
+    }
+
+    return {
+        statusId,
+        status: getstatusById(statusId),
+        testCasesPassed,
+        errorMessage,
+        errorDetail,
+        failedTestCase,
+        runtime: Math.round(maxRuntimeSeconds * 1000),
+        memory: parseFloat((maxMemoryKb / 1024).toFixed(1)),
+    };
+};
+
+// Guest submit (docs/GUEST_MODE_DESIGN.md): charged to the session quota, graded like a user's, and
+// stored only in the expiring guestsubmissions collection. Never touches submissions or problemsSolved.
+// The record is written once, after the verdict, so a Judge0 failure leaves nothing behind.
+const submitAsGuest = async (req, res, { problemId, code, language, snippet, testCases }) => {
+    const quotaKey = await takeGuestExecution(req.guest);
+    let testResult;
+    try {
+        testResult = await judgeService.runBatch({ language, driverCode: snippet.driverCode, code, testCases });
+    } catch (execErr) {
+        await refundGuestQuota(quotaKey);
+        throw execErr;
+    }
+
+    const graded = gradeResults(testResult, testCases);
+    const saved = await GuestSubmission.create({
+        guestId: req.guest.id,
+        problemId,
+        code,
+        language,
+        status: graded.status,
+        testCasesPassed: graded.testCasesPassed,
+        testCasesTotal: testCases.length,
+        runtime: graded.runtime,
+        memory: graded.memory,
+        errorMessage: graded.errorMessage,
+        expiresAt: req.guest.expiresAt
+    });
+
+    res.status(201).json({
+        message: "Submission completed.",
+        submissionResult: toPublicSubmission(saved)
+    });
+};
+
 // ==========================================
 // SUBMIT CODE (Grades all hidden test cases)
 // ==========================================
 const submitCode = async (req, res) => {
     try {
-        const userId = req.user._id;
         const problemId = req.params.id;
         const { code, language } = req.body;
 
         if (codeTooLarge(code)) {
             return res.status(413).json({ message: "Code is too large (max 64,000 characters)." });
         }
-        if (!userId || !problemId || typeof code !== "string" || !code || typeof language !== "string" || !language) {
+        if (!problemId || typeof code !== "string" || !code || typeof language !== "string" || !language) {
             return res.status(400).json({ message: "Missing required field." });
         }
 
@@ -92,6 +182,11 @@ const submitCode = async (req, res) => {
         }
         getLanguageId(language.toLowerCase()); // throws a 400 AppError for unsupported languages
         const testCases = problem.hiddenTestCases || [];
+
+        if (req.guest) {
+            return await submitAsGuest(req, res, { problemId, code, language, snippet, testCases });
+        }
+        const userId = req.user._id;
 
         // Demo quota is charged only for valid requests (BUG-14)
         let demoQuotaKey = null;
@@ -128,57 +223,18 @@ const submitCode = async (req, res) => {
             throw execErr;
         }
 
-        // Reported runtime is the slowest test, not the sum of all tests (BUG-18)
-        let maxRuntimeSeconds = 0;
-        let maxMemoryKb = 0;
-        let statusId = 3; // Default to Accepted
-        let testCasesPassed = 0;
-        // User-safe message (compile output, or a generic line for runtime errors)
-        let errorMessage = null;
-        // Full diagnostics, stored for admins only (never returned to the user)
-        let errorDetail = null;
-        let failedTestCase = null;
-
-        for (let i = 0; i < testResult.length; i++) {
-            const test = testResult[i];
-
-            if (test.status_id !== 3) {
-                statusId = test.status_id;
-
-                failedTestCase = {
-                    input: truncateString(testCases[i].input),
-                    expectedOutput: truncateString(testCases[i].expectedOutput),
-                    actualOutput: truncateString(decodeBase64(test.stdout))
-                };
-
-                if (test.status_id === 6) {
-                    // Compilation errors do not depend on test input, so the compiler output is safe to show.
-                    errorMessage = truncateString(decodeBase64(test.compile_output) || "Compilation failed.");
-                    errorDetail = errorMessage;
-                } else if (test.status_id !== 4) {
-                    // Runtime errors / TLE on a hidden test: stderr could echo the hidden input (SEC-03).
-                    errorDetail = truncateString(decodeBase64(test.stderr) || decodeBase64(test.compile_output) || "");
-                    errorMessage = test.status_id === 5 ? null : `${getstatusById(test.status_id)} on hidden test case ${i + 1}.`;
-                }
-                break; // Stop grading after the first failure
-            }
-
-            maxRuntimeSeconds = Math.max(maxRuntimeSeconds, parseFloat(test.time || 0));
-            maxMemoryKb = Math.max(maxMemoryKb, test.memory || 0);
-            testCasesPassed++;
-        }
-
-        submittedResult.status = getstatusById(statusId);
-        submittedResult.testCasesPassed = testCasesPassed;
-        submittedResult.errorMessage = errorMessage;
-        submittedResult.errorDetail = errorDetail;
-        submittedResult.failedTestCase = failedTestCase;
-        submittedResult.runtime = Math.round(maxRuntimeSeconds * 1000);
-        submittedResult.memory = parseFloat((maxMemoryKb / 1024).toFixed(1));
+        const graded = gradeResults(testResult, testCases);
+        submittedResult.status = graded.status;
+        submittedResult.testCasesPassed = graded.testCasesPassed;
+        submittedResult.errorMessage = graded.errorMessage;
+        submittedResult.errorDetail = graded.errorDetail;
+        submittedResult.failedTestCase = graded.failedTestCase;
+        submittedResult.runtime = graded.runtime;
+        submittedResult.memory = graded.memory;
 
         await submittedResult.save();
 
-        if(statusId === 3){
+        if(graded.statusId === 3){
             await User.findByIdAndUpdate(userId, {
                 $addToSet: { problemsSolved: problemId }
             });
@@ -200,14 +256,13 @@ const submitCode = async (req, res) => {
 // ==========================================
 const runCode = async (req, res) => {
     try {
-        const userId = req.user._id;
         const problemId = req.params.id;
         const { code, language } = req.body;
 
         if (codeTooLarge(code)) {
             return res.status(413).json({ message: "Code is too large (max 64,000 characters)." });
         }
-        if (!userId || !problemId || typeof code !== "string" || !code || typeof language !== "string" || !language) {
+        if (!problemId || typeof code !== "string" || !code || typeof language !== "string" || !language) {
             return res.status(400).json({ message: "Some fields are missing" });
         }
 
@@ -225,21 +280,23 @@ const runCode = async (req, res) => {
         const testCase = problem.visibleTestCase;
         getLanguageId(language.toLowerCase()); // throws a 400 AppError for unsupported languages
 
-        // Demo quota is charged only for valid requests (BUG-14)
+        // Guest and demo quotas are charged only for valid requests (BUG-14)
+        const guestQuotaKey = req.guest ? await takeGuestExecution(req.guest) : null;
         let demoQuotaKey = null;
-        if (req.user.isDemo) {
+        if (req.user?.isDemo) {
             const limitCheck = await checkDemoExecutionLimit(req.user);
             if (!limitCheck.allowed) {
                 return res.status(429).json({ message: limitCheck.message });
             }
             demoQuotaKey = limitCheck.key;
         }
-        
+
         let result;
         try {
             const [first] = await judgeService.runBatch({ language, driverCode: snippet.driverCode, code, testCases: [testCase] });
             result = first;
         } catch (execErr) {
+            await refundGuestQuota(guestQuotaKey);
             await refundDemoExecution(demoQuotaKey);
             throw execErr;
         }
@@ -266,9 +323,15 @@ const runCode = async (req, res) => {
 const getSubmissionById = async (req, res) => {
     try {
         // Scoped to the caller: another user's id answers 404, not 403, so ids cannot be probed.
-        const submission = await Submission.findOne({ _id: req.params.id, userId: req.user._id })
-            .select('_id problemId status testCasesPassed testCasesTotal runtime memory language createdAt errorMessage code')
-            .lean();
+        // Guests only ever see their own, unexpired guest submissions (a separate collection).
+        const fields = '_id problemId status testCasesPassed testCasesTotal runtime memory language createdAt errorMessage code';
+        const submission = req.guest
+            ? await GuestSubmission.findOne({
+                _id: req.params.id,
+                guestId: req.guest.id,
+                expiresAt: mongoose.trusted({ $gt: new Date() })
+            }).select(fields).lean()
+            : await Submission.findOne({ _id: req.params.id, userId: req.user._id }).select(fields).lean();
         if (!submission) {
             return res.status(404).json({ message: "Submission not found." });
         }

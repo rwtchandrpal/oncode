@@ -4,6 +4,7 @@ const Problem = require('../models/problem');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const Submission = require('../models/submission');
+const GuestSubmission = require('../models/guestSubmission');
 const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
 const { getAllTopics, invalidateTopics } = require('../utils/topicsCache');
@@ -264,13 +265,22 @@ const getProblemForAdmin = async (req, res) => {
 
 const getProblemSolution = async (req, res) => {
     const { id } = req.params;
-    const userId = req.user._id;
-    const userRole = req.user.role;
 
     try {
         if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid problem ID format." });
         }
+
+        // Guests never unlock official solutions, even after an Accepted guest submission
+        if (req.guest) {
+            return res.status(403).json({
+                isLocked: true,
+                code: "GUEST_NOT_ALLOWED",
+                message: "Sign up and solve this problem to unlock the official solution."
+            });
+        }
+        const userId = req.user._id;
+        const userRole = req.user.role;
 
         const problem = await Problem.findById(id).select('referenceSolutions title').lean();
         if (!problem) {
@@ -407,21 +417,24 @@ const getSolvedProblems = async (req, res) => {
 
 const getAllSubmissions = async (req, res) => {
     try {
-        const userId = req.user._id;
         const problemId = req.params.id;
 
         // Paginated summary rows without code/errorMessage (PERF-02); GET /submission/:id has the details
         const page = req.query.page || 1;
         const limit = req.query.limit || 20;
-        const filter = { userId, problemId };
+        // A guest sees only the unexpired submissions of the current guest session
+        const Model = req.guest ? GuestSubmission : Submission;
+        const filter = req.guest
+            ? { guestId: req.guest.id, problemId, expiresAt: mongoose.trusted({ $gt: new Date() }) }
+            : { userId: req.user._id, problemId };
         const [allSubmissions, total] = await Promise.all([
-            Submission.find(filter)
+            Model.find(filter)
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .select('_id status testCasesPassed testCasesTotal runtime memory language createdAt')
                 .lean(),
-            Submission.countDocuments(filter)
+            Model.countDocuments(filter)
         ]);
 
         res.set({

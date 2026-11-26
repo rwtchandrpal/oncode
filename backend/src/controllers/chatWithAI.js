@@ -1,5 +1,6 @@
 const { GoogleGenAI } = require('@google/genai');
-const { errorBody } = require('../utils/AppError');
+const { errorBody, AppError, sendError } = require('../utils/AppError');
+const { takeGuestAiQuestion, refundGuestQuota } = require('../utils/guestSession');
 const logger = require('../utils/logger');
 const Problem = require('../models/problem');
 const client = require('../config/redis');
@@ -33,6 +34,7 @@ const refundDemoAiQuota = async (user) => {
 
 const chatWithAI = async (req, res) => {
     let quotaTaken = false;
+    let guestQuotaKey = null;
     try {
         // Validated by validation/ai.js
         const { problemId, userLanguage, userCode, userQuestion } = req.body;
@@ -41,6 +43,11 @@ const chatWithAI = async (req, res) => {
         const problem = await Problem.findById(problemId).select('title description').lean();
         if (!problem) {
             return res.status(404).json(errorBody(404, "Problem not found."));
+        }
+
+        // Guests: 5 questions per guest session; fails closed when Redis is down (throws 429 / 503)
+        if (req.guest) {
+            guestQuotaKey = await takeGuestAiQuestion(req.guest);
         }
 
         quotaTaken = await takeDemoAiQuota(req.user);
@@ -90,8 +97,11 @@ const chatWithAI = async (req, res) => {
         res.status(200).json({ reply: response.text });
 
     } catch (error) {
+        // Guest quota exhausted (429) or unavailable (503): client-safe AppError, nothing to refund
+        if (error instanceof AppError) return sendError(res, error);
         logger.error({ err: error }, "Error generating AI response");
         if (quotaTaken) await refundDemoAiQuota(req.user);
+        await refundGuestQuota(guestQuotaKey);
         // Upstream overload / rate limit is temporary: say so instead of a generic 500
         if (error?.status === 503 || error?.status === 429) {
             return res.status(503).json(errorBody(503, "The AI tutor is busy right now. Please try again in a moment."));
