@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { nextSequence } = require('./counter');
 const GuestSubmission = require('./guestSubmission');
+const { SLUG_PATTERN, uniqueSlug } = require('../utils/slug');
 
 const problemSchema = new Schema({
   title: {
@@ -14,15 +15,19 @@ const problemSchema = new Schema({
     type: Number,
     unique: true
   },
-  // Stable kebab-case key used by the seed scripts (backend/seed) to upsert problems.
-  // Optional: problems created in the admin UI have none, so the unique index is sparse.
+  // URL key (/problems/<slug>) and the seed scripts' upsert key (backend/seed). Generated from the
+  // title when missing (pre-validate hook below) and never regenerated on title edits.
+  // Problems created before slugs were required get one from scripts/addSlugsToProblems.js.
+  // `sparse` only keeps the index options identical to the existing slug_1 index (slugs used to be
+  // optional), so Mongoose does not hit an index conflict; `required` keeps every new document slugged.
   slug: {
     type: String,
+    required: true,
     unique: true,
     sparse: true,
     trim: true,
     lowercase: true,
-    match: /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+    match: SLUG_PATTERN
   },
   topics: { 
     type: [String], 
@@ -84,6 +89,13 @@ const problemSchema = new Schema({
     required: true 
   }
 }, { timestamps: true });
+
+// Slug from the title ("Two Sum" -> "two-sum", then two-sum-2, ...) only when none is set
+problemSchema.pre('validate', async function() {
+    if (!this.slug && this.title) {
+        this.slug = await uniqueSlug(this.constructor, this.title, this._id);
+    }
+});
 
 // Atomic numbering (BUG-16): reading max(number)+1 raced under concurrent creates (E11000).
 problemSchema.pre('save', async function() {

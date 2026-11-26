@@ -100,7 +100,8 @@ const main = async () => {
 
     const counts = { inserted: 0, updated: 0, failed: 0 };
     for (const { slug, doc } of ready) {
-      // Match by slug; otherwise adopt an existing problem with the same title that has no slug yet.
+      // Match by slug; otherwise adopt an existing problem with the same title that has no slug yet
+      // (only before scripts/addSlugsToProblems.js has run; it gives such problems this same slug).
       let existing = hasSlugPath ? await Problem.findOne({ slug }).select("_id title slug").lean() : null;
       if (!existing) {
         const byTitle = await Problem.findOne({ title: doc.title }).select("_id title slug").lean();

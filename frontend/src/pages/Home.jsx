@@ -7,17 +7,18 @@ import GlobalNavbar from '../components/GlobalNavbar';
 import { openAuthModal } from '../features/auth/authSlice';
 import { getApiErrorMessage } from '../utils/apiError';
 import { getDifficultyColor } from '../utils/difficulty';
+import { problemPath } from '../utils/problemPath';
 
 const ProblemCard = memo(({ problem, isSolved, onProblemClick }) => {
   return (
     <div 
       role="button"
       tabIndex={0}
-      onClick={() => onProblemClick(problem._id)}
+      onClick={() => onProblemClick(problem)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onProblemClick(problem._id);
+          onProblemClick(problem);
         }
       }}
       className="group flex items-center justify-between bg-base-100 hover:bg-base-200 transition-all duration-200 p-5 rounded-xl border border-base-content/10 hover:border-base-content/20 shadow-sm cursor-pointer"
@@ -78,15 +79,15 @@ const Home = () => {
     }
   }, [location.state, user, dispatch]);
 
-  const handleProblemClick = (problemId) => {
+  const handleProblemClick = (problem) => {
     // Signed-in users and guests go straight in; anyone else picks sign up, log in or guest mode
     if (!user && !isGuest) {
       dispatch(openAuthModal({
         mode: 'login',
-        redirectPath: `/problem/${problemId}`
+        redirectPath: problemPath(problem)
       }));
     } else {
-      navigate(`/problem/${problemId}`);
+      navigate(problemPath(problem));
     }
   };
   

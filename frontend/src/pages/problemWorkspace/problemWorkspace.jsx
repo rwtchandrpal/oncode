@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { Maximize2, Minimize2, Play, Send } from "lucide-react";
 import axiosClient from "../../utils/axiosClient";
 import { loadDraft, saveDraft, clearDraft } from "../../utils/editorStorage";
@@ -24,10 +24,16 @@ const MAX_SPLIT_RATIO = 80;
 const PLACEHOLDER_CODE = "// Write your code here...";
 
 const ProblemWorkSpace = () => {
-  let { problemId } = useParams();
+  // The URL key: the problem's slug, or its _id on old links (swapped for the slug once loaded)
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   // --- Core State ---
   const [problem, setProblem] = useState(null);
+  // The real _id: what run, submit, the AI tutor, submissions and editor drafts use
+  const problemId = problem?._id;
+  // Set when this page itself rewrote the URL to the canonical slug, so that change is not refetched
+  const canonicalSlugRef = useRef(null);
   // null | "not-found" | "error"  (BUG-06: never spin forever)
   const [loadError, setLoadError] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
@@ -102,20 +108,29 @@ const ProblemWorkSpace = () => {
 
   // Fetch the problem
   useEffect(() => {
+    if (canonicalSlugRef.current === slug) {
+      canonicalSlugRef.current = null;
+      return undefined;
+    }
     let isMounted = true;
     const fetchProblem = async () => {
       setLoadError(null);
       try {
-        const { data } = await axiosClient.get(`/problem/${problemId}`);
+        const { data } = await axiosClient.get(`/problem/${encodeURIComponent(slug)}`);
         if (!isMounted) return;
         setProblem(data.problem);
+        // Old _id link or different letter case: show the canonical /problems/<slug> URL
+        if (data.problem?.slug && data.problem.slug !== slug) {
+          canonicalSlugRef.current = data.problem.slug;
+          navigate(`/problems/${data.problem.slug}`, { replace: true });
+        }
         if (data.problem && data.problem.codeSnippets) {
           const starters = {};
           const initial = {};
           data.problem.codeSnippets.forEach(snippet => {
             const lang = snippet.language.toLowerCase();
             starters[lang] = snippet.userSnippet;
-            initial[lang] = loadDraft(problemId, lang) ?? snippet.userSnippet;
+            initial[lang] = loadDraft(data.problem._id, lang) ?? snippet.userSnippet;
           });
           userCodesRef.current = { ...initial };
           setStarterCodes(starters);
@@ -139,7 +154,7 @@ const ProblemWorkSpace = () => {
     return () => {
       isMounted = false;
     };
-  }, [problemId, reloadKey]);
+  }, [slug, reloadKey, navigate]);
 
   // Keep code buffer in ref without triggering parent re-render on every keystroke
   const handleCodeChange = (newCode) => {

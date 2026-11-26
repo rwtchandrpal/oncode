@@ -32,6 +32,11 @@ replaced) and submitted (base64 batch, C++ flags `-Wall -Werror=return-type`) ex
 
 Every top-level key except `seedMeta` is a field of `src/models/problem.js`; `seed.js` writes only those.
 
+- `slug`: the file name, the key `seed.js` upserts by, and the problem's page URL (`/problems/<slug>`).
+  Required by the model; it equals what `src/utils/slug.js` generates from the title (checked by
+  `tests/seed-problems.test.js`), so a problem created earlier in the admin UI (and slugged by
+  `scripts/addSlugsToProblems.js`) is matched and updated instead of duplicated.
+
 - `examples`: the 3 samples. `input` is display text (`nums = [1,2,3]`), `output` is the reference's output.
 - `visibleTestCase`: sample 1 (what Run executes).
 - `hiddenTestCases`: all tests, samples first (what Submit executes). At most 10, each input and output <= 200 KB.

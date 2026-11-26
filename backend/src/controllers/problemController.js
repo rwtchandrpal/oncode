@@ -5,9 +5,10 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const Submission = require('../models/submission');
 const GuestSubmission = require('../models/guestSubmission');
-const { Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
+const { AppError, Judge0UnavailableError, EXECUTION_UNAVAILABLE_MESSAGE, sendError } = require('../utils/AppError');
 const logger = require('../utils/logger');
 const { getAllTopics, invalidateTopics } = require('../utils/topicsCache');
+const { uniqueSlug } = require('../utils/slug');
 
 // ==========================================
 // HELPER FUNCTION: Validation & Judge0 Testing
@@ -88,7 +89,7 @@ const changedJudgeFields = (existing, update) =>
         (field) => field in update && JSON.stringify(JUDGE_FIELDS[field](update[field])) !== JSON.stringify(JUDGE_FIELDS[field](existing[field]))
     );
 
-// Unique-index violations: say which field clashed (title or the optional seed slug).
+// Unique-index violations: say which field clashed (title or slug).
 const duplicateMessage = (err) =>
     err.keyPattern?.slug ? "A problem with this slug already exists." : "A problem with this title already exists.";
 
@@ -103,7 +104,7 @@ const createProblem = async (req, res) => {
             return res.status(validation.status || 400).json({ message: validation.error });
         }
 
-        // An empty slug means "none" (the schema's unique index is sparse, so it must be absent, not "").
+        // An empty slug means "not given": the model's pre-validate hook generates one from the title.
         const { slug, ...fields } = req.body;
         const newProblem = await Problem.create({
             ...fields,
@@ -149,11 +150,12 @@ const updateProblem = async (req, res) => {
             }
         }
 
-        // slug "" clears the slug ($unset), since the sparse unique index must not see an empty string
+        // Slugs are kept on title edits. "" means "unchanged"; a problem still without a slug (created
+        // before slugs were required, see scripts/addSlugsToProblems.js) gets one from its title.
         const { slug, ...fields } = req.body;
+        if (slug) fields.slug = slug;
+        else if (!existingProblem.slug) fields.slug = await uniqueSlug(Problem, fields.title || existingProblem.title, existingProblem._id);
         const change = { $set: fields };
-        if (slug === "") change.$unset = { slug: 1 };
-        else if (slug !== undefined) fields.slug = slug;
         const updatedProblem = await Problem.findByIdAndUpdate(id, change, { runValidators: true, returnDocument: 'after' });
         await invalidateTopics();
 
@@ -220,19 +222,23 @@ const deleteProblem = async (req, res) => {
 // USER CONTROLLERS (Fetching / Viewing)
 // ==========================================
 
-const getProblem = async (req, res) => {
-    const { id } = req.params;
-    try {
-        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid ID format" });
-        }
+const PUBLIC_PROBLEM_FIELDS = '_id number slug title difficulty topics description constraints examples visibleTestCase codeSnippets.language codeSnippets.userSnippet';
+const OBJECT_ID = /^[a-f\d]{24}$/i;
 
-        const fetchedProblem = await Problem.findById(id)
-            .select('_id number slug title difficulty topics description constraints examples visibleTestCase codeSnippets.language codeSnippets.userSnippet')
-            .lean();
+// By _id when the key looks like an ObjectId, otherwise (or if no such _id exists) by slug.
+// Slugs never look like ObjectIds (utils/slug.js), so the fallback is only a safety net.
+const findPublicProblem = async (key) => {
+    const byId = OBJECT_ID.test(key) ? await Problem.findById(key).select(PUBLIC_PROBLEM_FIELDS).lean() : null;
+    return byId || Problem.findOne({ slug: key }).select(PUBLIC_PROBLEM_FIELDS).lean();
+};
+
+const getProblem = async (req, res) => {
+    const { idOrSlug } = req.params;
+    try {
+        const fetchedProblem = await findPublicProblem(idOrSlug);
 
         if (!fetchedProblem) {
-            return res.status(404).json({ message: "Problem not found" });
+            return sendError(res, new AppError(404, "Problem not found."));
         }
 
         // Authenticated response: browser-only cache, short lifetime (SEC-13)
@@ -360,7 +366,7 @@ const getAllProblems = async (req, res) => {
 
         const [rows, totalProblems, allTopics] = await Promise.all([
             Problem.find(query)
-                .select('_id number title difficulty topics')
+                .select('_id number slug title difficulty topics')
                 .sort({ number: 1 })
                 .skip(skip)
                 .limit(limit)
@@ -396,7 +402,7 @@ const getSolvedProblems = async (req, res) => {
 
         const user = await User.findById(userId).populate({
             path: "problemsSolved",
-            select: "_id number title difficulty topics"
+            select: "_id number slug title difficulty topics"
         }).lean();
 
         // Filter out null/dangling references from deleted problems

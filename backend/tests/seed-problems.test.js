@@ -9,6 +9,7 @@ import { connect, disconnect, resetData, seed, api, login, auth, PASSWORDS, Prob
 
 const require = createRequire(import.meta.url);
 const { createProblemBody } = require('../src/validation/problem.js');
+const { slugify } = require('../src/utils/slug.js');
 
 const SEED = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'seed');
 const list = JSON.parse(fs.readFileSync(path.join(SEED, 'blind75-list.json'), 'utf8')).problems;
@@ -37,6 +38,8 @@ describe('seed data (backend/seed)', () => {
     const parsed = createProblemBody.safeParse(doc);
     expect(parsed.success, JSON.stringify(parsed.error?.issues?.slice(0, 2))).toBe(true);
     expect(parsed.data.slug).toBe(slug);
+    // So an admin-created problem with the same title gets this slug from the migration (FORMAT.md)
+    expect(slugify(doc.title)).toBe(slug);
     expect(doc.hiddenTestCases.length).toBeGreaterThanOrEqual(1);
     expect(doc.hiddenTestCases.length).toBeLessThanOrEqual(10);
     expect(doc.codeSnippets.map((c) => c.language).sort()).toEqual(['cpp', 'java']);
@@ -105,17 +108,23 @@ describe('admin problem API with the seed format', () => {
     expect(res.body.submissionResult.status).toBe('Accepted');
   }, 15000);
 
-  it('treats an empty slug as none on create, and clears a slug on update', async () => {
+  it('generates the slug from the title when it is empty, and keeps it on update', async () => {
     const res = await create({ ...docOf('counting-bits'), slug: '' });
     expect(res.status).toBe(201);
     const id = res.body.problem._id;
-    expect((await Problem.findById(id).lean()).slug).toBeUndefined();
+    expect(res.body.problem.slug).toBe('counting-bits');
 
-    const set = await api().put(`/problem/${id}`).set(auth(adminToken)).send({ slug: 'counting-bits' });
-    expect(set.status).toBe(200);
+    const retitled = await api().put(`/problem/${id}`).set(auth(adminToken)).send({ title: 'Counting Bits Again', slug: '' });
+    expect(retitled.status).toBe(200);
     expect((await Problem.findById(id).lean()).slug).toBe('counting-bits');
-    const cleared = await api().put(`/problem/${id}`).set(auth(adminToken)).send({ slug: '' });
-    expect(cleared.status).toBe(200);
-    expect((await Problem.findById(id).lean()).slug).toBeUndefined();
+    const set = await api().put(`/problem/${id}`).set(auth(adminToken)).send({ slug: 'bits-counting' });
+    expect(set.status).toBe(200);
+    expect((await Problem.findById(id).lean()).slug).toBe('bits-counting');
+  });
+
+  it('rejects a reserved slug', async () => {
+    const res = await create({ ...docOf('house-robber'), slug: 'solved' });
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe('VALIDATION_ERROR');
   });
 });

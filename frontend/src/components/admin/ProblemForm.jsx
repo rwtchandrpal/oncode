@@ -130,7 +130,7 @@ const ProblemForm = ({ mode, defaultValues, onSubmit, heading, subheading, submi
           </div>
 
           <div className="space-y-1">
-            <label htmlFor="pf-slug" className={labelClass}>Slug (optional, e.g. valid-palindrome-ii)</label>
+            <label htmlFor="pf-slug" className={labelClass}>URL slug (optional, generated from the title if blank, e.g. two-sum)</label>
             <input id="pf-slug" type="text" placeholder="lowercase-words-with-hyphens" {...register('slug')} className={inputClass} />
             <FieldError error={errors.slug} />
           </div>

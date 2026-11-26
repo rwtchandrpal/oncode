@@ -26,7 +26,7 @@ export const makeProblemFormSchema = ({ requireSolutions }) =>
   z
     .object({
       title: z.string().trim().min(3, 'Title must be at least 3 characters'),
-      // Optional stable key used by the seed scripts; empty means none.
+      // URL key (/problems/<slug>). Empty: generated from the title on create, unchanged on edit.
       slug: z
         .string()
         .trim()
@@ -103,7 +103,7 @@ export const formValuesToPayload = (values) => {
   const enabled = LANGUAGES.filter((l) => values.languages[l.id]?.enabled).map((l) => l.id);
   return {
     title: values.title,
-    // "" is sent on purpose: on edit it clears an existing slug; on create the backend ignores it
+    // "" means "not given": the backend generates the slug on create and keeps the current one on edit
     slug: (values.slug || '').trim(),
     difficulty: values.difficulty,
     description: values.description,

@@ -120,7 +120,7 @@ describe('HTTP client in guest mode', () => {
     store = makeStore(guestAuth());
     setupInterceptors(store, { sessionCleared, openAuthModal, guestSessionEnded });
     localStorage.setItem(GUEST_TOKEN_KEY, 'guest-token');
-    window.history.pushState({}, '', '/problem/p1');
+    window.history.pushState({}, '', '/problems/two-sum');
   });
 
   it('sends the guest token when there is no user token', async () => {
@@ -135,7 +135,7 @@ describe('HTTP client in guest mode', () => {
     const { auth } = store.getState();
     expect(auth.isGuest).toBe(false);
     expect(localStorage.getItem(GUEST_TOKEN_KEY)).toBeNull();
-    expect(auth.authModal).toMatchObject({ isOpen: true, mode: 'guest-expired', redirectPath: '/problem/p1' });
+    expect(auth.authModal).toMatchObject({ isOpen: true, mode: 'guest-expired', redirectPath: '/problems/two-sum' });
   });
 
   it('403 GUEST_NOT_ALLOWED keeps the guest session and offers sign-up; locked content does not', async () => {
@@ -155,7 +155,7 @@ describe('HTTP client in guest mode', () => {
 });
 
 describe('auth modal: sign up, log in, or continue as guest', () => {
-  const openModal = () => makeStore(baseAuth({ authModal: { isOpen: true, mode: 'login', redirectPath: '/problem/p1', notice: null } }));
+  const openModal = () => makeStore(baseAuth({ authModal: { isOpen: true, mode: 'login', redirectPath: '/problems/two-sum', notice: null } }));
 
   it('offers all three options and says progress is not saved', () => {
     renderWithStore(<AuthModal />, openModal());
@@ -182,7 +182,7 @@ describe('auth modal: sign up, log in, or continue as guest', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /continue as guest/i }));
     await waitFor(() => expect(store.getState().auth.isGuest).toBe(true));
-    await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/problem/p1'));
+    await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/problems/two-sum'));
     expect(store.getState().auth.authModal.isOpen).toBe(false);
   });
 
@@ -226,13 +226,13 @@ describe('route guards', () => {
   const routes = (props) => (
     <Routes>
       <Route path="/" element={<ShowState />} />
-      <Route path="/problem/:id" element={<SolveRoute {...props}><span>workspace</span></SolveRoute>} />
+      <Route path="/problems/:slug" element={<SolveRoute {...props}><span>workspace</span></SolveRoute>} />
       <Route path="/profile" element={<ProtectedRoute {...props}><span>profile</span></ProtectedRoute>} />
     </Routes>
   );
 
   it('a guest can open the workspace', () => {
-    renderWithStore(routes({ isAuthenticated: false, isGuest: true }), makeStore(guestAuth()), ['/problem/p1']);
+    renderWithStore(routes({ isAuthenticated: false, isGuest: true }), makeStore(guestAuth()), ['/problems/two-sum']);
     expect(screen.getByText('workspace')).toBeTruthy();
   });
 
@@ -243,8 +243,8 @@ describe('route guards', () => {
   });
 
   it('an anonymous visitor still cannot open the workspace', () => {
-    renderWithStore(routes({ isAuthenticated: false, isGuest: false }), makeStore(), ['/problem/p1']);
+    renderWithStore(routes({ isAuthenticated: false, isGuest: false }), makeStore(), ['/problems/two-sum']);
     expect(screen.queryByText('workspace')).toBeNull();
-    expect(JSON.parse(screen.getByTestId('state').textContent)).toMatchObject({ openAuthModal: true, from: '/problem/p1' });
+    expect(JSON.parse(screen.getByTestId('state').textContent)).toMatchObject({ openAuthModal: true, from: '/problems/two-sum' });
   });
 });

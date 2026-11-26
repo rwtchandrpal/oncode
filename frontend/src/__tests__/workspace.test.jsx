@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, act, cleanup, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Routes, Route } from 'react-router';
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router';
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 
@@ -32,6 +32,7 @@ vi.mock('../utils/monacoSetup', () => ({}));
 
 const PROBLEM = {
   _id: 'p1',
+  slug: 'double-it',
   title: 'Double It',
   difficulty: 'Easy',
   topics: ['Math'],
@@ -51,14 +52,19 @@ vi.mock('../utils/axiosClient', () => ({
 }));
 
 const { default: ProblemWorkSpace } = await import('../pages/problemWorkspace/problemWorkspace');
+const { LegacyProblemRedirect } = await import('../App');
+const { default: axiosClient } = await import('../utils/axiosClient');
 
-const renderWorkspace = () => {
+const Where = () => <span data-testid="where">{useLocation().pathname}</span>;
+
+const renderWorkspace = (url = '/problems/double-it') => {
   const store = configureStore({ reducer: { auth: authReducer } });
   return render(
     <Provider store={store}>
-      <MemoryRouter initialEntries={['/problem/p1']}>
+      <MemoryRouter initialEntries={[url]}>
         <Routes>
-          <Route path="/problem/:problemId" element={<ProblemWorkSpace />} />
+          <Route path="/problems/:slug" element={<><Where /><ProblemWorkSpace /></>} />
+          <Route path="/problem/:problemId" element={<LegacyProblemRedirect />} />
         </Routes>
       </MemoryRouter>
     </Provider>
@@ -112,5 +118,41 @@ describe('workspace language buffers (BUG-05) and drafts (UX-05)', () => {
     renderWorkspace();
     await screen.findByTestId('editor');
     expect(editor().value).toBe('// draft');
+  });
+});
+
+describe('workspace slug URLs', () => {
+  beforeEach(() => {
+    models.clear();
+    localStorage.clear();
+    axiosClient.get.mockClear();
+    axiosClient.post.mockReset();
+  });
+  afterEach(cleanup);
+
+  it('loads the problem by the slug in /problems/:slug', async () => {
+    renderWorkspace();
+    await screen.findByTestId('editor');
+    expect(axiosClient.get).toHaveBeenCalledTimes(1);
+    expect(axiosClient.get).toHaveBeenCalledWith('/problem/double-it');
+    expect(screen.getByTestId('where').textContent).toBe('/problems/double-it');
+  });
+
+  it('an old /problem/<_id> link lands on /problems/<slug> without a second fetch', async () => {
+    renderWorkspace('/problem/p1');
+    await screen.findByTestId('editor');
+    await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/problems/double-it'));
+    expect(axiosClient.get).toHaveBeenCalledTimes(1);
+    expect(axiosClient.get).toHaveBeenCalledWith('/problem/p1');
+  });
+
+  it('run and submit send the _id, not the slug', async () => {
+    axiosClient.post.mockResolvedValue({ data: { status: 'Accepted', submissionResult: { status: 'Accepted' } } });
+    renderWorkspace();
+    await screen.findByTestId('editor');
+    fireEvent.click(screen.getByLabelText('Run Code'));
+    await waitFor(() => expect(axiosClient.post).toHaveBeenCalledWith('/submission/run/p1', expect.any(Object), { skipWakeBanner: true }));
+    fireEvent.click(screen.getByLabelText('Submit Solution'));
+    await waitFor(() => expect(axiosClient.post).toHaveBeenCalledWith('/submission/submit/p1', expect.any(Object), { skipWakeBanner: true }));
   });
 });

@@ -1,4 +1,5 @@
-const { z, language } = require("./common");
+const { z, language, objectId } = require("./common");
+const { SLUG_PATTERN, MAX_SLUG_LENGTH, isUsable } = require("../utils/slug");
 
 const text = (max, label) => z.string({ error: `${label} must be text.` }).max(max, `${label} is too long (max ${max} characters).`);
 const requiredText = (max, label) => text(max, label).min(1, `${label} is required.`);
@@ -10,14 +11,26 @@ const testCase = z.object({
   expectedOutput: requiredText(MAX_TEST_CHARS, "Expected output"),
 });
 
-// Optional stable key (kebab-case), as used by backend/seed/seed.js. An empty string means "no slug".
+const lowerTrim = (v) => (typeof v === "string" ? v.trim().toLowerCase() : v);
+const slugText = z
+  .string()
+  .max(MAX_SLUG_LENGTH, `Slug is too long (max ${MAX_SLUG_LENGTH} characters).`)
+  .regex(SLUG_PATTERN, "Slug must be lowercase words joined by hyphens, e.g. two-sum.");
+
+// Optional URL key (kebab-case), as used by backend/seed/seed.js. An empty string means "not given":
+// generated from the title on create, left unchanged on update.
 const slug = z.preprocess(
-  (v) => (typeof v === "string" ? v.trim().toLowerCase() : v),
+  lowerTrim,
   z.union([
     z.literal(""),
-    z.string().max(100, "Slug is too long (max 100 characters).").regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase words joined by hyphens, e.g. two-sum."),
+    slugText.refine(isUsable, "This slug is reserved, choose another one."),
   ])
 );
+
+// GET /problem/:idOrSlug: a 24-hex ObjectId or a slug (case-insensitive)
+const problemKeyParams = z.object({
+  idOrSlug: z.preprocess(lowerTrim, z.union([objectId, slugText], { error: "Invalid problem id or slug." })),
+});
 
 // Strips unknown keys, so clients cannot set number, problemCreator, _id or timestamps.
 const problemShape = {
@@ -78,4 +91,4 @@ const listSubmissionsQuery = z.object({
   limit: z.coerce.number({ error: "Limit must be an integer between 1 and 50." }).int().min(1, "Limit must be an integer between 1 and 50.").max(50, "Limit must be an integer between 1 and 50."),
 }).partial();
 
-module.exports = { createProblemBody, updateProblemBody, listProblemsQuery, listSubmissionsQuery };
+module.exports = { createProblemBody, updateProblemBody, listProblemsQuery, listSubmissionsQuery, problemKeyParams };

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, Navigate, useLocation, Link } from "react-router";
+import { Routes, Route, Navigate, useLocation, useParams, Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth, openAuthModal, guestSessionEnded, syncAuthFromStorage } from "./features/auth/authSlice";
 import { clearGuestToken } from "./utils/guestSession";
@@ -48,6 +48,12 @@ export const SolveRoute =({ isAuthenticated, isGuest, children }) => {
     return <Navigate to="/" state={{ openAuthModal: true, from: location.pathname }} replace />;
   }
   return children;
+};
+
+// Old problem URLs (/problem/<_id>) go to /problems/<_id>; the page then swaps in the slug URL
+export const LegacyProblemRedirect = () => {
+  const { problemId } = useParams();
+  return <Navigate to={`/problems/${encodeURIComponent(problemId)}`} replace />;
 };
 
 const AdminRoute = ({ user, isAuthenticated, children }) => {
@@ -138,9 +144,10 @@ const App = () => {
           element={<ProtectedRoute isAuthenticated={isAuthenticated} isGuest={isGuest}><UserProfile /></ProtectedRoute>}
         />
         <Route
-          path="/problem/:problemId"
+          path="/problems/:slug"
           element={<SolveRoute isAuthenticated={isAuthenticated} isGuest={isGuest}><ProblemWorkSpace /></SolveRoute>}
         />
+        <Route path="/problem/:problemId" element={<LegacyProblemRedirect />} />
 
         <Route
           path="/admin"
