@@ -1,6 +1,6 @@
 # Oncode
 
-A LeetCode-style coding platform for practicing interview problems: solve the Blind 75 in C++ or Java in the browser, run your code against real tests, and get hints from an AI tutor.
+A online coding platform for practicing interview problems: solve the Blind 75 in C++ or Java in the browser, run your code against real tests, and get hints from an AI tutor.
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)
@@ -8,14 +8,14 @@ A LeetCode-style coding platform for practicing interview problems: solve the Bl
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose%209-47A248?logo=mongodb&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![Judge0](https://img.shields.io/badge/Judge0-CE%201.13.1-5C2D91)
-![License](https://img.shields.io/badge/license-ISC-blue)
-<!-- TODO: add a LICENSE file at the repo root that matches the badge -->
+
 
 <p align="center">
-  <a href="URL_PLACEHOLDER"><img src="https://img.shields.io/badge/🚀%20Live%20Demo-Open%20Oncode-6366F1?style=for-the-badge" alt="Live Demo"></a>
+  <a href="URL_PLACEHOLDER"><img src="https://img.shields.io/badge/%20Live%20Demo-Open%20Oncode-6366F1?style=for-the-badge" alt="Live Demo"></a>
   &nbsp;
   <a href="URL_PLACEHOLDER"><img src="https://img.shields.io/badge/▶%20Demo%20Video-Watch-FF0000?style=for-the-badge" alt="Demo video"></a>
 </p>
+
 
 ## Screenshots
 
@@ -25,17 +25,18 @@ A LeetCode-style coding platform for practicing interview problems: solve the Bl
 | **Submission result** | **Admin dashboard** |
 | ![Accepted verdict with runtime and memory](docs/screenshots/submission-result.jpg) | ![Admin overview with platform metrics](docs/screenshots/admin-dashboard.jpg) |
 
+
 ## Overview
 
 Oncode gives you the full practice loop in a browser tab, with no local setup.
 Pick a problem, write a solution in a Monaco editor, and submit it.
 The backend runs your code in a sandboxed, self-hosted Judge0 against hidden tests and stores the verdict.
-Anyone can try it instantly with a 4-hour guest session.
+Anyone can try it instantly with a guest session.
 
 ## Features
 
 **Solving**
-- 75 seeded problems (Blind 75), each with C++ and Java starter code and up to 10 hidden tests
+- 75 seeded problems (Blind 75), each with C++ and Java starter code and multiple hidden tests
 - Problem list with search, difficulty, topic and solved/unsolved filters, all kept in the URL
 - Monaco editor with separate code per language and drafts saved per account in the browser
 - **Run** checks the visible sample test; **Submit** grades all hidden tests (inputs are never shown)
@@ -172,9 +173,3 @@ oncode/
 - Refresh tokens so sessions last longer than one hour
 - An execution queue with live status (WebSocket) instead of request-time polling
 - Contests, leaderboards and an admin view of all submissions
-
-## Author
-
-**Your Name**: [GitHub](https://github.com/rwtchandrpal) · [LinkedIn](LINKEDIN_PLACEHOLDER)
-
-Licensed under the ISC license.
