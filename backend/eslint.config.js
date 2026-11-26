@@ -3,10 +3,10 @@ const n = require("eslint-plugin-n");
 const globals = require("globals");
 
 module.exports = [
-  { ignores: ["node_modules/**", "coverage/**"] },
+  { ignores: ["node_modules/**", "coverage/**", "backups/**"] },
   js.configs.recommended,
   {
-    files: ["src/**/*.js", "scripts/**/*.js"],
+    files: ["src/**/*.js", "scripts/**/*.js", "seed/**/*.js"],
     ...n.configs["flat/recommended-script"],
     languageOptions: { ecmaVersion: 2023, sourceType: "commonjs", globals: { ...globals.node } },
     rules: {

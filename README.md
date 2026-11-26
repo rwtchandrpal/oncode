@@ -32,7 +32,7 @@ submit against hidden tests on a self-hosted Judge0, and get hints from an AI tu
 
 ### For admins (`/admin`)
 - Dashboard: problems by difficulty, users by role, submissions and acceptance rate.
-- **Create and edit problems** with one shared form: statement (Markdown), topics, constraints, examples, the visible
+- **Create and edit problems** with one shared form: optional slug, statement (Markdown), topics, constraints, examples, the visible
   sample test, hidden test cases, and per language a starter snippet, driver code (with `{{USER_CODE}}`) and a
   reference solution. Every reference solution is run on Judge0 before saving; metadata-only edits (title,
   statement, topics...) save without Judge0.
@@ -110,6 +110,31 @@ cd backend && npm run dev      # API on :3000 (nodemon)
 cd frontend && npm run dev     # SPA on :5173
 ```
 Frontend checks: `npm run lint`, `npm run build`, `npm run preview` (serves the build with the same CSP as Vercel).
+
+### Seeding problems
+The problem set is the **Blind 75**, kept as data in [`backend/seed/`](backend/seed/): one verified JSON file per
+problem (`problems/<slug>.json`), with C++ and Java starter code, driver code, reference solutions and up to 10
+tests whose expected outputs come from running the reference solutions on Judge0. `FORMAT.md` describes the format,
+`DECISIONS.md` the choices behind it, `FINAL_REPORT.md` the verification results.
+
+Run these from `backend/`, with `MONGO_URI` in `backend/.env` pointing at the target database:
+```bash
+node seed/seed.js --dry-run                                   # offline: checks every file, touches no database
+node seed/seed.js --dry-run --connect --creator <admin email> # reads the database, reports insert/update
+node seed/seed.js --creator <admin email> --yes               # upserts all 75 problems by slug
+```
+`seed.js` refuses any file that changed since it was verified, validates every document against the Problem model,
+and needs an existing admin user (the problems' creator). It is safe to run again: problems are matched by `slug`.
+
+To replace an existing problem set: `node seed/tools/db.js backup` (exports every collection to
+`backend/backups/<timestamp>/`, git-ignored), then `node seed/tools/db.js clear --confirmed` (deletes problems,
+submissions and the problem-number counter, empties every user's solved list, drops stale problem indexes and the
+cached topic list), seed, and check with `node seed/tools/db.js check`.
+
+To change or add a seed problem: edit `seed/spec/<slug>.js`, `seed/tools/gen/<slug>.js` and
+`seed/reference/<slug>/`, then `node seed/tools/build.js <slug>` and `node seed/tools/verify.js <slug>` (both need
+a Judge0). New problems can also be added in the admin form, which takes the same fields, including an optional
+`slug`; test cases may be up to 200 KB each.
 
 ### Tests and CI
 ```bash
