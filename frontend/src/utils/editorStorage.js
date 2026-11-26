@@ -36,6 +36,24 @@ export const clearDraft = (owner, problemId, language) => {
   }
 };
 
+// A guest who signs up or logs in keeps the code written in that guest session: its drafts move to the
+// account (an existing draft of the account for the same problem and language wins).
+export const adoptDrafts = (fromOwner, toOwner) => {
+  if (!fromOwner || !toOwner || fromOwner === toOwner) return;
+  try {
+    const from = `${PREFIX}${fromOwner}:`;
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith(from))
+      .forEach((k) => {
+        const target = `${PREFIX}${toOwner}:${k.slice(from.length)}`;
+        if (localStorage.getItem(target) === null) localStorage.setItem(target, localStorage.getItem(k));
+        localStorage.removeItem(k);
+      });
+  } catch {
+    // ignore
+  }
+};
+
 // Removes drafts saved before they were scoped to an account: nobody can tell whose they are.
 export const purgeLegacyDrafts = () => {
   try {

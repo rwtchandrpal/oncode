@@ -1,7 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../utils/axiosClient';
 import { getApiErrorMessage } from '../../utils/apiError';
-import { clearGuestToken, readActiveGuestSession, saveGuestToken } from '../../utils/guestSession';
+import { clearGuestToken, readActiveGuestSession, readGuestId, saveGuestToken } from '../../utils/guestSession';
+import { adoptDrafts } from '../../utils/editorStorage';
+
+// Leaving guest mode by signing up or logging in: the guest session's editor drafts move to the account,
+// then the guest token is dropped (guest submissions are discarded).
+const leaveGuestModeFor = (user) => {
+    const gid = readGuestId();
+    if (gid && user?._id) adoptDrafts(`guest-${gid}`, user._id);
+    clearGuestToken();
+};
 
 // Helper to handle axios errors consistently
 export const handleAxiosError = (error, rejectWithValue) => {
@@ -22,7 +31,7 @@ export const registerUser = createAsyncThunk(
             const response = await axiosClient.post('/user/register', userData);
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
-                clearGuestToken(); // a guest who signs up leaves guest mode; guest work is discarded
+                leaveGuestModeFor(response.data.user);
             }
             return response.data.user;
         } catch (error) {
@@ -38,7 +47,7 @@ export const loginUser = createAsyncThunk(
             const response = await axiosClient.post('/user/login', credentials);
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
-                clearGuestToken(); // a guest who logs in leaves guest mode; guest work is discarded
+                leaveGuestModeFor(response.data.user);
             }
             return response.data.user;
         } catch(error) {
