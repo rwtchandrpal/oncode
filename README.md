@@ -18,7 +18,8 @@ submit against hidden tests on a self-hosted Judge0, and get hints from an AI tu
 - **Problem list:** search, filters (difficulty, topic, solved/unsolved) and pages, all kept in the URL so links
   and reloads keep the view. Solved problems are ticked.
 - **Workspace:** Monaco editor (bundled, no CDN) offering only the languages a problem supports (C++ and/or Java).
-  Each language keeps its own code, drafts survive reloads, and there's a "Reset to starter code" button.
+  Each language keeps its own code, drafts survive reloads (stored in the browser per account, so another
+  account or a guest on the same browser never sees them), and there's a "Reset to starter code" button.
 - **Run** checks the visible sample test. **Submit** grades every hidden test case; hidden inputs and expected
   outputs are never shown. Compile errors show the compiler output; runtime errors show a short message.
 - **History:** paginated past submissions per problem; a submission's code loads when you expand it.
@@ -44,8 +45,8 @@ keeps a **Guest** badge with **Sign up** / **Log in** in the navbar.
 | Official solutions, profile, stats, solved badges, admin | no |
 
 - Guest submissions never touch `submissions`, solved lists, profile stats or the admin dashboard.
-- Signing up or logging in ends guest mode, and that session's submissions are **discarded** (code drafts stay
-  in the browser).
+- Signing up or logging in ends guest mode, and that session's submissions are **discarded** (its code drafts
+  move to the account).
 - Guest limits fail **closed**: if Redis is down, guest mode pauses (503) while signed-in users keep working.
 - `GUEST_MODE_ENABLED=false` switches guest mode off (new sessions get 503, existing guest tokens stop working).
 - Settings live in `backend/src/config/guest.js`; design notes in [`docs/GUEST_MODE_DESIGN.md`](docs/GUEST_MODE_DESIGN.md).
@@ -71,7 +72,7 @@ There is no admin "all submissions" view.
   helmet, express-rate-limit with a Redis store, JWT (Bearer) + bcrypt, @google/genai.
 - **Data:** MongoDB (replica set: problem deletion uses a transaction), Redis (token blocklist, rate limits,
   guest quotas, topic cache).
-- **Code execution:** Judge0 CE (self-hosted on AWS EC2).
+- **Code execution:** Judge0 CE 1.13.1 (self-hosted on AWS EC2), see [Judge0](#judge0).
 
 ---
 
@@ -131,6 +132,29 @@ cd backend && npm run dev      # API on :3000 (nodemon)
 cd frontend && npm run dev     # SPA on :5173
 ```
 Frontend checks: `npm run lint`, `npm run build`, `npm run preview` (serves the build with the same CSP as Vercel).
+
+### Creating the first admin
+There is no sign-up path to admin (registration always creates `role: "user"`, and `POST /user/admin/register`
+needs an admin). Register normally in the app, then promote that account once in MongoDB:
+```bash
+mongosh "<MONGO_URI>" --eval 'db.users.updateOne({ email: "you@example.com" }, { $set: { role: "admin" } })'
+```
+The role is re-read from the database on every request, so the next request is already an admin one (no new
+login needed). Further admins can be created from `/admin/users`. The last admin cannot delete their own
+account (409).
+
+### Judge0
+Run and Submit, and admin problem create/edit (which runs every reference solution), need a Judge0 CE
+instance. The platform uses language **54** (C++, GCC 9.2.0, compiled with `-Wall -Werror=return-type`) and **62**
+(Java, OpenJDK 13.0.1), batch submissions with base64, and Judge0's default limits (5 s CPU per test).
+- Install Judge0 CE **1.13.1** with its docker-compose release on a Linux host with **cgroup v1** (for example
+  Ubuntu 22.04 booted with `systemd.unified_cgroup_hierarchy=0`); it does not run on cgroup v2 as released.
+- In `judge0.conf` set `AUTHN_HEADER=X-Auth-Token` and a long random `AUTHN_TOKEN`; put the same value in
+  `JUDGE0_AUTH_TOKEN`. Open port 2358 only to the backend (security group / private network), or put TLS in front.
+- Capacity: a 10-test submission is 10 Judge0 jobs. If concurrent submissions start failing with 503 ("Code
+  execution is temporarily unavailable"), the batch did not finish within `JUDGE0_DEADLINE_MS` (default 30 s):
+  add workers (`COUNT` in `judge0.conf`) or CPU, or raise the deadline.
+- Check it from the app with `GET /submission/health` as an admin.
 
 ### Seeding problems
 The problem set is the **Blind 75**, kept as data in [`backend/seed/`](backend/seed/): one verified JSON file per
