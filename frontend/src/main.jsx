@@ -6,9 +6,9 @@ import App from './App.jsx';
 import {Provider} from 'react-redux';
 import {store} from './store/store.js';
 import { setupInterceptors } from './utils/axiosClient.js';
-import { sessionCleared, openAuthModal } from './features/auth/authSlice.js';
+import { sessionCleared, openAuthModal, guestSessionEnded } from './features/auth/authSlice.js';
 
-setupInterceptors(store, { sessionCleared, openAuthModal });
+setupInterceptors(store, { sessionCleared, openAuthModal, guestSessionEnded });
 
 createRoot(document.getElementById('root')).render(
 <StrictMode>

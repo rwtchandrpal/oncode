@@ -1,10 +1,12 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation, Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { checkAuth, openAuthModal } from "./features/auth/authSlice";
+import { checkAuth, openAuthModal, guestSessionEnded, syncAuthFromStorage } from "./features/auth/authSlice";
+import { clearGuestToken } from "./utils/guestSession";
 
 // Loaded on first open, so react-hook-form + zod stay out of the initial bundle (PERF-03)
 const AuthModal = lazy(() => import("./components/AuthModal"));
+const GuestNotice = lazy(() => import("./components/GuestNotice"));
 
 // Route-level code splitting
 const Home = lazy(() => import("./pages/Home"));
@@ -26,9 +28,22 @@ const PageLoader = () => (
   </div>
 );
 
-const ProtectedRoute = ({ isAuthenticated, children }) => {
+// Signed-in users only. A guest is sent to sign-up instead of the login form.
+export const ProtectedRoute =({ isAuthenticated, isGuest, children }) => {
   const location = useLocation();
   if (!isAuthenticated) {
+    const guestState = isGuest
+      ? { mode: "signup", notice: "Sign up to get a profile and keep your progress." }
+      : {};
+    return <Navigate to="/" state={{ openAuthModal: true, from: location.pathname, ...guestState }} replace />;
+  }
+  return children;
+};
+
+// Solving a problem: signed-in users and guests
+export const SolveRoute =({ isAuthenticated, isGuest, children }) => {
+  const location = useLocation();
+  if (!isAuthenticated && !isGuest) {
     return <Navigate to="/" state={{ openAuthModal: true, from: location.pathname }} replace />;
   }
   return children;
@@ -54,7 +69,7 @@ const AuthEntryRedirect = ({ mode, isAuthenticated }) => {
 };
 
 const App = () => {
-  const { user, isAuthenticated, isCheckingAuth, authModal } = useSelector((state) => state.auth);
+  const { user, isAuthenticated, isCheckingAuth, authModal, isGuest, guest, guestNoticeOpen } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -62,6 +77,28 @@ const App = () => {
       dispatch(checkAuth());
     }
   }, [dispatch]);
+
+  // Keep this tab in step when another tab logs in, logs out, or starts/ends guest mode
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === null || e.key === "token" || e.key === "guestToken") dispatch(syncAuthFromStorage());
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [dispatch]);
+
+  // End guest mode in the UI when the 4-hour session runs out, even if no request is made
+  const guestExpiresAt = isGuest ? guest?.expiresAt : null;
+  useEffect(() => {
+    if (!guestExpiresAt) return undefined;
+    const msLeft = new Date(guestExpiresAt).getTime() - Date.now();
+    const timer = setTimeout(() => {
+      clearGuestToken();
+      dispatch(guestSessionEnded());
+      dispatch(openAuthModal({ mode: "guest-expired", redirectPath: window.location.pathname }));
+    }, Math.max(0, Math.min(msLeft, 2147483647)));
+    return () => clearTimeout(timer);
+  }, [guestExpiresAt, dispatch]);
 
   if (isCheckingAuth) {
     return <PageLoader />;
@@ -72,6 +109,11 @@ const App = () => {
       {authModal.isOpen && (
         <Suspense fallback={null}>
           <AuthModal />
+        </Suspense>
+      )}
+      {guestNoticeOpen && !authModal.isOpen && (
+        <Suspense fallback={null}>
+          <GuestNotice />
         </Suspense>
       )}
       <Suspense fallback={<PageLoader />}>
@@ -85,11 +127,11 @@ const App = () => {
         />
         <Route 
           path="/profile" 
-          element={<ProtectedRoute isAuthenticated={isAuthenticated}><UserProfile /></ProtectedRoute>} 
+          element={<ProtectedRoute isAuthenticated={isAuthenticated} isGuest={isGuest}><UserProfile /></ProtectedRoute>}
         />
-        <Route 
-          path="/problem/:problemId"  
-          element={<ProtectedRoute isAuthenticated={isAuthenticated}><ProblemWorkSpace /></ProtectedRoute>} 
+        <Route
+          path="/problem/:problemId"
+          element={<SolveRoute isAuthenticated={isAuthenticated} isGuest={isGuest}><ProblemWorkSpace /></SolveRoute>}
         />
 
         <Route

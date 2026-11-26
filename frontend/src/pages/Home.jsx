@@ -60,17 +60,18 @@ const ProblemCard = memo(({ problem, isSolved, onProblemClick }) => {
 ProblemCard.displayName = "ProblemCard";
 
 const Home = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isGuest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Intercept redirection from ProtectedRoute
+  // Intercept redirection from ProtectedRoute / SolveRoute
   useEffect(() => {
     if (location.state?.openAuthModal && !user) {
       dispatch(openAuthModal({
-        mode: 'login',
-        redirectPath: location.state.from || '/'
+        mode: location.state.mode || 'login',
+        redirectPath: location.state.from || '/',
+        notice: location.state.notice || null
       }));
       // Clear location state so modal doesn't re-open on page refresh
       window.history.replaceState({}, document.title);
@@ -78,7 +79,8 @@ const Home = () => {
   }, [location.state, user, dispatch]);
 
   const handleProblemClick = (problemId) => {
-    if (!user) {
+    // Signed-in users and guests go straight in; anyone else picks sign up, log in or guest mode
+    if (!user && !isGuest) {
       dispatch(openAuthModal({
         mode: 'login',
         redirectPath: `/problem/${problemId}`
