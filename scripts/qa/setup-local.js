@@ -36,11 +36,18 @@ if (!["127.0.0.1", "localhost"].includes(host)) {
       const now = new Date();
       await users.updateOne(
         { email: a.email },
-        { $set: { firstName: a.firstName, lastName: "QA", role: a.role, password: await bcrypt.hash(a.password, 10), updatedAt: now }, $setOnInsert: { email: a.email, problemsSolved: [], createdAt: now } },
+        // problemsSolved is reset so every QA run starts from the same state
+        { $set: { firstName: a.firstName, lastName: "QA", role: a.role, password: await bcrypt.hash(a.password, 10), problemsSolved: [], updatedAt: now }, $setOnInsert: { email: a.email, createdAt: now } },
         { upsert: true }
       );
+      const u = await users.findOne({ email: a.email }, { projection: { _id: 1 } });
+      await db.collection("submissions").deleteMany({ userId: u._id });
       console.log(`ok ${a.role.padEnd(5)} ${a.email}`);
     }
+    // Deleted problems keep their number (by design), so earlier QA create/delete runs advance the counter.
+    // Reset it to the highest existing number so each QA run starts from the same state.
+    const last = await db.collection("problems").find({}).sort({ number: -1 }).limit(1).next();
+    if (last) await db.collection("counters").updateOne({ _id: "problemNumber" }, { $set: { seq: last.number } });
     console.log(`\nSeed problems:  cd backend && MONGO_URI="${URI}" node seed/seed.js --creator ${ACCOUNTS.admin.email} --yes`);
   }
   await mongoose.disconnect();

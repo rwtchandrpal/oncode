@@ -66,11 +66,11 @@ const submit = async (problemId, language, code) => {
 const INJECT = {
   tle: {
     cpp: (code) => `${code}\nstatic int qa_spin = [](){ volatile unsigned long long x = 1; while (x) { x = x * 3 + 1; if (x == 0) x = 1; } return 0; }();\n`,
-    java: (code) => code.replace(/class Solution\s*\{/, (m) => `${m}\n    static { long qaX = 1; while (qaX != 0) { qaX = qaX * 3 + 1; if (qaX == 0) qaX = 1; } }\n`),
+    java: (code) => code.replace(/class \w+\s*\{/, (m) => `${m}\n    static { long qaX = 1; while (qaX != 0) { qaX = qaX * 3 + 1; if (qaX == 0) qaX = 1; } }\n`),
   },
   rte: {
     cpp: (code) => `${code}\nstatic int qa_crash = [](){ volatile int* p = nullptr; *p = 1; return 0; }();\n`,
-    java: (code) => code.replace(/class Solution\s*\{/, (m) => `${m}\n    static { int[] qaA = new int[1]; int qaI = 2; qaA[qaI] = 1; }\n`),
+    java: (code) => code.replace(/class \w+\s*\{/, (m) => `${m}\n    static { int[] qaA = new int[1]; int qaI = 2; qaA[qaI] = 1; }\n`),
   },
   ce: { cpp: () => 'this is not C++ ;', java: () => 'class Solution { this is not java }' },
 };

@@ -57,7 +57,15 @@ if (which === 'backend') backend(3200, readDotEnv('JUDGE0_BASE_URL') || 'http://
 else if (which === 'backend-nojudge') backend(3201, 'http://127.0.0.1:2359');
 else if (which === 'frontend') {
   run('npx', ['vite', '--port', '5175', '--strictPort'], path.join(root, 'frontend'), { VITE_API_URL: 'http://localhost:3200' });
+} else if (which === 'preview') {
+  // Production build served by vite preview on the same port (so CORS matches), for load-time measurements
+  const env = { VITE_API_URL: 'http://localhost:3200' };
+  const build = spawn('npx', ['vite', 'build', '--outDir', 'dist-qa', '--emptyOutDir'], { cwd: path.join(root, 'frontend'), env: { ...process.env, ...env }, stdio: 'inherit', shell: process.platform === 'win32' });
+  build.on('exit', (code) => {
+    if (code) process.exit(code);
+    run('npx', ['vite', 'preview', '--outDir', 'dist-qa', '--port', '5175', '--strictPort'], path.join(root, 'frontend'), env);
+  });
 } else {
-  console.error('usage: node scripts/qa/stack.mjs backend|backend-nojudge|frontend');
+  console.error('usage: node scripts/qa/stack.mjs backend|backend-nojudge|frontend|preview');
   process.exit(1);
 }

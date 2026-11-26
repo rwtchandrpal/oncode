@@ -43,7 +43,8 @@ const call = async (method, url, { token, body, headers = {}, raw } = {}) => {
 const msg = (r) => `${r.status} ${JSON.stringify(r.data).slice(0, 200)}`;
 const login = async (a) => (await call('POST', '/user/login', { body: { email: a.email, password: a.password } })).data.token;
 
-// ---------- setup
+// ---------- setup (leftover limiter counts from an earlier run would skew the checks)
+await clearKeys('rl:*');
 const adminT = await login(ACCOUNTS.admin);
 const userT = await login(ACCOUNTS.user2);
 const list = (await call('GET', '/problem?limit=100')).data.allProblems;
